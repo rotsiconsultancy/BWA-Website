@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Grounded — Beads World Africa</title>
+<meta name="description" content="The Grounded — Black Onyx and Lava Stone bracelet by Beads World Africa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+ --charcoal:#171716;--ivory:#f5f1e8;--stone:#d8d0c2;--forest:#26372f;
+ --clay:#9a6848;--brass:#a88b5a;--neutral:#6e6a63;--white:#fff;
+ --line:#ddd6ca;--soft:#ebe6dc;--max:1280px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ivory);color:var(--charcoal);font-family:Manrope,Arial,sans-serif}
+button{font:inherit;cursor:pointer} a{text-decoration:none;color:inherit}
+.container{width:min(var(--max),calc(100% - 48px));margin:auto}
+
+/* HEADER */
+.header{height:76px;border-bottom:1px solid var(--line);display:flex;align-items:center;position:sticky;top:0;background:rgba(245,241,232,.96);backdrop-filter:blur(8px);z-index:40}
+.nav{width:min(1440px,calc(100% - 48px));margin:auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.logo{font:600 20px "Cormorant Garamond",serif;letter-spacing:.08em}
+.links{display:flex;gap:30px;justify-content:center;font-size:12px;font-weight:600}
+.links a{padding:30px 0;position:relative}.links a:first-child:after{content:"";position:absolute;bottom:21px;left:0;right:0;height:1px;background:var(--charcoal)}
+.tools{display:flex;justify-content:flex-end;gap:14px}
+.tool{border:0;background:none;padding:8px;font-size:12px;font-weight:600}
+.menu{display:none;border:0;background:none;font-size:20px}
+
+/* BREADCRUMB */
+.breadcrumb{padding:24px 0 18px;color:var(--neutral);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.breadcrumb span{margin:0 8px;color:#a49d91}
+
+/* PRODUCT */
+.product{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(390px,.82fr);gap:70px;padding-bottom:100px}
+.gallery{display:grid;grid-template-columns:92px 1fr;gap:12px;align-self:start}
+.thumbs{display:flex;flex-direction:column;gap:10px}
+.thumb{border:1px solid var(--line);padding:0;background:var(--soft);aspect-ratio:1;overflow:hidden;border-radius:4px}
+.thumb.active{border:1px solid var(--charcoal)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.main-image{position:relative;aspect-ratio:4/5;background:var(--soft);overflow:hidden;border-radius:6px}
+.main-image img{width:100%;height:100%;object-fit:cover;display:block}
+.image-note{position:absolute;bottom:15px;left:15px;background:rgba(245,241,232,.9);padding:8px 10px;border-radius:3px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+
+.details{position:sticky;top:105px;height:max-content;padding:12px 0}
+.kicker{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--neutral);margin:0 0 12px}
+h1{font:500 clamp(48px,5vw,70px)/.9 "Cormorant Garamond",serif;margin:0}
+.tagline{font:500 20px/1.25 "Cormorant Garamond",serif;margin:14px 0 18px}
+.price{font-size:14px;font-weight:700;margin-bottom:24px}
+.intro{font-size:14px;line-height:1.75;color:#514e48;max-width:500px;margin:0 0 26px}
+.divider{height:1px;background:var(--line);margin:22px 0}
+.detail-row{display:flex;justify-content:space-between;gap:25px;padding:15px 0;border-bottom:1px solid var(--line);font-size:12px}
+.detail-row strong{font-weight:600}.detail-row span{color:var(--neutral);text-align:right}
+.label{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin:0 0 10px}
+.size-row{display:flex;gap:8px;margin-bottom:23px}
+.size{height:43px;min-width:70px;border:1px solid var(--line);background:transparent;border-radius:4px;font-size:11px;font-weight:700}
+.size.active{background:var(--charcoal);color:var(--ivory);border-color:var(--charcoal)}
+.qty-add{display:grid;grid-template-columns:105px 1fr;gap:9px;margin-top:12px}
+.qty{height:54px;border:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:12px}
+.qty button{border:0;background:none;font-size:17px}
+.add{height:54px;border:1px solid var(--charcoal);background:var(--charcoal);color:var(--ivory);font-size:12px;font-weight:700;letter-spacing:.03em}
+.buy-note{text-align:center;font-size:10px;color:var(--neutral);margin:11px 0 0}
+
+/* STORY / INFORMATION */
+.story-band{background:var(--charcoal);color:var(--ivory);padding:82px 0}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.story-eyebrow{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#aaa49a}
+.story-title{font:500 clamp(42px,5vw,62px)/.95 "Cormorant Garamond",serif;margin:12px 0 22px}
+.story-copy{font-size:14px;line-height:1.8;color:#c8c2b8;max-width:510px}
+.story-card{border:1px solid #3b3934;padding:30px}
+.story-card h3{font:500 31px "Cormorant Garamond",serif;margin:0 0 18px}
+.story-card p{font-size:12px;line-height:1.8;color:#b5afa5;margin:0 0 15px}
+.materials{padding:86px 0}
+.section-kicker{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--neutral)}
+.section-title{font:500 48px/1 "Cormorant Garamond",serif;margin:10px 0 38px}
+.material-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+.material{background:var(--ivory);padding:30px;min-height:180px}
+.material-num{font-size:10px;color:var(--neutral);font-weight:700}
+.material h3{font:500 28px "Cormorant Garamond",serif;margin:25px 0 7px}
+.material p{font-size:12px;line-height:1.7;color:var(--neutral);margin:0}
+
+/* DELIVERY / CARE */
+.info-section{border-top:1px solid var(--line);padding:25px 0}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px}
+.info-box h3{font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px}
+.info-box p{font-size:12px;line-height:1.7;color:var(--neutral);margin:0}
+
+/* REVIEWS */
+.reviews{padding:82px 0;border-top:1px solid var(--line)}
+.review-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:32px}
+.rating{font-size:12px;font-weight:700}
+.review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.review{border:1px solid var(--line);background:#fff;padding:25px;min-height:190px}
+.stars{font-size:12px;letter-spacing:2px}
+.review p{font:500 20px/1.3 "Cormorant Garamond",serif;margin:22px 0 28px}
+.review small{font-size:10px;color:var(--neutral)}
+
+/* RELATED */
+.related{padding:82px 0 100px;border-top:1px solid var(--line)}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.related-card .related-media{aspect-ratio:4/5;background:var(--soft);overflow:hidden;border-radius:6px}
+.related-card img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.related-card:hover img{transform:scale(1.025)}
+.related-card h3{font:500 27px "Cormorant Garamond",serif;margin:11px 0 4px}
+.related-card p{font-size:11px;color:var(--neutral);margin:0}
+
+/* FOOTER */
+footer{background:var(--charcoal);color:var(--ivory);padding:58px 0 35px}
+.footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px}
+.footer-brand{font:500 34px "Cormorant Garamond",serif}
+.footer-note{font-size:12px;line-height:1.7;color:#bcb6aa;max-width:290px;margin-top:10px}
+footer h4{font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:4px 0 15px}
+footer a{font-size:12px;color:#bcb6aa;margin:9px 0;display:block}
+.footer-bottom{border-top:1px solid #373632;margin-top:42px;padding-top:18px;color:#817d75;font-size:10px;display:flex;justify-content:space-between}
+
+/* CART */
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.25s;z-index:50}
+.cart{position:fixed;right:0;top:0;bottom:0;width:min(430px,92vw);background:var(--ivory);z-index:51;transform:translateX(100%);transition:.3s;padding:25px;overflow:auto}
+.cart.open{transform:none}.backdrop.open{opacity:1;pointer-events:auto}
+.cart-head{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:17px}
+.cart h2{font:500 32px "Cormorant Garamond",serif;margin:0}
+.close{border:0;background:none;font-size:20px}
+.cart-item{display:grid;grid-template-columns:80px 1fr auto;gap:13px;padding:22px 0;border-bottom:1px solid var(--line)}
+.cart-item img{width:80px;height:100px;object-fit:cover;border-radius:4px}
+.cart-item h3{font:500 22px "Cormorant Garamond",serif;margin:0 0 5px}
+.cart-item p{font-size:10px;color:var(--neutral);margin:0 0 10px}
+.cart-total{display:flex;justify-content:space-between;padding:22px 0;font-weight:700;font-size:13px}
+.checkout{width:100%;height:52px;background:var(--charcoal);color:var(--ivory);border:0;border-radius:4px;font-size:12px;font-weight:700}
+
+/* MOBILE */
+@media(max-width:1000px){
+ .product{grid-template-columns:1fr;gap:38px}.details{position:static}
+ .gallery{grid-template-columns:72px 1fr}.material-grid{grid-template-columns:1fr 1fr}
+ .story-grid{gap:45px}.review-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+ .container{width:calc(100% - 32px)}
+ .header{height:66px}.nav{width:calc(100% - 32px);grid-template-columns:1fr auto auto}
+ .logo{font-size:18px}.links{display:none}.tools{gap:0}.tools .search{display:none}.menu{display:block}
+ .breadcrumb{padding:18px 0 12px}
+ .product{gap:18px;padding-bottom:65px}
+ .gallery{display:flex;flex-direction:column}.thumbs{order:2;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.main-image{order:1}
+ .details{padding:8px 0}.details h1{font-size:54px}
+ .tagline{font-size:19px}.intro{font-size:13px}
+ .qty-add{grid-template-columns:90px 1fr}
+ .story-band{padding:60px 0}.story-grid{grid-template-columns:1fr;gap:38px}.story-title{font-size:46px}
+ .materials{padding:60px 0}.section-title{font-size:42px}.material-grid{grid-template-columns:1fr}
+ .material{min-height:150px}
+ .info-grid{grid-template-columns:1fr;gap:22px}
+ .reviews{padding:60px 0}.review-head{display:block}.rating{margin-top:10px}.review-grid{grid-template-columns:1fr}
+ .related{padding:60px 0 70px}.related-grid{grid-template-columns:1fr 1fr;gap:10px}.related-card:last-child{display:none}
+ .related-card h3{font-size:22px}
+ .footer-grid{grid-template-columns:1fr 1fr}.footer-brand-block{grid-column:1/-1}
+ .footer-bottom{display:block}.footer-bottom span{display:block;margin-top:5px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+<nav class="nav">
+ <a class="logo" href="#">BEADS WORLD AFRICA</a>
+ <div class="links"><a href="#">Shop</a><a href="#">Collections</a><a href="#">Find Your Bracelet</a><a href="#">Our Story</a></div>
+ <div class="tools"><button class="tool search">⌕ Search</button><button class="tool" id="bag">Bag (<span id="bagCount">0</span>)</button><button class="menu">☰</button></div>
+</nav>
+</header>
+
+<main>
+<div class="container breadcrumb">Shop <span>/</span> Bracelets <span>/</span> The Grounded</div>
+
+<section class="container product">
+ <div class="gallery">
+   <div class="thumbs">
+     <button class="thumb active"><img src="https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840" alt="The Grounded bracelet front"></button>
+     <button class="thumb"><img src="https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778" alt="Bracelet detail"></button>
+     <button class="thumb"><img src="https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048" alt="Bracelet lifestyle"></button>
+     <button class="thumb"><img src="https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778" alt="Bracelet close view"></button>
+     <button class="thumb"><img src="https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840" alt="The Grounded alternate view"></button>
+   </div>
+   <div class="main-image">
+     <img id="mainImg" src="https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840" alt="The Grounded natural stone bracelet">
+     <span class="image-note">Natural stones · Handmade</span>
+   </div>
+ </div>
+
+ <aside class="details">
+   <p class="kicker">BWA Signature</p>
+   <h1>THE<br>GROUNDED</h1>
+   <p class="tagline">Understated. Natural. Quietly confident.</p>
+   <div class="price">KES 4,500</div>
+   <p class="intro">For the person who doesn't need to make a lot of noise. The Grounded pairs the depth of Black Onyx with the raw texture of Lava Stone for a bracelet that feels calm, considered and unmistakably itself.</p>
+
+   <div class="divider"></div>
+   <p class="label">Bracelet size</p>
+   <div class="size-row">
+    <button class="size">S / 16cm</button><button class="size active">M / 18cm</button><button class="size">L / 20cm</button>
+   </div>
+
+   <div class="detail-row"><strong>Materials</strong><span>Black Onyx · Lava Stone</span></div>
+   <div class="detail-row"><strong>Style</strong><span>Quiet &amp; Grounded</span></div>
+   <div class="detail-row"><strong>Expression</strong><span>Grounding · Balance</span></div>
+   <div class="detail-row"><strong>Wear</strong><span>Every day · Work · Weekend</span></div>
+
+   <div class="qty-add">
+    <div class="qty"><button id="minus">−</button><span id="qty">1</span><button id="plus">+</button></div>
+    <button class="add" id="add">ADD TO BAG — KES 4,500</button>
+   </div>
+   <p class="buy-note">Secure checkout · Handmade in Africa · Natural stones</p>
+ </aside>
+</section>
+
+<section class="story-band">
+ <div class="container story-grid">
+  <div>
+   <div class="story-eyebrow">Why it feels like you</div>
+   <div class="story-title">Wear something that keeps you grounded.</div>
+   <p class="story-copy">The Grounded was designed around a simple feeling: being comfortable in who you are. Black Onyx brings depth and presence. Lava Stone keeps the expression raw, tactile and natural. Together, they create a bracelet that works quietly with almost everything.</p>
+  </div>
+  <div class="story-card">
+   <h3>The story behind The Grounded</h3>
+   <p>Not every bracelet needs to announce itself. Some become part of your everyday rhythm — the one you reach for before work, before travel, before a long day.</p>
+   <p>This is that bracelet. Minimal enough to disappear into your wardrobe. Distinct enough to still feel like yours.</p>
+  </div>
+ </div>
+</section>
+
+<section class="materials container">
+ <div class="section-kicker">The materials</div>
+ <div class="section-title">Natural by design.</div>
+ <div class="material-grid">
+  <article class="material"><div class="material-num">01</div><h3>Black Onyx</h3><p>Deep, dark and polished. A strong foundation for an understated bracelet with presence.</p></article>
+  <article class="material"><div class="material-num">02</div><h3>Lava Stone</h3><p>Raw volcanic texture brings an earthy contrast and a tactile, natural character.</p></article>
+  <article class="material"><div class="material-num">03</div><h3>Handmade</h3><p>Assembled with care as part of Beads World Africa's contemporary African craft language.</p></article>
+ </div>
+</section>
+
+<section class="container info-section">
+ <div class="info-grid">
+  <div class="info-box"><h3>Delivery</h3><p>Delivery information and estimated timing will be shown at checkout based on your location.</p></div>
+  <div class="info-box"><h3>Care</h3><p>Keep away from prolonged water, harsh chemicals and unnecessary impact. Store dry when not wearing.</p></div>
+  <div class="info-box"><h3>Fit</h3><p>Choose your usual wrist measurement. If between sizes, the larger size gives a more relaxed fit.</p></div>
+ </div>
+</section>
+
+<section class="reviews">
+ <div class="container">
+  <div class="review-head"><div><div class="section-kicker">From the BWA community</div><div class="section-title" style="margin-bottom:0">What they say.</div></div><div class="rating">★★★★★ &nbsp; Customer reviews</div></div>
+  <div class="review-grid">
+   <article class="review"><div class="stars">★★★★★</div><p>“It is simple, but somehow it changes the whole look.”</p><small>Verified BWA customer</small></article>
+   <article class="review"><div class="stars">★★★★★</div><p>“The kind of bracelet I can wear every single day.”</p><small>Verified BWA customer</small></article>
+   <article class="review"><div class="stars">★★★★★</div><p>“Feels personal without trying too hard.”</p><small>Verified BWA customer</small></article>
+  </div>
+ </div>
+</section>
+
+<section class="related container">
+ <div class="section-kicker">You might also like</div>
+ <div class="section-title">Other ways to wear your story.</div>
+ <div class="related-grid">
+  <article class="related-card"><div class="related-media"><img src="https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778" alt="The Bold"></div><h3>THE BOLD</h3><p>Tiger's Eye · Onyx · KES 4,200</p></article>
+  <article class="related-card"><div class="related-media"><img src="https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048" alt="The Calm"></div><h3>THE CALM</h3><p>Howlite · Matte Agate · KES 4,000</p></article>
+  <article class="related-card"><div class="related-media"><img src="https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840" alt="The Explorer"></div><h3>THE EXPLORER</h3><p>African Turquoise · Lava Stone · KES 4,800</p></article>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div class="container">
+  <div class="footer-grid">
+   <div class="footer-brand-block"><div class="footer-brand">Wear what means something.</div><p class="footer-note">Natural stones. Handmade in Africa. Bracelets with a story.</p></div>
+   <div><h4>Explore</h4><a href="#">Shop</a><a href="#">Collections</a><a href="#">Find Your Bracelet</a><a href="#">Gifts</a></div>
+   <div><h4>About</h4><a href="#">Our Story</a><a href="#">Craft &amp; Materials</a><a href="#">Care Guide</a><a href="#">Contact</a></div>
+   <div><h4>Help</h4><a href="#">Delivery</a><a href="#">Returns</a><a href="#">FAQs</a><a href="#">WhatsApp</a></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Beads World Africa</span><span>Bracelets with a story.</span></div>
+ </div>
+</footer>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="cart" id="cart">
+ <div class="cart-head"><h2>Your Bag</h2><button class="close" id="close">×</button></div>
+ <div id="cartContent"></div>
+</aside>
+
+<script>
+const main=document.getElementById('mainImg');
+document.querySelectorAll('.thumb').forEach(t=>t.addEventListener('click',()=>{
+ document.querySelectorAll('.thumb').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+ main.src=t.querySelector('img').src;
+}));
+document.querySelectorAll('.size').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('.size').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+}));
+let qty=1;
+document.getElementById('minus').onclick=()=>{qty=Math.max(1,qty-1);document.getElementById('qty').textContent=qty};
+document.getElementById('plus').onclick=()=>{qty++;document.getElementById('qty').textContent=qty};
+const cart=document.getElementById('cart'),back=document.getElementById('backdrop');
+function renderCart(){
+ document.getElementById('cartContent').innerHTML=`
+ <div class="cart-item">
+  <img src="${main.src}" alt="The Grounded">
+  <div><h3>THE GROUNDED</h3><p>Black Onyx · Lava Stone<br>Qty ${qty}</p><strong>KES ${(4500*qty).toLocaleString()}</strong></div>
+ </div>
+ <div class="cart-total"><span>Subtotal</span><span>KES ${(4500*qty).toLocaleString()}</span></div>
+ <button class="checkout">PROCEED TO CHECKOUT</button>`;
+}
+function openCart(){renderCart();cart.classList.add('open');back.classList.add('open')}
+function closeCart(){cart.classList.remove('open');back.classList.remove('open')}
+document.getElementById('add').onclick=()=>{document.getElementById('bagCount').textContent=qty;openCart()};
+document.getElementById('bag').onclick=openCart;
+document.getElementById('close').onclick=closeCart;
+back.onclick=closeCart;
+</script>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Beads World Africa — bracelets with a story. Natural stones. Handmade in Africa." />
+  <title>Beads World Africa — Bracelets With A Story</title>
+  <style>
+    :root{
+      --charcoal:#171716;
+      --ivory:#F5F1E8;
+      --stone:#D8D0C2;
+      --forest:#26372F;
+      --clay:#9A6848;
+      --brass:#A88B5A;
+      --white:#FFFFFF;
+      --muted:#6E6A63;
+      --success:#3F6B50;
+      --error:#9A4038;
+      --radius-sm:4px;
+      --radius-md:6px;
+      --radius-lg:8px;
+      --shadow-soft:0 12px 40px rgba(23,23,22,.08);
+      --max:1280px;
+      --pad:20px;
+      --ease:180ms ease;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:var(--ivory);
+      color:var(--charcoal);
+      font-family:Manrope,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.55;
+    }
+    img{display:block;width:100%;height:100%;object-fit:cover}
+    button,a{font:inherit}
+    a{color:inherit;text-decoration:none}
+    button{border:0;background:none;color:inherit;cursor:pointer}
+    .container{width:min(var(--max),calc(100% - 2*var(--pad)));margin-inline:auto}
+    .eyebrow{
+      margin:0 0 10px;
+      font-size:11px;
+      line-height:1.4;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    h1,h2,h3,p{margin-top:0}
+    h1,h2,h3{
+      font-family:"Cormorant Garamond",Georgia,serif;
+      font-weight:500;
+      line-height:.98;
+      letter-spacing:-.02em;
+    }
+    h1{font-size:clamp(3rem,8vw,5.5rem);max-width:700px}
+    h2{font-size:clamp(2.3rem,5vw,4rem)}
+    h3{font-size:clamp(1.5rem,3vw,2rem)}
+    .lede{font-size:15px;color:var(--muted);max-width:520px}
+    .btn{
+      min-height:52px;
+      padding:0 20px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      border-radius:var(--radius-sm);
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:.01em;
+      transition:transform var(--ease),background var(--ease),color var(--ease),border-color var(--ease);
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--charcoal);color:var(--ivory)}
+    .btn-light{background:var(--ivory);color:var(--charcoal)}
+    .btn-outline{border:1px solid currentColor}
+    .text-link{
+      display:inline-flex;align-items:center;gap:10px;
+      font-size:13px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.08em;
+    }
+
+    /* Header */
+    .site-header{
+      position:absolute;inset:0 0 auto;z-index:20;color:var(--white);
+    }
+    .nav{
+      min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px;
+    }
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand-mark{font-family:Georgia,serif;font-size:29px;line-height:1}
+    .brand-meta{font-size:7px;letter-spacing:.15em;line-height:1.2}
+    .desktop-nav{display:none;align-items:center;gap:28px;font-size:12px;font-weight:600}
+    .nav-actions{display:flex;align-items:center;gap:14px}
+    .icon-btn{width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.22);border-radius:50%}
+    .menu-btn{display:grid}
+    .cart-count{font-size:9px;margin-left:-8px;margin-top:-16px}
+    .mobile-menu{
+      position:fixed;inset:0;background:var(--charcoal);z-index:50;
+      transform:translateX(100%);transition:transform 280ms ease;
+      padding:24px var(--pad);
+      display:flex;flex-direction:column;
+    }
+    .mobile-menu.open{transform:translateX(0)}
+    .mobile-menu-head{display:flex;justify-content:space-between;align-items:center}
+    .mobile-links{display:grid;gap:20px;margin-top:70px;font-family:Georgia,serif;font-size:34px}
+    .mobile-links a{color:var(--ivory)}
+
+    /* Hero */
+    .hero{
+      min-height:760px;
+      position:relative;
+      display:flex;
+      align-items:flex-end;
+      overflow:hidden;
+      color:var(--white);
+      background:
+        linear-gradient(90deg,rgba(12,12,11,.72),rgba(12,12,11,.20) 70%),
+        linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.58)),
+        url("assets/images/hero.svg") center/cover no-repeat,
+        #292720;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;inset:auto 0 0;height:30%;
+      background:linear-gradient(transparent,rgba(0,0,0,.35));
+      pointer-events:none;
+    }
+    .hero-content{position:relative;z-index:2;padding-bottom:70px}
+    .hero h1{margin-bottom:22px}
+    .hero-copy{font-size:15px;max-width:450px;margin-bottom:28px;color:rgba(255,255,255,.88)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:10px}
+
+    /* Discovery */
+    .discovery{padding:72px 0;background:var(--ivory)}
+    .discovery-grid{display:grid;gap:30px;align-items:center}
+    .discovery-visual{
+      min-height:270px;overflow:hidden;border-radius:var(--radius-md);
+      background:url("assets/images/discovery.svg") center/cover no-repeat,#9c8a72;
+      order:2;
+    }
+    .discovery-copy{order:1}
+    .discovery h2{margin-bottom:18px}
+    .discovery .btn{margin-top:22px}
+
+    /* Collections */
+    .section{padding:78px 0}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:28px}
+    .section-head h2{margin:0}
+    .product-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px 12px}
+    .product-card{min-width:0}
+    .product-image{
+      aspect-ratio:4/5;border-radius:var(--radius-md);overflow:hidden;
+      background:#c8bca9;
+      position:relative;
+    }
+    .product-image::after{
+      content:"";position:absolute;inset:0;
+      background:linear-gradient(180deg,transparent 70%,rgba(0,0,0,.10));
+      pointer-events:none;
+    }
+    .product-image img{transition:transform 500ms ease}
+    .product-card:hover .product-image img{transform:scale(1.025)}
+    .product-info{padding-top:13px}
+    .product-name{font-family:Georgia,serif;font-size:21px;margin-bottom:3px}
+    .product-meta{font-size:11px;color:var(--muted);margin-bottom:7px}
+    .product-price{font-size:12px;font-weight:700}
+    .product-arrow{float:right;font-size:17px}
+
+    /* Story */
+    .story{display:grid;background:var(--charcoal);color:var(--ivory)}
+    .story-image{min-height:420px;background:url("assets/images/story.svg") center/cover no-repeat,#403d36}
+    .story-copy{padding:54px var(--pad);display:flex;flex-direction:column;justify-content:center}
+    .story-copy h2{max-width:540px}
+    .story-copy p{max-width:500px;color:rgba(245,241,232,.72)}
+    .story-copy .btn{align-self:flex-start;margin-top:14px}
+
+    /* Difference */
+    .difference{background:#eee8dd}
+    .benefit-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px 24px}
+    .benefit{border-top:1px solid var(--stone);padding-top:18px}
+    .benefit-icon{font-size:25px;margin-bottom:13px}
+    .benefit h3{font-family:Manrope,sans-serif;font-size:14px;font-weight:700;line-height:1.2;margin-bottom:5px}
+    .benefit p{font-size:12px;color:var(--muted);margin:0}
+
+    /* Proof */
+    .proof{
+      background:
+        linear-gradient(90deg,rgba(18,24,21,.92),rgba(18,24,21,.64)),
+        url("assets/images/proof.svg") center/cover no-repeat,
+        var(--forest);
+      color:var(--ivory);padding:76px 0;
+    }
+    .proof-grid{display:grid;gap:34px}
+    .quote{font-family:Georgia,serif;font-size:27px;line-height:1.1;max-width:650px}
+    .reviewer{font-size:12px;opacity:.75}
+    .proof-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .proof-gallery div{aspect-ratio:1;overflow:hidden;border-radius:4px;background:#655b4c}
+    .stars{letter-spacing:3px;font-size:14px;margin-top:16px}
+
+    /* Final CTA */
+    .final-cta{
+      position:relative;min-height:430px;display:flex;align-items:flex-end;
+      color:var(--white);overflow:hidden;
+      background:
+        linear-gradient(90deg,rgba(0,0,0,.62),rgba(0,0,0,.12)),
+        url("assets/images/final-cta.svg") center/cover no-repeat,
+        #5a5142;
+    }
+    .final-cta-content{position:relative;z-index:1;padding:62px 0}
+    .final-cta h2{margin-bottom:18px}
+    .final-cta p{color:rgba(255,255,255,.82);max-width:400px}
+
+    /* Footer */
+    footer{background:var(--charcoal);color:var(--ivory);padding:58px 0 28px}
+    .footer-grid{display:grid;gap:38px}
+    .footer-brand p{font-family:Georgia,serif;font-size:20px;max-width:280px;margin-top:16px}
+    .footer-col h4{font-size:11px;text-transform:uppercase;letter-spacing:.14em;margin:0 0 13px}
+    .footer-links{display:grid;gap:8px;font-size:12px;color:rgba(245,241,232,.72)}
+    .newsletter{display:flex;border-bottom:1px solid rgba(245,241,232,.3);padding-bottom:8px;margin-top:14px}
+    .newsletter input{min-width:0;flex:1;background:none;border:0;outline:0;color:var(--ivory);font-size:12px}
+    .newsletter button{color:var(--ivory);font-weight:700}
+    .socials{display:flex;gap:14px;margin-top:20px;font-size:12px}
+    .footer-bottom{border-top:1px solid rgba(245,241,232,.16);margin-top:45px;padding-top:18px;display:flex;justify-content:space-between;gap:15px;font-size:10px;color:rgba(245,241,232,.5)}
+
+    /* Tablet/Desktop */
+    @media (min-width:700px){
+      :root{--pad:32px}
+      .desktop-nav{display:flex}
+      .menu-btn{display:none}
+      .hero{min-height:820px}
+      .hero-content{padding-bottom:100px}
+      .discovery{padding:96px 0}
+      .discovery-grid{grid-template-columns:1fr 1.15fr;gap:60px}
+      .discovery-visual{order:2;min-height:400px}
+      .discovery-copy{order:1}
+      .product-grid{grid-template-columns:repeat(4,1fr);gap:22px}
+      .story{grid-template-columns:1fr 1fr}
+      .story-image{min-height:560px}
+      .story-copy{padding:70px}
+      .benefit-grid{grid-template-columns:repeat(5,1fr);gap:28px}
+      .proof-grid{grid-template-columns:1.1fr .9fr;align-items:center}
+      .footer-grid{grid-template-columns:1.4fr .8fr .8fr 1.2fr}
+    }
+
+    @media (min-width:1100px){
+      :root{--pad:40px}
+      .nav{min-height:88px}
+      .hero-content{padding-bottom:115px}
+      .hero-copy{font-size:16px}
+      .section{padding:105px 0}
+      .story-copy{padding:90px}
+      .footer-grid{gap:60px}
+    }
+
+    @media (max-width:699px){
+      .section-head .text-link{font-size:10px}
+      .hero .btn{width:100%}
+      .hero-actions{max-width:360px}
+    }
+
+    /* Missing-image treatment keeps the layout stable while real BWA assets are added. */
+    img[src*="assets/images/"]{background:linear-gradient(135deg,#766957,#c9bda9 48%,#3f443c)}
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="#">
+      <span class="brand-mark">BWA</span>
+      <span class="brand-meta">BEADS WORLD AFRICA</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary">
+      <a href="#shop">Shop</a>
+      <a href="#discover">Find Your Bracelet</a>
+      <a href="#story">Our Story</a>
+      <a href="#journal">Journal</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn" aria-label="Search">⌕</button>
+      <button class="icon-btn" aria-label="Account">♙</button>
+      <button class="icon-btn" aria-label="Cart">▢</button>
+      <span class="cart-count">0</span>
+      <button class="icon-btn menu-btn" id="menuOpen" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<aside class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <div class="mobile-menu-head">
+    <a class="brand" href="#"><span class="brand-mark">BWA</span><span class="brand-meta">BEADS WORLD AFRICA</span></a>
+    <button class="icon-btn" id="menuClose" aria-label="Close menu">×</button>
+  </div>
+  <nav class="mobile-links">
+    <a href="#shop">Shop</a>
+    <a href="#discover">Find Your Bracelet</a>
+    <a href="#story">Our Story</a>
+    <a href="#journal">Journal</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</aside>
+
+<main>
+  <section class="hero">
+    <div class="container hero-content">
+      <p class="eyebrow">Bracelets with a story.</p>
+      <h1>Natural stones.<br>Handmade in Africa.</h1>
+      <p class="hero-copy">Contemporary bracelets designed around natural materials, personal style and the stories we choose to wear.</p>
+      <div class="hero-actions">
+        <a class="btn btn-light" href="#discover">Find My Bracelet <span>→</span></a>
+        <a class="btn btn-outline" href="#shop">Shop All Bracelets <span>→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="discovery" id="discover">
+    <div class="container discovery-grid">
+      <div class="discovery-copy">
+        <p class="eyebrow">Not sure which one?</p>
+        <h2>Tell us a little about yourself.</h2>
+        <p class="lede">We'll help you discover a bracelet that fits your style, personality and the way you want to wear it.</p>
+        <a class="btn btn-primary" href="#">Help Me Discover <span>→</span></a>
+        <p style="font-size:11px;color:var(--muted);margin:13px 0 0">◷ About 1 minute</p>
+      </div>
+      <div class="discovery-visual" role="img" aria-label="BWA bracelet discovery image"></div>
+    </div>
+  </section>
+
+  <section class="section" id="shop">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Featured collections</p>
+          <h2>Popular Picks</h2>
+        </div>
+        <a class="text-link" href="#">Shop all →</a>
+      </div>
+
+      <div class="product-grid">
+        <article class="product-card">
+          <div class="product-image"><img src="assets/images/the-grounded.svg" alt="The Grounded bracelet" loading="lazy"></div>
+          <div class="product-info">
+            <div class="product-name">The Grounded</div>
+            <div class="product-meta">Black Onyx · Lava Stone</div>
+            <div class="product-price">KES 4,500 <span class="product-arrow">→</span></div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image"><img src="assets/images/the-bold.svg" alt="The Bold bracelet" loading="lazy"></div>
+          <div class="product-info">
+            <div class="product-name">The Bold</div>
+            <div class="product-meta">Tiger's Eye · Onyx</div>
+            <div class="product-price">KES 4,200 <span class="product-arrow">→</span></div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image"><img src="assets/images/the-calm.svg" alt="The Calm bracelet" loading="lazy"></div>
+          <div class="product-info">
+            <div class="product-name">The Calm</div>
+            <div class="product-meta">Howlite · Matte Agate</div>
+            <div class="product-price">KES 4,000 <span class="product-arrow">→</span></div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-image"><img src="assets/images/the-explorer.svg" alt="The Explorer bracelet" loading="lazy"></div>
+          <div class="product-info">
+            <div class="product-name">The Explorer</div>
+            <div class="product-meta">African Turquoise · Lava Stone</div>
+            <div class="product-price">KES 4,800 <span class="product-arrow">→</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="story" id="story">
+    <div class="story-image" role="img" aria-label="BWA craftsmanship and bracelet lifestyle image"></div>
+    <div class="story-copy">
+      <p class="eyebrow">Our story</p>
+      <h2>Wear what means something.</h2>
+      <p>BWA is more than a jewellery brand. We're a celebration of African craftsmanship, natural materials and the stories that connect us.</p>
+      <a class="btn btn-light" href="#">Our Story <span>→</span></a>
+    </div>
+  </section>
+
+  <section class="section difference" id="journal">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">The BWA difference</p>
+          <h2>Why choose BWA?</h2>
+        </div>
+      </div>
+
+      <div class="benefit-grid">
+        <div class="benefit"><div class="benefit-icon">◈</div><h3>Natural Stones</h3><p>Natural materials with their own character and variation.</p></div>
+        <div class="benefit"><div class="benefit-icon">♢</div><h3>Handmade in Africa</h3><p>Craftsmanship at the centre of every piece.</p></div>
+        <div class="benefit"><div class="benefit-icon">◇</div><h3>Premium Quality</h3><p>Designed to feel considered, refined and lasting.</p></div>
+        <div class="benefit"><div class="benefit-icon">♡</div><h3>Meaningful Designs</h3><p>Bracelets built around identity, style and story.</p></div>
+        <div class="benefit"><div class="benefit-icon">◎</div><h3>Local Community</h3><p>A brand rooted in African creativity and connection.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof">
+    <div class="container proof-grid">
+      <div>
+        <p class="eyebrow">Real people. Real stories.</p>
+        <h2>Loved by many.</h2>
+        <p class="quote">“The quality is incredible and the story behind it makes it even more special. I get compliments every time I wear it.”</p>
+        <p class="reviewer">— James K.</p>
+        <div class="stars">★★★★★</div>
+      </div>
+      <div>
+        <div class="proof-gallery">
+          <div><img src="assets/images/ugc-01.svg" alt="Customer bracelet styling" loading="lazy"></div>
+          <div><img src="assets/images/ugc-02.svg" alt="Customer bracelet detail" loading="lazy"></div>
+          <div><img src="assets/images/ugc-03.svg" alt="Customer bracelet lifestyle" loading="lazy"></div>
+        </div>
+        <p style="font-size:11px;margin:12px 0 0;opacity:.72">4.9/5 from verified customers</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container final-cta-content">
+      <p class="eyebrow">Your bracelet is out there.</p>
+      <h2>Find yours.</h2>
+      <p>Discover the bracelet that fits your style, your story and the way you want to wear it.</p>
+      <a class="btn btn-light" href="#discover">Find My Bracelet <span>→</span></a>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand"><span class="brand-mark">BWA</span><span class="brand-meta">BEADS WORLD AFRICA</span></div>
+        <p>Timeless pieces.<br>Real stories.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <div class="footer-links">
+          <a href="#">All Bracelets</a><a href="#">New Arrivals</a><a href="#">Collections</a><a href="#">Gift Cards</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>About</h4>
+        <div class="footer-links">
+          <a href="#">Our Story</a><a href="#">Craftsmanship</a><a href="#">Sustainability</a><a href="#">Journal</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Join our journey</h4>
+        <div class="footer-links"><span>Get updates on new collections, stories and more.</span></div>
+        <form class="newsletter" onsubmit="event.preventDefault()">
+          <input type="email" placeholder="Your email address" aria-label="Email address" required>
+          <button type="submit">→</button>
+        </form>
+        <div class="socials"><span>Instagram</span><span>Facebook</span><span>TikTok</span></div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Beads World Africa. All rights reserved.</span>
+      <span>Privacy Policy · Terms & Conditions</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const menu = document.getElementById('mobileMenu');
+  const open = document.getElementById('menuOpen');
+  const close = document.getElementById('menuClose');
+
+  open.addEventListener('click', () => {
+    menu.classList.add('open');
+    menu.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  });
+  close.addEventListener('click', () => {
+    menu.classList.remove('open');
+    menu.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    menu.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }));
+</script>
+</body>
+</html>

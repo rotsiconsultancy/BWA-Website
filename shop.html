@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop Bracelets — Beads World Africa</title>
+<meta name="description" content="Explore handmade natural-stone bracelets by style, feeling and palette. Beads World Africa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+ --charcoal:#171716;--ivory:#f5f1e8;--stone:#d8d0c2;--forest:#26372f;
+ --clay:#9a6848;--brass:#a88b5a;--neutral:#6e6a63;--white:#fff;
+ --line:#ddd6ca;--max:1280px;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--ivory);color:var(--charcoal);font-family:Manrope,Arial,sans-serif}
+button,select{font:inherit} button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.container{width:min(var(--max),calc(100% - 48px));margin:auto}
+
+/* HEADER */
+.site-header{height:76px;background:var(--ivory);border-bottom:1px solid var(--line);display:flex;align-items:center;position:sticky;top:0;z-index:30}
+.nav{width:min(1440px,calc(100% - 48px));margin:auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.brand{font:600 20px "Cormorant Garamond",serif;letter-spacing:.08em}
+.navlinks{display:flex;gap:30px;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+.navlinks a{position:relative;padding:30px 0}
+.navlinks a.active:after{content:"";position:absolute;left:0;right:0;bottom:21px;height:1px;background:var(--charcoal)}
+.navtools{display:flex;justify-content:flex-end;gap:18px;font-size:12px;font-weight:600}
+.iconbtn{background:none;border:0;padding:8px}
+.mobile-menu{display:none}
+
+/* SHOP INTRO */
+.shop-intro{padding:72px 0 52px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--neutral);margin:0 0 16px}
+h1{font:500 clamp(46px,6vw,76px)/.92 "Cormorant Garamond",serif;margin:0;max-width:850px}
+.intro-row{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-top:24px}
+.intro-copy{max-width:610px;color:var(--neutral);font-size:15px;line-height:1.7;margin:0}
+.shop-count{font-size:12px;font-weight:700;white-space:nowrap}
+
+/* COLLECTIONS */
+.collections{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px;margin-bottom:52px}
+.collection{min-height:250px;position:relative;overflow:hidden;border-radius:6px;background:var(--charcoal);color:var(--ivory);padding:28px;display:flex;align-items:flex-end}
+.collection:first-child{min-height:330px}
+.collection img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.58;transition:transform .5s}
+.collection:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.72),rgba(0,0,0,.05) 70%)}
+.collection:hover img{transform:scale(1.035)}
+.collection-content{position:relative;z-index:1}
+.collection small{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.collection h2{font:500 35px/1 "Cormorant Garamond",serif;margin:7px 0 4px}
+.collection p{font-size:11px;margin:0;opacity:.78}
+
+/* TOOLBAR */
+.shop-toolbar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 0;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.filter-scroll{display:flex;gap:7px;overflow:auto;scrollbar-width:none}
+.filter-scroll::-webkit-scrollbar{display:none}
+.filter{height:40px;padding:0 14px;border:1px solid var(--line);background:transparent;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap}
+.filter.active{background:var(--charcoal);border-color:var(--charcoal);color:var(--ivory)}
+.toolbar-right{display:flex;gap:8px;align-items:center}
+.sort{height:40px;border:1px solid var(--line);background:transparent;border-radius:4px;padding:0 34px 0 12px;font-size:11px;font-weight:600}
+.filter-toggle{height:40px;border:1px solid var(--charcoal);background:transparent;border-radius:4px;padding:0 13px;font-size:11px;font-weight:700;display:none}
+
+/* ADVANCED */
+.advanced{display:none;border-bottom:1px solid var(--line);padding:22px 0}
+.advanced.open{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.advanced h3{font-size:10px;letter-spacing:.13em;text-transform:uppercase;margin:0 0 12px}
+.option{display:flex;align-items:center;gap:8px;font-size:12px;margin:8px 0;color:#4e4b46}
+.option input{accent-color:var(--charcoal)}
+
+/* PRODUCT GRID */
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:38px 16px;padding:32px 0 100px}
+.card{min-width:0;cursor:pointer}
+.media{position:relative;aspect-ratio:4/5;background:#ebe6dc;overflow:hidden;border-radius:6px}
+.media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s}
+.card:hover .media img{transform:scale(1.025)}
+.quick{position:absolute;left:12px;right:12px;bottom:12px;height:44px;background:var(--ivory);border:0;border-radius:4px;font-size:11px;font-weight:700;opacity:0;transform:translateY(5px);transition:.2s}
+.card:hover .quick{opacity:1;transform:none}
+.badge{position:absolute;left:12px;top:12px;background:var(--ivory);padding:7px 9px;border-radius:3px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.info{padding:13px 2px 0}
+.feeling{font-size:9px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--neutral)}
+.name{font:500 27px/1 "Cormorant Garamond",serif;margin:6px 0}
+.materials{font-size:11px;color:var(--neutral);line-height:1.5}
+.price{font-size:12px;font-weight:700;margin-top:9px}
+.no-results{text-align:center;padding:90px 20px;border-top:1px solid var(--line);grid-column:1/-1}
+.no-results h2{font:500 38px "Cormorant Garamond",serif;margin:0 0 8px}
+.no-results p{font-size:13px;color:var(--neutral);margin:0}
+
+/* FOOTER */
+footer{background:var(--charcoal);color:var(--ivory);padding:58px 0 35px}
+.footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px}
+.footer-brand{font:500 34px "Cormorant Garamond",serif}
+.footer-note{font-size:12px;line-height:1.7;color:#bcb6aa;max-width:290px;margin-top:10px}
+footer h4{font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:4px 0 15px}
+footer a,footer p{font-size:12px;color:#bcb6aa;margin:9px 0;display:block}
+.footer-bottom{border-top:1px solid #373632;margin-top:42px;padding-top:18px;color:#817d75;font-size:10px;display:flex;justify-content:space-between}
+
+/* DRAWER */
+.drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.25s;z-index:50}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:min(430px,92vw);background:var(--ivory);z-index:51;transform:translateX(100%);transition:.3s;padding:25px;overflow:auto}
+.drawer.open{transform:none}.drawer-backdrop.open{opacity:1;pointer-events:auto}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:17px}
+.drawer h2{font:500 32px "Cormorant Garamond",serif;margin:0}
+.close{border:0;background:none;font-size:20px}
+.drawer-section{padding:22px 0;border-bottom:1px solid var(--line)}
+.drawer-section h3{font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 14px}
+.drawer button{width:100%;text-align:left;border:1px solid var(--line);background:transparent;padding:12px;border-radius:4px;margin:4px 0;font-size:12px}
+.drawer button:hover{background:#fff}
+.clear{margin-top:14px!important;text-align:center!important;background:var(--charcoal)!important;color:var(--ivory);border-color:var(--charcoal)!important}
+
+/* MOBILE */
+@media(max-width:980px){
+ .navlinks{gap:18px}.navtools{gap:5px}.products{grid-template-columns:repeat(3,1fr)}
+ .collections{grid-template-columns:1fr 1fr}.collection:first-child{grid-column:1/-1}
+ .advanced.open{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+ .container{width:calc(100% - 32px)}
+ .site-header{height:66px}.nav{width:calc(100% - 32px);grid-template-columns:auto 1fr auto}
+ .brand{font-size:18px}.navlinks{display:none}.navtools{gap:0}.navtools span{display:none}
+ .mobile-menu{display:block;border:0;background:none;font-size:20px;margin-left:5px}
+ .shop-intro{padding:44px 0 34px}h1{font-size:48px;line-height:.95}
+ .intro-row{display:block;margin-top:18px}.shop-count{margin-top:14px}
+ .collections{grid-template-columns:1fr;gap:10px;margin-bottom:34px}.collection,.collection:first-child{min-height:205px;grid-column:auto}
+ .shop-toolbar{display:grid;grid-template-columns:1fr auto}.filter-scroll{grid-column:1/-1;order:2}
+ .toolbar-right{order:1;grid-column:1/-1;justify-content:space-between}.filter-toggle{display:block}
+ .advanced.open{grid-template-columns:1fr 1fr}
+ .products{grid-template-columns:repeat(2,1fr);gap:30px 10px;padding-top:24px}
+ .name{font-size:23px}.quick{display:none}
+ .footer-grid{grid-template-columns:1fr 1fr}.footer-brand-block{grid-column:1/-1}
+ .footer-bottom{display:block}.footer-bottom span{display:block;margin-top:5px}
+}
+@media(max-width:420px){.advanced.open{grid-template-columns:1fr}.products{gap:26px 9px}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+<nav class="nav">
+  <a class="brand" href="#">BEADS WORLD AFRICA</a>
+  <div class="navlinks">
+    <a class="active" href="#">Shop</a>
+    <a href="#collections">Collections</a>
+    <a href="#shop">Find Your Bracelet</a>
+    <a href="#footer">Our Story</a>
+  </div>
+  <div class="navtools">
+    <button class="iconbtn" aria-label="Search">⌕ <span>Search</span></button>
+    <button class="iconbtn" id="cartOpen" aria-label="Cart">Bag (0)</button>
+    <button class="mobile-menu" id="menuOpen" aria-label="Open menu">☰</button>
+  </div>
+</nav>
+</header>
+
+<main>
+<section class="shop-intro container">
+  <p class="eyebrow">The BWA Bracelet Collection</p>
+  <h1>Find the one that feels like you.</h1>
+  <div class="intro-row">
+    <p class="intro-copy">Handmade natural-stone bracelets, designed around feeling, style and meaning. Explore the collection your way — or let us help you discover your match.</p>
+    <div class="shop-count" id="count">04 BRACELETS</div>
+  </div>
+</section>
+
+<section class="container" id="collections">
+  <div class="collections">
+    <article class="collection" data-filter="all">
+      <img src="https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840" alt="Natural stone bracelet">
+      <div class="collection-content"><small>Explore the full collection</small><h2>All Bracelets</h2><p>Every story. Every feeling.</p></div>
+    </article>
+    <article class="collection" data-filter="dark">
+      <img src="https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048" alt="Dark natural stone bracelet">
+      <div class="collection-content"><small>Palette</small><h2>Dark &amp; Deep</h2><p>Quiet. Grounded. Strong.</p></div>
+    </article>
+    <article class="collection" data-filter="earth">
+      <img src="https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778" alt="Earth-toned natural stone bracelet">
+      <div class="collection-content"><small>Palette</small><h2>Earth &amp; Warm</h2><p>Natural. Rich. Expressive.</p></div>
+    </article>
+  </div>
+</section>
+
+<section class="container" id="shop">
+  <div class="shop-toolbar">
+    <div class="toolbar-right">
+      <button class="filter-toggle" id="advancedOpen">Filters +</button>
+      <select class="sort" id="sort">
+        <option value="featured">Featured</option>
+        <option value="low">Price: Low to high</option>
+        <option value="high">Price: High to low</option>
+        <option value="az">Name: A–Z</option>
+      </select>
+    </div>
+    <div class="filter-scroll" id="quickFilters">
+      <button class="filter active" data-filter="all">All</button>
+      <button class="filter" data-filter="dark">Dark &amp; Deep</button>
+      <button class="filter" data-filter="earth">Earth &amp; Warm</button>
+      <button class="filter" data-filter="clean">Clean &amp; Minimal</button>
+      <button class="filter" data-filter="bold">Rich &amp; Expressive</button>
+    </div>
+  </div>
+
+  <div class="advanced" id="advanced">
+    <div>
+      <h3>Style</h3>
+      <label class="option"><input type="checkbox" value="quiet"> Quiet &amp; Grounded</label>
+      <label class="option"><input type="checkbox" value="bold"> Bold &amp; Confident</label>
+      <label class="option"><input type="checkbox" value="clean"> Clean &amp; Refined</label>
+      <label class="option"><input type="checkbox" value="free"> Free &amp; Natural</label>
+    </div>
+    <div>
+      <h3>Palette</h3>
+      <label class="option"><input type="checkbox" value="dark"> Dark &amp; Deep</label>
+      <label class="option"><input type="checkbox" value="earth"> Earth &amp; Warm</label>
+      <label class="option"><input type="checkbox" value="neutral"> Light &amp; Neutral</label>
+    </div>
+    <div>
+      <h3>Expression</h3>
+      <label class="option"><input type="checkbox" value="grounding"> Grounding</label>
+      <label class="option"><input type="checkbox" value="confidence"> Confidence</label>
+      <label class="option"><input type="checkbox" value="balance"> Balance</label>
+      <label class="option"><input type="checkbox" value="individuality"> Individuality</label>
+    </div>
+    <div>
+      <h3>Reset</h3>
+      <button class="filter" id="clearFilters">Clear all filters</button>
+    </div>
+  </div>
+
+  <div class="products" id="products"></div>
+</section>
+</main>
+
+<footer id="footer">
+<div class="container">
+  <div class="footer-grid">
+    <div class="footer-brand-block"><div class="footer-brand">Wear what means something.</div><p class="footer-note">Natural stones. Handmade in Africa. Bracelets with a story.</p></div>
+    <div><h4>Explore</h4><a href="#">Shop</a><a href="#collections">Collections</a><a href="#">Find Your Bracelet</a><a href="#">Gifts</a></div>
+    <div><h4>About</h4><a href="#">Our Story</a><a href="#">Craft &amp; Materials</a><a href="#">Care Guide</a><a href="#">Contact</a></div>
+    <div><h4>Help</h4><a href="#">Delivery</a><a href="#">Returns</a><a href="#">FAQs</a><a href="#">WhatsApp</a></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Beads World Africa</span><span>Bracelets with a story.</span></div>
+</div>
+</footer>
+
+<div class="drawer-backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping bag">
+  <div class="drawer-head"><h2>Your Bag</h2><button class="close" id="cartClose">×</button></div>
+  <div class="drawer-section"><p style="font-size:13px;color:var(--neutral);line-height:1.7">Your bag is ready for the bracelets you choose. Product-page and checkout integration will connect here next.</p></div>
+</aside>
+
+<script>
+const PRODUCTS=[
+ {id:'grounded',name:'THE GROUNDED',feeling:'Quietly confident',materials:'Black Onyx · Lava Stone',price:4500,palette:['dark','earth'],style:['quiet','clean'],expr:['grounding','balance'],img:'https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840',badge:'BWA Signature'},
+ {id:'bold',name:'THE BOLD',feeling:'Strong presence',materials:"Tiger's Eye · Onyx",price:4200,palette:['earth','bold'],style:['bold'],expr:['confidence','individuality'],img:'https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778'},
+ {id:'calm',name:'THE CALM',feeling:'Softly composed',materials:'Howlite · Matte Agate',price:4000,palette:['neutral','clean'],style:['quiet','clean'],expr:['balance','grounding'],img:'https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048'},
+ {id:'explorer',name:'THE EXPLORER',feeling:'Free & natural',materials:'African Turquoise · Lava Stone',price:4800,palette:['earth','bold'],style:['free','bold'],expr:['individuality','confidence'],img:'https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778'}
+];
+let active='all';
+
+function money(n){return 'KES '+n.toLocaleString();}
+function matches(p){
+ if(active!=='all' && ![...p.palette,...p.style,...p.expr].includes(active)) return false;
+ const checks=[...document.querySelectorAll('.advanced input:checked')].map(x=>x.value);
+ return !checks.length || checks.some(v=>[...p.palette,...p.style,...p.expr].includes(v));
+}
+function render(){
+ let list=PRODUCTS.filter(matches);
+ const s=document.getElementById('sort').value;
+ if(s==='low')list.sort((a,b)=>a.price-b.price);
+ if(s==='high')list.sort((a,b)=>b.price-a.price);
+ if(s==='az')list.sort((a,b)=>a.name.localeCompare(b.name));
+ const grid=document.getElementById('products');
+ document.getElementById('count').textContent=String(list.length).padStart(2,'0')+' BRACELET'+(list.length===1?'':'S');
+ grid.innerHTML=list.length?list.map(p=>`
+ <article class="card" data-product="${p.id}">
+   <div class="media"><img src="${p.img}" alt="${p.name}" loading="lazy">${p.badge?`<span class="badge">${p.badge}</span>`:''}<button class="quick">VIEW BRACELET</button></div>
+   <div class="info"><div class="feeling">${p.feeling}</div><h2 class="name">${p.name}</h2><div class="materials">${p.materials}</div><div class="price">${money(p.price)}</div></div>
+ </article>`).join(''):`<div class="no-results"><h2>Nothing matched.</h2><p>Try another feeling, palette or style.</p></div>`;
+}
+document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{
+ if(!b.dataset.filter)return;
+ active=b.dataset.filter;
+ document.querySelectorAll('#quickFilters .filter').forEach(x=>x.classList.toggle('active',x===b));
+ render();
+}));
+document.querySelectorAll('.collection').forEach(c=>c.addEventListener('click',()=>{
+ const f=c.dataset.filter;
+ active=f==='all'?'all':f;
+ document.querySelectorAll('#quickFilters .filter').forEach(x=>x.classList.toggle('active',x.dataset.filter===active));
+ document.getElementById('shop').scrollIntoView({behavior:'smooth'});
+ render();
+}));
+document.querySelectorAll('.advanced input').forEach(x=>x.addEventListener('change',render));
+document.getElementById('sort').addEventListener('change',render);
+document.getElementById('clearFilters').addEventListener('click',()=>{
+ document.querySelectorAll('.advanced input').forEach(x=>x.checked=false);
+ active='all';document.querySelectorAll('#quickFilters .filter').forEach(x=>x.classList.toggle('active',x.dataset.filter==='all'));render();
+});
+document.getElementById('advancedOpen').addEventListener('click',()=>{
+ const a=document.getElementById('advanced');a.classList.toggle('open');
+ document.getElementById('advancedOpen').textContent=a.classList.contains('open')?'Filters −':'Filters +';
+});
+const drawer=document.getElementById('drawer'),backdrop=document.getElementById('backdrop');
+function openDrawer(){drawer.classList.add('open');backdrop.classList.add('open')}
+function closeDrawer(){drawer.classList.remove('open');backdrop.classList.remove('open')}
+document.getElementById('cartOpen').addEventListener('click',openDrawer);
+document.getElementById('cartClose').addEventListener('click',closeDrawer);
+backdrop.addEventListener('click',closeDrawer);
+document.getElementById('menuOpen').addEventListener('click',openDrawer);
+render();
+</script>
+</body>
+</html>

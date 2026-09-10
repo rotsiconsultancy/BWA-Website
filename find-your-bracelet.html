@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Bracelet — Beads World Africa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --charcoal:#171716;--ivory:#f5f1e8;--stone:#d8d0c2;--forest:#26372f;
+  --clay:#9a6848;--brass:#a88b5a;--white:#fff;--muted:#6e6a63;
+  --max:1280px;--ease:220ms cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--ivory);color:var(--charcoal);font-family:Manrope,Arial,sans-serif}
+button,a{font:inherit} a{text-decoration:none;color:inherit}
+button{cursor:pointer;border:0}
+.container{width:min(calc(100% - 48px),var(--max));margin:auto}
+.header{height:76px;background:rgba(245,241,232,.96);border-bottom:1px solid rgba(23,23,22,.12);display:flex;align-items:center;position:sticky;top:0;z-index:20;backdrop-filter:blur(12px)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:28px}
+.logo{font-size:15px;font-weight:700;letter-spacing:.16em}
+.navlinks{display:flex;align-items:center;gap:28px;font-size:13px;font-weight:600}
+.navlinks a{opacity:.78}.navlinks a:hover,.navlinks a.active{opacity:1}
+.navtools{display:flex;gap:18px;align-items:center;font-size:13px}
+.menu{display:none;background:none}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.display{font-family:"Cormorant Garamond",serif;font-weight:500;line-height:.94}
+.hero{min-height:calc(100vh - 76px);display:grid;place-items:center;padding:80px 0 90px;text-align:center}
+.hero-inner{max-width:880px}
+.hero h1{font-size:clamp(52px,7vw,92px);margin:18px 0 24px}
+.hero p{max-width:620px;margin:0 auto;color:#57534d;font-size:16px;line-height:1.8}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 24px;border:1px solid var(--charcoal);font-size:13px;font-weight:700;letter-spacing:.03em;transition:all var(--ease)}
+.btn.primary{background:var(--charcoal);color:var(--ivory)}
+.btn.primary:hover{background:var(--forest)}
+.btn.secondary{background:transparent}.btn.secondary:hover{background:var(--stone)}
+.hero-actions{display:flex;gap:12px;justify-content:center;margin-top:38px}
+.micro{margin-top:18px;font-size:11px;color:var(--muted)}
+.discovery{padding:20px 0 110px}
+.entry-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.entry{min-height:250px;background:#fff;border:1px solid var(--stone);padding:28px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;transition:transform var(--ease),border-color var(--ease)}
+.entry:hover{transform:translateY(-4px);border-color:var(--charcoal)}
+.entry h3{font-family:"Cormorant Garamond",serif;font-size:31px;font-weight:500;line-height:1;margin:12px 0}
+.entry p{font-size:12px;line-height:1.6;color:var(--muted);max-width:230px}
+.entry .arrow{font-size:18px}
+.quiz-shell{display:none;min-height:calc(100vh - 76px);padding:46px 0 90px}
+.quiz-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:54px}
+.progress{font-size:12px;font-weight:700;letter-spacing:.12em}
+.progressbar{height:2px;background:var(--stone);margin-top:10px;width:240px}
+.progressbar span{display:block;height:100%;width:0;background:var(--charcoal);transition:width 350ms ease}
+.quiz-question{text-align:center;max-width:920px;margin:auto}
+.quiz-question h2{font-size:clamp(42px,5vw,64px);margin:12px 0 42px}
+.options{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;text-align:left}
+.option{min-height:125px;background:#fff;border:1px solid var(--stone);padding:24px;position:relative;transition:all var(--ease)}
+.option:hover{border-color:var(--charcoal);transform:translateY(-2px)}
+.option.selected{background:var(--forest);color:var(--ivory);border-color:var(--forest)}
+.option .num{font-size:10px;letter-spacing:.14em;opacity:.6}
+.option strong{display:block;font-size:14px;margin:13px 0 5px;letter-spacing:.02em}
+.option small{font-size:11px;opacity:.65;line-height:1.5}
+.progress-wrap{text-align:right;min-width:115px}.progress-label{font-size:10px;color:var(--muted);margin-top:5px}.checkpoint{display:none;max-width:620px;margin:48px auto 0;padding:32px;background:#fff;border:1px solid var(--stone);text-align:center}.checkpoint strong{display:block;font-family:"Cormorant Garamond",serif;font-size:30px;font-weight:500;margin:9px 0 4px}.checkpoint span{display:block;font-size:12px;color:var(--muted);margin-bottom:20px}.checkpoint .btn{min-height:48px}.quiz-controls{display:flex;justify-content:space-between;align-items:center;margin-top:30px}
+.back{background:none;color:var(--muted);font-size:12px;font-weight:700;padding:12px 0}
+.next{display:none}
+.result{display:none;padding:65px 0 100px}
+.result-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:70px;align-items:center}
+.result-image{aspect-ratio:4/5;background:#e7e0d5;overflow:hidden}
+.result-image img{width:100%;height:100%;object-fit:cover}
+.result-copy h2{font-size:clamp(50px,6vw,76px);margin:12px 0}
+.result-copy .descriptor{font-family:"Cormorant Garamond",serif;font-size:27px;color:#514d47;margin-bottom:30px}
+.result-copy p{font-size:14px;line-height:1.8;color:#625e57;max-width:540px}
+.why{border-top:1px solid var(--stone);border-bottom:1px solid var(--stone);padding:24px 0;margin:32px 0}
+.why strong{font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.why p{margin:10px 0 0}
+.result-meta{display:flex;gap:30px;margin:25px 0 30px}.meta b{display:block;font-size:14px}.meta span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.alts{padding:90px 0;border-top:1px solid var(--stone)}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:30px}.section-head h3{font-family:"Cormorant Garamond",serif;font-size:43px;font-weight:500;margin:8px 0 0}
+.alt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:#fff;border:1px solid var(--stone)}.card-img{aspect-ratio:4/5;overflow:hidden;background:#e7e0d5}.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}.card:hover img{transform:scale(1.03)}
+.card-body{padding:20px}.card-body h4{font-family:"Cormorant Garamond",serif;font-size:28px;font-weight:500;margin:7px 0}.card-body p{font-size:11px;color:var(--muted);margin:0}.card-body .price{font-size:13px;font-weight:700;color:var(--charcoal);margin-top:15px}
+footer{background:var(--charcoal);color:var(--ivory);padding:60px 0 28px}.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:35px}.footer h4{font-size:11px;letter-spacing:.14em;text-transform:uppercase}.footer a,.footer p{font-size:12px;color:#bdb8ae;line-height:2;display:block}.footer-brand{font-family:"Cormorant Garamond",serif;font-size:39px}.copyright{border-top:1px solid #3b3a37;margin-top:50px;padding-top:20px;font-size:10px;color:#88847d}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,120px);background:var(--charcoal);color:var(--ivory);padding:14px 20px;font-size:12px;z-index:50;transition:transform .3s}.toast.show{transform:translate(-50%,0)}
+@media(max-width:900px){
+ .navlinks{display:none}.menu{display:block}.navtools span.search{display:none}
+ .entry-grid{grid-template-columns:repeat(2,1fr)} .result-grid{gap:35px}
+ .footer-grid{grid-template-columns:1.3fr 1fr 1fr}
+}
+@media(max-width:640px){
+ .container{width:min(calc(100% - 40px),var(--max))}
+ .header{height:68px}.hero{min-height:calc(100vh - 68px);padding:55px 0 70px}.hero h1{font-size:52px}.hero p{font-size:14px}.hero-actions{flex-direction:column}
+ .entry-grid{grid-template-columns:1fr}.entry{min-height:190px}
+ .quiz-shell{padding-top:30px}.quiz-top{margin-bottom:38px}.progressbar{width:160px}.quiz-question h2{font-size:43px;margin-bottom:28px}.progress-wrap{min-width:95px}.checkpoint{margin-top:35px;padding:26px 20px}.checkpoint strong{font-size:27px}
+ .options{grid-template-columns:1fr}.option{min-height:105px}
+ .quiz-controls{margin-top:20px}.next{min-height:50px}
+ .result{padding-top:30px}.result-grid{grid-template-columns:1fr;gap:28px}.result-copy h2{font-size:57px}.result-copy .descriptor{font-size:25px}
+ .alt-grid{grid-template-columns:1fr}.section-head{display:block}
+ .footer-grid{grid-template-columns:1fr 1fr}.footer-brand{font-size:34px}
+}
+</style>
+</head>
+<body>
+<header class="header">
+ <div class="container nav">
+  <a class="logo" href="#">BWA</a>
+  <nav class="navlinks">
+   <a href="#">Shop</a><a href="#">Collections</a><a class="active" href="#">Find Your Bracelet</a><a href="#">Our Story</a>
+  </nav>
+  <div class="navtools"><span class="search">Search</span><span>Cart (0)</span><button class="menu">Menu</button></div>
+ </div>
+</header>
+
+<main>
+<section class="hero" id="intro">
+ <div class="container hero-inner">
+  <div class="eyebrow">Beads World Africa</div>
+  <h1 class="display">Find the bracelet<br>that feels like you.</h1>
+  <p>Not sure where to start? Tell us a little about your style, what you want your bracelet to express, and how you see yourself wearing it.</p>
+  <div class="hero-actions"><button class="btn primary" onclick="showQuiz()">LET'S FIND YOURS</button><button class="btn secondary" onclick="document.getElementById('paths').scrollIntoView()">EXPLORE YOUR WAY</button></div>
+  <div class="micro">Takes about 1 minute · No right or wrong answers</div>
+ </div>
+</section>
+
+<section class="discovery" id="paths">
+ <div class="container">
+  <div class="eyebrow" style="margin-bottom:18px">Choose your starting point</div>
+  <div class="entry-grid">
+   <button class="entry" onclick="showQuiz()"><div><div class="eyebrow">01</div><h3>I already know what I want.</h3><p>Browse by style, colour, stone or collection.</p></div><span class="arrow">→</span></button>
+   <button class="entry" onclick="showQuiz()"><div><div class="eyebrow">02</div><h3>I have a picture / inspiration.</h3><p>Use a look, outfit or bracelet as your visual starting point.</p></div><span class="arrow">→</span></button>
+   <button class="entry" onclick="showQuiz()"><div><div class="eyebrow">03</div><h3>Help me discover.</h3><p>Answer a few simple questions and we'll narrow it down.</p></div><span class="arrow">→</span></button>
+   <button class="entry" onclick="showQuiz()"><div><div class="eyebrow">04</div><h3>I'm buying for someone.</h3><p>Find a meaningful gift without having to know their exact style.</p></div><span class="arrow">→</span></button>
+  </div>
+ </div>
+</section>
+
+<section class="quiz-shell" id="quiz">
+ <div class="container">
+  <div class="quiz-top"><div><div class="eyebrow">Find your bracelet</div><div class="progressbar"><span id="bar"></span></div></div><div class="progress-wrap"><div class="progress" id="progress">01 / 08</div><div class="progress-label" id="progressLabel">Getting started</div></div></div>
+  <div class="quiz-question">
+   <div class="eyebrow" id="qeyebrow">WHO ARE YOU CHOOSING FOR?</div>
+   <h2 class="display" id="qtitle">Let's start with who we're finding this for.</h2>
+   <div class="options" id="options"></div>
+  </div>
+  <div class="checkpoint" id="checkpoint"><div class="eyebrow">YOU’RE DOING WELL.</div><strong>We’re getting a clearer picture of your style.</strong><span>3 more questions to go.</span><button class="btn primary" onclick="resumeQuiz()">CONTINUE →</button></div>
+  <div class="quiz-controls"><button class="back" onclick="previous()">← BACK</button><button class="btn primary next" id="next" onclick="next()">CONTINUE →</button></div>
+ </div>
+</section>
+
+<section class="result" id="result">
+ <div class="container">
+  <div class="eyebrow">Your match</div>
+  <div class="result-grid">
+   <div class="result-image"><img id="resultImg" alt="Recommended BWA bracelet"></div>
+   <div class="result-copy">
+    <div class="eyebrow">WE THINK WE FOUND YOURS.</div>
+    <h2 class="display" id="resultName">THE GROUNDED</h2>
+    <div class="descriptor" id="resultDesc">Understated. Natural. Quietly confident.</div>
+    <div class="why"><strong>Why it feels like you</strong><p id="resultWhy">You lean toward pieces that feel calm, considered and natural — something with presence without needing to announce itself.</p></div>
+    <div class="result-meta"><div class="meta"><b id="resultMaterials">Black Onyx · Lava Stone</b><span>Materials</span></div><div class="meta"><b id="resultPrice">KES 3,500</b><span>Price</span></div></div>
+    <button class="btn primary" onclick="alert('Product page connection ready for the next integration step.')">DISCOVER YOUR BRACELET →</button>
+   </div>
+  </div>
+  <div class="alts">
+   <div class="section-head"><div><div class="eyebrow">Other matches</div><h3>Worth looking at too.</h3></div><button class="btn secondary" onclick="restart()">START AGAIN</button></div>
+   <div class="alt-grid">
+    <article class="card"><div class="card-img"><img src="https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840" alt="Natural stone bracelet"></div><div class="card-body"><div class="eyebrow">Strong presence</div><h4>THE BOLD</h4><p>Tiger Eye · Hematite</p><div class="price">KES 3,900</div></div></article>
+    <article class="card"><div class="card-img"><img src="https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048" alt="Sodalite bracelet"></div><div class="card-body"><div class="eyebrow">Clean & refined</div><h4>THE CALM</h4><p>Sodalite · Natural Stone</p><div class="price">KES 3,700</div></div></article>
+    <article class="card"><div class="card-img"><img src="https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778" alt="Blue tiger eye bracelet"></div><div class="card-body"><div class="eyebrow">Free & natural</div><h4>THE EXPLORER</h4><p>Blue Tiger Eye · Mixed Stone</p><div class="price">KES 4,200</div></div></article>
+   </div>
+  </div>
+ </div>
+</section>
+</main>
+
+<footer class="footer">
+ <div class="container">
+  <div class="footer-grid">
+   <div><div class="footer-brand">Beads World Africa.</div><p>Bracelets with a story.<br>Wear what means something.</p></div>
+   <div><h4>Shop</h4><a href="#">All Bracelets</a><a href="#">Collections</a><a href="#">Gifts</a><a href="#">Find Yours</a></div>
+   <div><h4>About</h4><a href="#">Our Story</a><a href="#">Materials</a><a href="#">Care Guide</a><a href="#">Contact</a></div>
+   <div><h4>Help</h4><a href="#">Delivery</a><a href="#">FAQs</a><a href="#">Returns</a><a href="#">Instagram</a></div>
+  </div>
+  <div class="copyright">© 2026 Beads World Africa. All rights reserved.</div>
+ </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const questions=[
+ {title:"Let's start with who we're finding this for.", eyebrow:"WHO ARE YOU CHOOSING FOR?", opts:[["01","FOR MYSELF","","self"],["02","FOR SOMEONE ELSE","","gift"]]},
+ {title:"Who are we finding a bracelet for?",eyebrow:"WHO ARE WE FINDING A BRACELET FOR?",opts:[["01","WOMAN","","woman"],["02","MAN","","man"],["03","I'D RATHER KEEP THIS OPEN","","open"]]},
+ {title:"Which one feels most like you?",eyebrow:"YOUR IDENTITY",opts:[["01","QUIET & GROUNDED","Calm, understated","grounded"],["02","BOLD & CONFIDENT","Strong presence","bold"],["03","CLEAN & REFINED","Considered, polished","calm"],["04","FREE & NATURAL","Relaxed, organic","explorer"]]},
+ {title:"Which style draws you in?",eyebrow:"YOUR STYLE",opts:[["01","DARK & UNDERSTATED","","dark"],["02","EARTHY & NATURAL","","earth"],["03","CLEAN & MINIMAL","","minimal"],["04","RICH & EXPRESSIVE","","rich"]]},
+ {title:"What would you like your bracelet to express?",eyebrow:"WHAT IT MEANS",opts:[["01","GROUNDING","","grounding"],["02","CONFIDENCE","","confidence"],["03","BALANCE","","balance"],["04","INDIVIDUALITY","","individuality"],["05","CONNECTION","","connection"],["06","STYLE","","style"]]},
+ {title:"Where do you see yourself wearing it most?",eyebrow:"YOUR LIFE",opts:[["01","EVERY DAY","","everyday"],["02","WORK & BUSINESS","","work"],["03","CASUAL & WEEKEND","","casual"],["04","EVENINGS & OCCASIONS","","evening"],["05","A LITTLE OF EVERYTHING","","versatile"]]},
+ {title:"Which palette feels most like you?",eyebrow:"YOUR PALETTE",opts:[["01","DARK & DEEP","","dark"],["02","EARTH & WARM","","earth"],["03","LIGHT & NEUTRAL","","light"],["04","MIXED & TEXTURED","","mixed"],["05","SURPRISE ME","","surprise"]]},
+ {title:"When choosing a bracelet, what matters most?",eyebrow:"YOUR PRIORITY",opts:[["01","HOW IT LOOKS","","looks"],["02","HOW IT FEELS","","feels"],["03","WHAT IT REPRESENTS","","represents"],["04","THE MATERIALS","","materials"],["05","HOW VERSATILE IT IS","","versatile"],["06","THE STORY BEHIND IT","","story"]]}
+];
+let step=0, answers=[], paused=false;
+const quiz=document.getElementById('quiz'), intro=document.getElementById('intro'), paths=document.getElementById('paths'), result=document.getElementById('result');
+const progressLabels=["Getting started","Finding your style","Getting to know you","Narrowing it down","You’re doing well","Getting closer","Almost there","One last thing"];
+function showQuiz(){intro.style.display='none';paths.style.display='none';result.style.display='none';quiz.style.display='block';paused=false;window.scrollTo({top:0,behavior:'smooth'});render()}
+function render(){paused=false;const q=questions[step];document.getElementById('qtitle').textContent=q.title;document.getElementById('qeyebrow').textContent=q.eyebrow;document.getElementById('progress').textContent=String(step+1).padStart(2,'0')+" / "+String(questions.length).padStart(2,'0');document.getElementById('progressLabel').textContent=progressLabels[step];document.getElementById('bar').style.width=((step+1)/questions.length*100)+'%';document.getElementById('checkpoint').style.display='none';const box=document.getElementById('options');box.innerHTML='';q.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='option';if(answers[step]===o[3])b.classList.add('selected');b.innerHTML='<span class="num">'+o[0]+'</span><strong>'+o[1]+'</strong><small>'+o[2]+'</small>';b.onclick=()=>select(i,o[3]);box.appendChild(b)});document.getElementById('next').style.display=answers[step]?'inline-flex':'none';document.getElementById('next').textContent=step===questions.length-1?'SEE MY MATCH →':'CONTINUE →'}
+function select(i,val){answers[step]=val;document.querySelectorAll('.option').forEach((x,n)=>x.classList.toggle('selected',n===i));document.getElementById('next').style.display='inline-flex'}
+function next(){if(!answers[step])return;if(step<questions.length-1){step++;if(step===5)showCheckpoint();else render()}else showResult()}
+function showCheckpoint(){paused=true;document.getElementById('qtitle').textContent="We’re getting closer.";document.getElementById('qeyebrow').textContent="YOUR MATCH";document.getElementById('progress').textContent='05 / 08';document.getElementById('progressLabel').textContent="You’re doing well";document.getElementById('bar').style.width='62.5%';document.getElementById('options').innerHTML='';document.getElementById('next').style.display='none';document.getElementById('checkpoint').style.display='block';window.scrollTo({top:0,behavior:'smooth'})}
+function resumeQuiz(){if(!paused)return;paused=false;render()}
+function previous(){if(paused){paused=false;step=4;render();return}if(step>0){step--;render()}else{quiz.style.display='none';intro.style.display='grid';paths.style.display='block';window.scrollTo(0,0)}}
+function showResult(){quiz.style.display='none';result.style.display='block';window.scrollTo({top:0,behavior:'smooth'});let name='THE GROUNDED',desc='Understated. Natural. Quietly confident.',why='You lean toward pieces that feel calm, considered and natural — something with presence without needing to announce itself.',mat='Black Onyx · Lava Stone',price='KES 3,500',img='https://mesmerizeindia.com/cdn/shop/files/grounding-black-obsidian-natural-stone-bracelet.jpg';if(answers.includes('bold')||answers.includes('confidence')||answers.includes('rich')){name='THE BOLD';desc='Strong. Expressive. Quietly commanding.';why='You are drawn to pieces with presence. Your bracelet should feel like part of your confidence, not an afterthought.';mat='Tiger Eye · Hematite';price='KES 3,900';img='https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840'}else if(answers.includes('calm')||answers.includes('minimal')||answers.includes('balance')){name='THE CALM';desc='Clean. Considered. Effortlessly refined.';why='You prefer things that feel intentional. Clean lines, natural materials and quiet detail fit the way you move through the world.';mat='Sodalite · Natural Stone';price='KES 3,700';img='https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048'}else if(answers.includes('explorer')||answers.includes('earth')||answers.includes('individuality')){name='THE EXPLORER';desc='Free. Natural. Full of character.';why='You like pieces that feel lived-in, tactile and individual — something that can travel with you rather than stay in one setting.';mat='Blue Tiger Eye · Mixed Stone';price='KES 4,200';img='https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778'}document.getElementById('resultName').textContent=name;document.getElementById('resultDesc').textContent=desc;document.getElementById('resultWhy').textContent=why;document.getElementById('resultMaterials').textContent=mat;document.getElementById('resultPrice').textContent=price;document.getElementById('resultImg').src=img}
+function restart(){step=0;answers=[];result.style.display='none';intro.style.display='grid';paths.style.display='block';window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>
