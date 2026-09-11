@@ -1,37 +1,23 @@
 import Link from "next/link";
+
 export default function DiscoverySection() {
   return (
-    <section className="section">
-      <div className="container">
-        <div className="eyebrow">Start here</div>
-        <div className="section-head">
-          <h2 className="display">Which one is you?</h2>
-          <Link className="smallcaps" href="/find-your-bracelet">
-            Find yours →
+    <section className="discovery" id="discover">
+      <div className="container discovery-grid">
+        <div className="discovery-copy">
+          <p className="eyebrow">Not sure which one?</p>
+          <h2>Tell us a little about yourself.</h2>
+          <p className="lede">
+            We'll help you discover a bracelet that fits your style, personality and the way you want to wear it.
+          </p>
+          <Link className="btn btn-primary" href="/find-your-bracelet">
+            Help Me Discover <span>→</span>
           </Link>
+          <p style={{ fontSize: "11px", color: "var(--muted)", margin: "13px 0 0" }}>
+            ◷ About 1 minute
+          </p>
         </div>
-        <div className="grid4">
-          {[
-            "I already know what I want",
-            "I have a picture / inspiration",
-            "Help me discover",
-            "I’m buying for someone",
-          ].map((x, i) => (
-            <Link href="/find-your-bracelet" className="discovery" key={x}>
-              <div className="card-img" style={{ aspectRatio: "1/1" }}>
-                <span
-                  className="display"
-                  style={{ fontSize: 27, textAlign: "center", padding: 20 }}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
-              <div className="display" style={{ fontSize: 23, marginTop: 13 }}>
-                {x}
-              </div>
-            </Link>
-          ))}
-        </div>
+        <div className="discovery-visual" role="img" aria-label="BWA bracelet discovery image"></div>
       </div>
     </section>
   );

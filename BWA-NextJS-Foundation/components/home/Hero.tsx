@@ -1,24 +1,25 @@
 import Link from "next/link";
+
 export default function Hero() {
   return (
     <section className="hero">
-      <div className="container hero-inner">
-        <div>
-          <div className="eyebrow">Natural stone · Handmade in Africa</div>
-          <h1 className="display">
-            Bracelets
-            <br />
-            with a story.
-          </h1>
-          <p>Find the bracelet that feels like you.</p>
-          <div className="actions">
-            <Link className="btn primary" href="/find-your-bracelet">
-              Find Your Bracelet
-            </Link>
-            <Link className="btn secondary" href="/shop">
-              Shop Bracelets
-            </Link>
-          </div>
+      <div className="container hero-content">
+        <p className="eyebrow">Bracelets with a story.</p>
+        <h1>
+          Natural stones.
+          <br />
+          Handmade in Africa.
+        </h1>
+        <p className="hero-copy">
+          Contemporary bracelets designed around natural materials, personal style and the stories we choose to wear.
+        </p>
+        <div className="hero-actions">
+          <Link className="btn btn-light" href="/find-your-bracelet">
+            Find My Bracelet <span>→</span>
+          </Link>
+          <Link className="btn btn-outline" href="/shop">
+            Shop All Bracelets <span>→</span>
+          </Link>
         </div>
       </div>
     </section>
