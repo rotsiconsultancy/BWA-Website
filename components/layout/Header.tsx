@@ -2,13 +2,38 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // Close menu on route change or ESC key
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <>
@@ -44,15 +69,17 @@ export default function Header() {
             <span className="cart-count">0</span>
             <button
               className="icon-btn menu-btn"
-              onClick={() => setOpen(!open)}
-              aria-label="Open menu"
+              onClick={() => setOpen((prev) => !prev)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
             >
-              <Menu size={16} strokeWidth={1.75} />
+              {open ? <X size={16} strokeWidth={1.75} /> : <Menu size={16} strokeWidth={1.75} />}
             </button>
           </div>
         </div>
       </header>
 
+      {/* Mobile Drawer */}
       <aside className={`mobile-menu ${open ? "open" : ""}`} aria-hidden={!open}>
         <div className="mobile-menu-head">
           <Link className="brand" href="/" onClick={() => setOpen(false)}>

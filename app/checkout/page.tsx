@@ -2,11 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { MessageSquare, CheckCircle, ShieldCheck } from "lucide-react";
 
 export default function CheckoutPage() {
   const [deliveryMethod, setDeliveryMethod] = useState<"standard" | "pickup">("standard");
   const [discountCode, setDiscountCode] = useState("");
   const [discountApplied, setDiscountApplied] = useState(false);
+
+  // Form inputs
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [county, setCounty] = useState("Nairobi");
+  const [note, setNote] = useState("");
 
   const subtotal = discountApplied ? 3420 : 3800;
   const delivery = deliveryMethod === "pickup" ? 0 : 250;
@@ -15,15 +26,42 @@ export default function CheckoutPage() {
   const applyCode = () => {
     if (discountCode.trim().toUpperCase() === "BWA10") {
       setDiscountApplied(true);
-      alert("Discount applied — 10% off.");
+      alert("Discount applied — 10% off!");
     } else {
-      alert("For this prototype, try code BWA10.");
+      alert("Try code BWA10 for 10% off.");
     }
+  };
+
+  const handleWhatsAppCheckout = () => {
+    if (!firstName || !phone) {
+      alert("Please fill in at least your First Name and Phone Number to place your order via WhatsApp.");
+      return;
+    }
+
+    const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "254712345678";
+
+    const message = `*NEW ORDER - BEADS WORLD AFRICA* 🛍️\n\n` +
+      `*Customer:* ${firstName} ${lastName}\n` +
+      `*Phone:* ${phone}\n` +
+      `*Email:* ${email || "N/A"}\n` +
+      `*Delivery Method:* ${deliveryMethod === "standard" ? "Standard Delivery (KES 250)" : "Self Pick-Up (Free)"}\n` +
+      `*Address:* ${address || "N/A"}, ${city || ""}, ${county}\n` +
+      (note ? `*Delivery Note:* ${note}\n` : "") +
+      `\n*Order Summary:*\n` +
+      `• 1x THE GROUNDED (Black Onyx + Lava Stone) - KES ${subtotal.toLocaleString()}\n` +
+      `• Delivery Fee: KES ${delivery.toLocaleString()}\n` +
+      `*TOTAL AMOUNT:* KES ${total.toLocaleString()}\n\n` +
+      `Please confirm availability and payment instructions. Thank you!`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+    window.open(whatsappUrl, "_blank");
   };
 
   return (
     <main>
-      {/* Dark sticky header for checkout */}
+      {/* Header */}
       <section
         style={{
           background: "var(--charcoal)",
@@ -45,24 +83,8 @@ export default function CheckoutPage() {
             Complete your order.
           </h1>
           <p style={{ maxWidth: "590px", color: "#57534c", fontSize: "14px", lineHeight: "1.8" }}>
-            One final step. Your bracelet is almost on its way. Enter your details below and choose how you would like to receive it.
+            Direct ordering via WhatsApp is currently active. Fill in your details below and click to send your order directly to our concierge on WhatsApp.
           </p>
-          <div className="checkout-steps">
-            <div className="checkout-step">
-              <span className="step-dot">✓</span>
-              Bag
-            </div>
-            <span className="checkout-connector"></span>
-            <div className="checkout-step active">
-              <span className="step-dot">2</span>
-              Details
-            </div>
-            <span className="checkout-connector"></span>
-            <div className="checkout-step">
-              <span className="step-dot">3</span>
-              Payment
-            </div>
-          </div>
         </div>
       </section>
 
@@ -82,30 +104,22 @@ export default function CheckoutPage() {
                   marginBottom: "22px",
                 }}
               >
-                <span
-                  style={{
-                    fontFamily: "Cormorant Garamond, serif",
-                    fontSize: "30px",
-                    fontWeight: 500,
-                  }}
-                >
+                <span style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "30px", fontWeight: 500 }}>
                   Contact information
                 </span>
-                <span
-                  style={{
-                    fontSize: "10px",
-                    color: "var(--muted)",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
-                >
+                <span style={{ fontSize: "10px", color: "var(--muted)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
                   Required
                 </span>
               </div>
               <div className="form-fields-grid">
                 <div className="full-width">
                   <label>Email address</label>
-                  <input type="email" placeholder="you@example.com" />
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
               </div>
             </section>
@@ -122,65 +136,74 @@ export default function CheckoutPage() {
                   marginBottom: "22px",
                 }}
               >
-                <span
-                  style={{
-                    fontFamily: "Cormorant Garamond, serif",
-                    fontSize: "30px",
-                    fontWeight: 500,
-                  }}
-                >
+                <span style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "30px", fontWeight: 500 }}>
                   Delivery details
                 </span>
-                <span
-                  style={{
-                    fontSize: "10px",
-                    color: "var(--muted)",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
-                >
+                <span style={{ fontSize: "10px", color: "var(--muted)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
                   Required
                 </span>
               </div>
               <div className="form-fields-grid">
                 <div>
-                  <label>First name</label>
-                  <input placeholder="First name" />
+                  <label>First name *</label>
+                  <input
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
                 </div>
                 <div>
                   <label>Last name</label>
-                  <input placeholder="Last name" />
+                  <input
+                    placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
                 </div>
                 <div className="full-width">
-                  <label>Phone number</label>
-                  <input placeholder="+254 7XX XXX XXX" />
+                  <label>Phone number (WhatsApp) *</label>
+                  <input
+                    placeholder="+254 7XX XXX XXX"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                  />
                 </div>
                 <div className="full-width">
-                  <label>Address</label>
-                  <input placeholder="Street / building / estate" />
+                  <label>Address / Estate</label>
+                  <input
+                    placeholder="Street / building / estate"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
                 </div>
                 <div>
                   <label>City</label>
-                  <input placeholder="City" />
+                  <input
+                    placeholder="City"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
                 </div>
                 <div>
                   <label>County</label>
-                  <select>
-                    <option>Select county</option>
-                    <option>Nairobi</option>
-                    <option>Mombasa</option>
-                    <option>Kiambu</option>
-                    <option>Nakuru</option>
-                    <option>Machakos</option>
-                    <option>Other</option>
+                  <select value={county} onChange={(e) => setCounty(e.target.value)}>
+                    <option value="Nairobi">Nairobi</option>
+                    <option value="Mombasa">Mombasa</option>
+                    <option value="Kiambu">Kiambu</option>
+                    <option value="Nakuru">Nakuru</option>
+                    <option value="Machakos">Machakos</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
                 <div className="full-width">
-                  <label>
-                    Delivery note{" "}
-                    <span style={{ color: "var(--muted)" }}>(optional)</span>
-                  </label>
-                  <input placeholder="Anything our courier should know?" />
+                  <label>Delivery note <span style={{ color: "var(--muted)" }}>(optional)</span></label>
+                  <input
+                    placeholder="Anything our courier should know?"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
                 </div>
               </div>
             </section>
@@ -214,7 +237,7 @@ export default function CheckoutPage() {
                   <div>
                     <strong style={{ fontSize: "12px", fontWeight: 600 }}>Standard delivery</strong>
                     <span style={{ display: "block", fontSize: "11px", color: "var(--muted)", marginTop: "3px" }}>
-                      Reliable delivery · Estimated 2–4 business days
+                      Doorstep delivery within 1–3 business days
                     </span>
                   </div>
                   <b style={{ marginLeft: "auto", fontSize: "12px" }}>KES 250</b>
@@ -233,26 +256,15 @@ export default function CheckoutPage() {
                   <div>
                     <strong style={{ fontSize: "12px", fontWeight: 600 }}>Pick up</strong>
                     <span style={{ display: "block", fontSize: "11px", color: "var(--muted)", marginTop: "3px" }}>
-                      We'll confirm collection details with you
+                      Collection point instructions sent via WhatsApp
                     </span>
                   </div>
                   <b style={{ marginLeft: "auto", fontSize: "12px" }}>Free</b>
                 </label>
               </div>
-              <div
-                style={{
-                  background: "var(--stone)",
-                  padding: "17px 18px",
-                  fontSize: "12px",
-                  lineHeight: "1.6",
-                  marginTop: "16px",
-                }}
-              >
-                Your order is prepared with care. Once it leaves us, we'll send your delivery details to the email and phone number provided.
-              </div>
             </section>
 
-            {/* Payment */}
+            {/* Payment Method Notice */}
             <section style={{ marginBottom: "44px" }}>
               <div
                 style={{
@@ -264,35 +276,35 @@ export default function CheckoutPage() {
                   fontWeight: 500,
                 }}
               >
-                Payment
+                Payment Method
               </div>
-              <label className="radio-card selected">
-                <input
-                  type="radio"
-                  name="payment"
-                  defaultChecked
-                  style={{ width: "16px", height: "16px", margin: 0 }}
-                />
+              <div
+                style={{
+                  background: "#f7f5f0",
+                  border: "1px solid var(--line)",
+                  padding: "20px",
+                  borderRadius: "4px",
+                  display: "flex",
+                  gap: "14px",
+                  alignItems: "flex-start",
+                }}
+              >
+                <MessageSquare size={24} style={{ color: "#25D366", flex: "0 0 auto", marginTop: "2px" }} />
                 <div>
-                  <strong style={{ fontSize: "12px", fontWeight: 600 }}>Card / M-Pesa</strong>
-                  <span style={{ display: "block", fontSize: "11px", color: "var(--muted)", marginTop: "3px" }}>
-                    Secure payment. You'll be taken to the payment step after reviewing your order.
-                  </span>
+                  <strong style={{ fontSize: "14px", display: "block", marginBottom: "4px" }}>
+                    Order directly via WhatsApp
+                  </strong>
+                  <p style={{ fontSize: "12px", color: "var(--muted)", margin: 0, lineHeight: 1.6 }}>
+                    Direct card/automated checkout is currently disabled. Clicking the order button below will open WhatsApp with your pre-filled order summary, where our concierge will assist you with M-Pesa / Cash on Delivery payment.
+                  </p>
                 </div>
-              </label>
+              </div>
             </section>
           </div>
 
           {/* Right Column: Order Summary */}
           <aside className="checkout-order-summary">
-            <h2
-              style={{
-                fontFamily: "Cormorant Garamond, serif",
-                fontSize: "31px",
-                fontWeight: 500,
-                margin: "0 0 24px",
-              }}
-            >
+            <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "31px", fontWeight: 500, margin: "0 0 24px" }}>
               Your order
             </h2>
 
@@ -328,27 +340,15 @@ export default function CheckoutPage() {
                 />
               </div>
               <div>
-                <div
-                  style={{
-                    fontFamily: "Cormorant Garamond, serif",
-                    fontSize: "21px",
-                    fontWeight: 500,
-                    lineHeight: 1.05,
-                    marginBottom: "5px",
-                  }}
-                >
+                <div style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "21px", fontWeight: 500, marginBottom: "5px" }}>
                   THE GROUNDED
                 </div>
                 <div style={{ fontSize: "10px", color: "var(--muted)", lineHeight: "1.5" }}>
                   Black Onyx + Lava Stone
-                  <br />
-                  Adjustable / Unisex
                 </div>
                 <div style={{ fontSize: "10px", color: "var(--muted)", marginTop: "8px" }}>Qty 1</div>
               </div>
-              <div style={{ fontSize: "12px", whiteSpace: "nowrap" }}>
-                KES {subtotal.toLocaleString()}
-              </div>
+              <div style={{ fontSize: "12px" }}>KES {subtotal.toLocaleString()}</div>
             </div>
 
             {/* Discount code */}
@@ -362,7 +362,7 @@ export default function CheckoutPage() {
                   padding: "0 12px",
                   fontSize: "12px",
                 }}
-                placeholder="Discount code"
+                placeholder="Discount code (try BWA10)"
                 value={discountCode}
                 onChange={(e) => setDiscountCode(e.target.value)}
                 disabled={discountApplied}
@@ -411,35 +411,33 @@ export default function CheckoutPage() {
             </div>
 
             <button
+              onClick={handleWhatsAppCheckout}
               style={{
                 width: "100%",
-                height: "54px",
-                border: "1px solid var(--charcoal)",
-                background: "var(--charcoal)",
-                color: "var(--ivory)",
-                letterSpacing: "0.12em",
+                minHeight: "56px",
+                border: "none",
+                background: "#25D366",
+                color: "#ffffff",
+                letterSpacing: "0.08em",
                 textTransform: "uppercase",
-                fontSize: "12px",
-                fontWeight: 600,
+                fontSize: "13px",
+                fontWeight: 700,
                 marginTop: "23px",
                 cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                borderRadius: "4px",
+                boxShadow: "0 4px 14px rgba(37, 211, 102, 0.35)",
               }}
-              onClick={() => alert("Checkout prototype ready — next step is connecting payment.")}
             >
-              Continue to secure payment
+              <MessageSquare size={18} />
+              Order via WhatsApp 💬
             </button>
-            <div
-              style={{
-                textAlign: "center",
-                fontSize: "10px",
-                color: "var(--muted)",
-                marginTop: "13px",
-                lineHeight: "1.6",
-              }}
-            >
-              Secure checkout · Your payment details are handled securely.
-              <br />
-              By continuing, you agree to our terms and privacy policy.
+
+            <div style={{ textAlign: "center", fontSize: "10px", color: "var(--muted)", marginTop: "13px", lineHeight: "1.6" }}>
+              Fast response · Direct support from Beads World Africa concierge.
             </div>
           </aside>
         </div>
