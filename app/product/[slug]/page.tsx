@@ -2,24 +2,37 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
 
 const galleryImages = [
-  "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
-  "https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778",
-  "https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048",
-  "https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778",
-  "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
+  "/images/hero-find-your-vibe.png",
+  "/images/wear-sth-that-story-section.png",
+  "/images/hero-image.png",
 ];
 
 export default function ProductDetailPage() {
   const [selectedImg, setSelectedImg] = useState(galleryImages[0]);
   const [selectedSize, setSelectedSize] = useState("M / 18cm");
   const [qty, setQty] = useState(1);
+  const { addToCart } = useCart();
+
+  const handleAdd = () => {
+    addToCart({
+      id: "bwa-001",
+      slug: "the-grounded",
+      title: "THE GROUNDED",
+      subtitle: "Black Onyx + Lava Stone",
+      price: 3800,
+      image: galleryImages[0],
+      size: selectedSize,
+      quantity: qty,
+    });
+  };
 
   return (
     <main>
       <div className="container breadcrumb">
-        Shop <span>/</span> Bracelets <span>/</span> The Grounded
+        <Link href="/shop">Shop</Link> <span>/</span> Bracelets <span>/</span> The Grounded
       </div>
 
       <section className="container product-detail-layout">
@@ -49,7 +62,7 @@ export default function ProductDetailPage() {
             GROUNDED
           </h1>
           <p className="product-tagline">Understated. Natural. Quietly confident.</p>
-          <div className="product-price">KES 4,500</div>
+          <div className="product-price">KES 3,800</div>
           <p className="product-intro-copy">
             For the person who doesn't need to make a lot of noise. The Grounded pairs the depth of Black Onyx with the raw texture of Lava Stone for a bracelet that feels calm, considered and unmistakably itself.
           </p>
@@ -74,7 +87,7 @@ export default function ProductDetailPage() {
               <span>{qty}</span>
               <button onClick={() => setQty(qty + 1)}>+</button>
             </div>
-            <button className="btn add-btn" onClick={() => alert("Added to bag!")}>
+            <button className="btn add-btn" onClick={handleAdd}>
               ADD TO BAG
             </button>
           </div>

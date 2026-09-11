@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const { cartCount } = useCart();
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function Header() {
     };
   }, [open]);
 
-  // Close menu on route change or ESC key
+  // Close menu on route change
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -63,10 +65,10 @@ export default function Header() {
             <button className="icon-btn" aria-label="Account">
               <User size={16} strokeWidth={1.75} />
             </button>
-            <Link href="/cart" className="icon-btn" aria-label="Cart">
+            <Link href="/cart" className="icon-btn" aria-label="Cart" style={{ position: "relative" }}>
               <ShoppingBag size={16} strokeWidth={1.75} />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </Link>
-            <span className="cart-count">0</span>
             <button
               className="icon-btn menu-btn"
               onClick={() => setOpen((prev) => !prev)}

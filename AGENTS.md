@@ -64,3 +64,15 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
   3. Integrated WhatsApp order generation on `checkout/page.tsx` (payments disabled).
   4. Added Brevo non-intrusive scroll popup (`NewsletterPopup.tsx`) with `sessionStorage` tracking and `/api/newsletter/subscribe` route.
   5. Enhanced SEO metadata and created `sitemap.ts` and `robots.txt`.
+
+### [2026-09-11 17:30] — Package Dependencies Update
+- **Agent**: Antigravity
+- **Changes**: Added `@supabase/supabase-js` (`^2.48.1`) and `@supabase/ssr` (`^0.5.2`) to `package.json`.
+
+### [2026-09-11 17:46] — Cart Context Engine, 7-Day Storage & Alert Elimination
+- **Agent**: Antigravity
+- **Changes**:
+  1. Created global `CartContext` (`context/CartContext.tsx`) with `localStorage` persistence, live header count badge, and luxury toast notifications.
+  2. Eliminated browser `alert()` popups across product, cart, and checkout pages.
+  3. Updated `NewsletterPopup.tsx` to use 7-day expiration timestamp in `localStorage`.
+  4. Dynamic multi-item WhatsApp checkout message generation.
