@@ -209,11 +209,13 @@ h3 {
   gap: 10px;
 }
 
-.brand-mark {
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 29px;
-  line-height: 1;
-  font-weight: 600;
+.brand-emblem {
+  width: 29px;
+  aspect-ratio: 122 / 141;
+  flex: 0 0 auto;
+  background: var(--brand-emblem-color, currentColor);
+  -webkit-mask: url("/brand/bwa-emblem.svg") center / contain no-repeat;
+  mask: url("/brand/bwa-emblem.svg") center / contain no-repeat;
 }
 
 .brand-meta {
@@ -292,6 +294,10 @@ h3 {
   align-items: center;
 }
 
+.mobile-menu-head .brand-emblem {
+  width: 36px;
+}
+
 .mobile-links {
   display: grid;
   gap: 20px;
@@ -315,7 +321,7 @@ h3 {
   background:
     linear-gradient(90deg, rgba(12, 12, 11, 0.72), rgba(12, 12, 11, 0.20) 70%),
     linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.58)),
-    linear-gradient(135deg, #171716 0%, #252522 48%, #51483c 100%);
+    url(/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png) center / cover no-repeat;
 }
 
 .hero::after {
@@ -366,7 +372,9 @@ h3 {
   min-height: 270px;
   overflow: hidden;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #766957, #c9bda9 48%, #3f443c);
+  background: 
+  /* linear-gradient(135deg, #766957, #c9bda9 48%, #3f443c), */
+  url(/images/hero-find-your-vibe.png) center / cover no-repeat;
   order: 2;
 }
 
@@ -468,7 +476,9 @@ h3 {
 
 .story-image {
   min-height: 420px;
-  background: linear-gradient(135deg, #403d36, #766957);
+  background:
+    linear-gradient(135deg, rgba(64, 61, 54, 0.45), rgba(118, 105, 87, 0.35)),
+    url(/images/wear-sth-that-story-section.png) center / cover no-repeat;
 }
 
 .story-copy {
@@ -536,6 +546,14 @@ h3 {
   padding: 76px 0;
 }
 
+/* .proof {
+  background:
+    linear-gradient(90deg, rgba(18, 24, 21, 0.85), rgba(18, 24, 21, 0.60)),
+    url(/images/final-cta-bracelet-on-a-mountain-2.png) center / cover no-repeat var(--forest);
+  color: var(--ivory);
+  padding: 76px 0;
+} */
+
 .proof-grid {
   display: grid;
   gap: 34px;
@@ -582,7 +600,8 @@ h3 {
   overflow: hidden;
   background:
     linear-gradient(90deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.12)),
-    #5a5142;
+    #5a5142,
+    url(/images/final-cta-bracelet-on-a-mountain.png) center / cover no-repeat;
 }
 
 .final-cta-content {

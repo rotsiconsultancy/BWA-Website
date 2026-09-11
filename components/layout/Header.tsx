@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -14,7 +15,7 @@ export default function Header() {
       <header className={`site-header ${isHome ? "" : "sticky-header"}`}>
         <div className="container nav">
           <Link className="brand" href="/">
-            <span className="brand-mark">BWA</span>
+            <span className="brand-emblem" aria-hidden="true" />
             <span className="brand-meta">BEADS WORLD AFRICA</span>
           </Link>
 
@@ -32,13 +33,13 @@ export default function Header() {
 
           <div className="nav-actions">
             <button className="icon-btn" aria-label="Search">
-              ⌕
+              <Search size={16} strokeWidth={1.75} />
             </button>
             <button className="icon-btn" aria-label="Account">
-              ♙
+              <User size={16} strokeWidth={1.75} />
             </button>
             <Link href="/cart" className="icon-btn" aria-label="Cart">
-              ▢
+              <ShoppingBag size={16} strokeWidth={1.75} />
             </Link>
             <span className="cart-count">0</span>
             <button
@@ -46,7 +47,7 @@ export default function Header() {
               onClick={() => setOpen(!open)}
               aria-label="Open menu"
             >
-              ☰
+              <Menu size={16} strokeWidth={1.75} />
             </button>
           </div>
         </div>
@@ -55,11 +56,11 @@ export default function Header() {
       <aside className={`mobile-menu ${open ? "open" : ""}`} aria-hidden={!open}>
         <div className="mobile-menu-head">
           <Link className="brand" href="/" onClick={() => setOpen(false)}>
-            <span className="brand-mark">BWA</span>
+            <span className="brand-emblem" aria-hidden="true" />
             <span className="brand-meta">BEADS WORLD AFRICA</span>
           </Link>
           <button className="icon-btn" onClick={() => setOpen(false)} aria-label="Close menu">
-            ×
+            <X size={16} strokeWidth={1.75} />
           </button>
         </div>
         <nav className="mobile-links">

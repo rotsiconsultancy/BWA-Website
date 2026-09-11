@@ -8,7 +8,7 @@ export default function DiscoverySection() {
           <p className="eyebrow">Not sure which one?</p>
           <h2>Tell us a little about yourself.</h2>
           <p className="lede">
-            We'll help you discover a bracelet that fits your style, personality and the way you want to wear it.
+            We'll help you discover a bracelet that fits your style, personality, budget and the way you want to wear it.
           </p>
           <Link className="btn btn-primary" href="/find-your-bracelet">
             Help Me Discover <span>→</span>

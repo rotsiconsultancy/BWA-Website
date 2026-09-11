@@ -2,51 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-const allProducts = [
-  {
-    id: "the-grounded",
-    slug: "the-grounded",
-    name: "THE GROUNDED",
-    feeling: "Quiet · Grounded",
-    materials: "Black Onyx · Lava Stone",
-    price: "KES 4,500",
-    filterGroup: "dark",
-    image: "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
-    badge: "Bestseller",
-  },
-  {
-    id: "the-bold",
-    slug: "the-bold",
-    name: "THE BOLD",
-    feeling: "Strong · Confident",
-    materials: "Tiger's Eye · Onyx",
-    price: "KES 4,200",
-    filterGroup: "earth",
-    image: "https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048",
-    badge: "Popular",
-  },
-  {
-    id: "the-calm",
-    slug: "the-calm",
-    name: "THE CALM",
-    feeling: "Clean · Minimal",
-    materials: "Howlite · Matte Agate",
-    price: "KES 4,000",
-    filterGroup: "clean",
-    image: "https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778",
-  },
-  {
-    id: "the-explorer",
-    slug: "the-explorer",
-    name: "THE EXPLORER",
-    feeling: "Rich · Expressive",
-    materials: "African Turquoise · Lava Stone",
-    price: "KES 4,800",
-    filterGroup: "bold",
-    image: "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
-  },
-];
+import { allShopProducts } from "../../data/products";
 
 export default function ShopPage() {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -54,8 +10,8 @@ export default function ShopPage() {
   const [sortBy, setSortBy] = useState("featured");
 
   const filtered = activeFilter === "all"
-    ? allProducts
-    : allProducts.filter((p) => p.filterGroup === activeFilter);
+    ? allShopProducts
+    : allShopProducts.filter((p) => p.filterGroup === activeFilter);
 
   return (
     <main>
@@ -69,44 +25,6 @@ export default function ShopPage() {
           <div className="shop-count">
             {String(filtered.length).padStart(2, "0")} BRACELETS
           </div>
-        </div>
-      </section>
-
-      <section className="container">
-        <div className="collections-grid">
-          <article className="collection-card" onClick={() => setActiveFilter("all")}>
-            <img
-              src="https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840"
-              alt="Natural stone bracelet"
-            />
-            <div className="collection-content">
-              <small>Explore the full collection</small>
-              <h2>All Bracelets</h2>
-              <p>Every story. Every feeling.</p>
-            </div>
-          </article>
-          <article className="collection-card" onClick={() => setActiveFilter("dark")}>
-            <img
-              src="https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048"
-              alt="Dark natural stone bracelet"
-            />
-            <div className="collection-content">
-              <small>Palette</small>
-              <h2>Dark &amp; Deep</h2>
-              <p>Quiet. Grounded. Strong.</p>
-            </div>
-          </article>
-          <article className="collection-card" onClick={() => setActiveFilter("earth")}>
-            <img
-              src="https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778"
-              alt="Earth-toned natural stone bracelet"
-            />
-            <div className="collection-content">
-              <small>Palette</small>
-              <h2>Earth &amp; Warm</h2>
-              <p>Natural. Rich. Expressive.</p>
-            </div>
-          </article>
         </div>
       </section>
 

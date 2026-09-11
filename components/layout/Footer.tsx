@@ -3,13 +3,17 @@
 import Link from "next/link";
 
 export default function Footer() {
+  
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer id="contact">
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="brand">
-              <span className="brand-mark">BWA</span>
+              {/* <span className="brand-mark">BWA</span> */}
+              <span className="brand-emblem" aria-hidden="true" />
               <span className="brand-meta">BEADS WORLD AFRICA</span>
             </div>
             <p>
@@ -62,7 +66,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <span>© 2026 Beads World Africa. All rights reserved.</span>
+          <span>© {currentYear} Beads World Africa. All rights reserved.</span>
           <span>Privacy Policy · Terms & Conditions</span>
         </div>
       </div>
