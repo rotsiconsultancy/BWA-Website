@@ -1,7 +1,8 @@
 node_modules
-.next
 out
 .env*
 .DS_Store
 .zip
 .zip*
+.next
+# next-env.d.ts
