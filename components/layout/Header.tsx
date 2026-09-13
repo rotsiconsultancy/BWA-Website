@@ -2,12 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<
+    {
+      slug: string;
+      title: string;
+      subtitle: string;
+      price: number;
+      image: string;
+    }[]
+  >([]);
+  const searchInput = useRef<HTMLInputElement>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
   const { cartCount, openDrawer } = useCart();
@@ -31,11 +43,34 @@ export default function Header() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        setSearchOpen(false);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+  useEffect(() => {
+    if (searchOpen) searchInput.current?.focus();
+  }, [searchOpen]);
+  useEffect(() => {
+    const term = query.trim();
+    if (term.length < 2) {
+      setResults([]);
+      return;
+    }
+    const timer = window.setTimeout(async () => {
+      const response = await fetch(`/api/search?q=${encodeURIComponent(term)}`);
+      const data = await response.json();
+      setResults(data.products || []);
+    }, 160);
+    return () => window.clearTimeout(timer);
+  }, [query]);
 
   return (
     <>
@@ -68,7 +103,11 @@ export default function Header() {
           </nav>
 
           <div className="nav-actions">
-            <button className="icon-btn" aria-label="Search">
+            <button
+              className="icon-btn"
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+            >
               <Search size={16} strokeWidth={1.75} />
             </button>
             <button className="icon-btn" aria-label="Account">
@@ -98,6 +137,65 @@ export default function Header() {
           </div>
         </div>
       </header>
+
+      {searchOpen && (
+        <div
+          className="site-search"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Search BWA"
+        >
+          <button
+            className="site-search-backdrop"
+            aria-label="Close search"
+            onClick={() => setSearchOpen(false)}
+          />
+          <section className="site-search-panel">
+            <div className="site-search-input">
+              <Search size={18} aria-hidden="true" />
+              <input
+                ref={searchInput}
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search bracelets, stones, or moods"
+                aria-label="Search bracelets, stones, or moods"
+              />
+              <button type="button" onClick={() => setSearchOpen(false)}>
+                Esc
+              </button>
+            </div>
+            {!query && (
+              <p className="site-search-hint">
+                Try “Tiger Eye”, “grounded”, or “gift”.
+              </p>
+            )}
+            {query.length >= 2 && !results.length && (
+              <p className="site-search-hint">
+                No pieces found yet.{" "}
+                <Link href="/bespoke" onClick={() => setSearchOpen(false)}>
+                  Create something bespoke.
+                </Link>
+              </p>
+            )}
+            <div className="site-search-results">
+              {results.map((product) => (
+                <Link
+                  key={product.slug}
+                  href={`/product/${product.slug}`}
+                  onClick={() => setSearchOpen(false)}
+                >
+                  <img src={product.image} alt="" />
+                  <span>
+                    <strong>{product.title}</strong>
+                    <small>{product.subtitle}</small>
+                  </span>
+                  <b>KES {product.price.toLocaleString()}</b>
+                </Link>
+              ))}
+            </div>
+          </section>
+        </div>
+      )}
 
       {/* Mobile Drawer */}
       <aside

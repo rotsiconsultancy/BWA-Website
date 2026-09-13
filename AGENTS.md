@@ -192,3 +192,17 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 - **Agent**: Codex
 - **Changes**: Added a keyboard-accessible three-step editor: Set up, Build, and Review. Each step isolates its task, the publish control is available only in Review, and server actions return staff to the relevant Build step after saving questions, answers, or bracelet matches.
+
+### [2026-09-13 11:30] — Discovery Completion & Customer Journey Attribution
+
+- **Agent**: Codex
+- **Changes**: Added persistent BWA-owned quiz sessions/results, event attribution for quiz completion, recommendation views, add-to-bag, bespoke starts, and orders, plus direct add-to-bag and bespoke handoffs from a recommendation.
+- **Operations**: Discovery context is retained through checkout/bespoke submission, then linked to the local customer record. Customer profiles show saved quiz outcomes and Discovery shows aggregate conversion counts.
+- **Schema**: Added `quiz_sessions.customer_id` and the `discovery_events` table/indexes. Apply the updated `supabase/schema.sql` before using Discovery analytics in production.
+
+### [2026-09-13 12:00] — Storefront Discovery, Search & Brand Basics
+
+- **Agent**: Codex
+- **Changes**: Replaced Popular Picks’ unauthorised external placeholders with the BWA-owned storefront catalogue and each product’s approved image, adding a safe catalogue fallback when no product is marked featured.
+- **Experience**: Added a header search overlay with Cmd/Ctrl+K, Escape, live product/stone/mood suggestions, and a bespoke no-result route. Footer subscription now submits through the Brevo API route with visible success/error feedback.
+- **Brand/SEO**: Registered the BWA emblem SVG as the favicon and fixed social-card metadata to use an available owned image.

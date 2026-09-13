@@ -3,12 +3,19 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { ArrowLeft, MessageCircle } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
 
 type Confirmation = { orderNumber: string; total: number } | null;
 
 export default function CheckoutPage() {
-  const { items, subtotal, clearCart } = useCart();
+  const {
+    items,
+    subtotal,
+    clearCart,
+    discoverySessionToken,
+    setDiscoverySessionToken,
+  } = useCart();
   const [deliveryMethod, setDeliveryMethod] = useState<"standard" | "pickup">(
     "standard",
   );
@@ -58,6 +65,7 @@ export default function CheckoutPage() {
             quantity: line.quantity,
             image: line.image,
           })),
+          discoverySessionToken,
         }),
       });
       const data = await response.json();
@@ -65,6 +73,7 @@ export default function CheckoutPage() {
         throw new Error(data.error || "Could not create your order.");
       setConfirmation({ orderNumber: data.orderNumber, total: data.total });
       clearCart();
+      setDiscoverySessionToken(null);
       const message =
         "Hello BWA, I have placed website order " +
         data.orderNumber +
@@ -172,19 +181,19 @@ export default function CheckoutPage() {
             <div className="delivery-choice">
               <button
                 type="button"
-                onClick={() => setDeliveryMethod("standard")}
-                className={deliveryMethod === "standard" ? "is-selected" : ""}
-              >
-                <strong>Doorstep delivery</strong>
-                <span>Kenya delivery · KES 250</span>
-              </button>
-              <button
-                type="button"
                 onClick={() => setDeliveryMethod("pickup")}
                 className={deliveryMethod === "pickup" ? "is-selected" : ""}
               >
                 <strong>Collect with BWA</strong>
                 <span>Location confirmed on WhatsApp · Free</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeliveryMethod("standard")}
+                className={deliveryMethod === "standard" ? "is-selected" : ""}
+              >
+                <strong>Doorstep delivery</strong>
+                <span>Kenya delivery · KES 250</span>
               </button>
             </div>
             {deliveryMethod === "standard" && (
@@ -231,7 +240,8 @@ export default function CheckoutPage() {
                 update("marketingOptIn", event.target.checked)
               }
             />{" "}
-            Send me occasional BWA stories and new drop news.
+            Send me occasional BWA stories and new drop news and discount
+            announcements. I can unsubscribe at any time.
           </label>
           {error && (
             <p className="checkout-error" role="alert">
@@ -243,7 +253,7 @@ export default function CheckoutPage() {
             className="btn btn-primary checkout-submit"
           >
             {loading ? "Creating your order…" : "Create order & open WhatsApp"}{" "}
-            <MessageCircle size={17} />
+            <FaWhatsapp size={17} />
           </button>
         </form>
         <aside className="checkout-summary">

@@ -65,6 +65,20 @@ export async function POST(request: Request) {
       idempotency_key: "custom-" + bespoke.id,
       payload: bespoke,
     });
+    if (body.quizSessionToken) {
+      const { data: session } = await supabase
+        .from("quiz_sessions")
+        .update({ customer_id: customer.id })
+        .eq("session_token", String(body.quizSessionToken))
+        .select("id")
+        .maybeSingle();
+      if (session)
+        await supabase.from("discovery_events").insert({
+          quiz_session_id: session.id,
+          event_type: "bespoke_started",
+          product_id: body.startingProductId || null,
+        });
+    }
     return NextResponse.json({ requestNumber });
   } catch (error) {
     console.error("Bespoke request failed", error);

@@ -10,10 +10,34 @@ export default async function DiscoveryAdmin({
 }) {
   const params = await searchParams;
   const { admin } = await requireAdmin();
-  const { data: versions } = await admin
-    .from("quiz_versions")
-    .select("id,title,status,published_at,quiz_questions(count)")
-    .order("created_at", { ascending: false });
+  const [
+    { data: versions },
+    { count: completions },
+    { count: bagAdds },
+    { count: bespokeStarts },
+    { count: orders },
+  ] = await Promise.all([
+    admin
+      .from("quiz_versions")
+      .select("id,title,status,published_at,quiz_questions(count)")
+      .order("created_at", { ascending: false }),
+    admin
+      .from("discovery_events")
+      .select("*", { count: "exact", head: true })
+      .eq("event_type", "quiz_completed"),
+    admin
+      .from("discovery_events")
+      .select("*", { count: "exact", head: true })
+      .eq("event_type", "added_to_bag"),
+    admin
+      .from("discovery_events")
+      .select("*", { count: "exact", head: true })
+      .eq("event_type", "bespoke_started"),
+    admin
+      .from("discovery_events")
+      .select("*", { count: "exact", head: true })
+      .eq("event_type", "order_created"),
+  ]);
   return (
     <div className="admin-page">
       <PageHeader
@@ -27,6 +51,27 @@ export default async function DiscoveryAdmin({
           again.
         </p>
       )}
+      <section
+        className="admin-discovery-metrics"
+        aria-label="Discovery performance"
+      >
+        <div>
+          <span>Quiz completions</span>
+          <strong>{completions || 0}</strong>
+        </div>
+        <div>
+          <span>Added to bag</span>
+          <strong>{bagAdds || 0}</strong>
+        </div>
+        <div>
+          <span>Bespoke starts</span>
+          <strong>{bespokeStarts || 0}</strong>
+        </div>
+        <div>
+          <span>Orders created</span>
+          <strong>{orders || 0}</strong>
+        </div>
+      </section>
       <section className="admin-discovery-start">
         <div>
           <p className="admin-kicker">Start here</p>

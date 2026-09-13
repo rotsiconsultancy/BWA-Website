@@ -186,6 +186,20 @@ export async function POST(request: Request) {
         payload: { order, items },
       },
     ]);
+    if (body.discoverySessionToken) {
+      const { data: session } = await supabase
+        .from("quiz_sessions")
+        .update({ customer_id: savedCustomer.id })
+        .eq("session_token", String(body.discoverySessionToken))
+        .select("id")
+        .maybeSingle();
+      if (session)
+        await supabase.from("discovery_events").insert({
+          quiz_session_id: session.id,
+          event_type: "order_created",
+          order_id: order.id,
+        });
+    }
     return NextResponse.json({ orderNumber: reference, total, phone });
   } catch (error) {
     console.error("BWA order creation failed", error);

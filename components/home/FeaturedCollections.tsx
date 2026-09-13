@@ -1,45 +1,13 @@
 import Link from "next/link";
+import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 
-const featuredProducts = [
-  {
-    id: "the-grounded",
-    slug: "the-grounded",
-    name: "The Grounded",
-    meta: "Black Onyx · Lava Stone",
-    price: "KES 4,500",
-    image:
-      "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
-  },
-  {
-    id: "the-bold",
-    slug: "the-bold",
-    name: "The Bold",
-    meta: "Tiger's Eye · Onyx",
-    price: "KES 4,200",
-    image:
-      "https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048",
-  },
-  {
-    id: "the-calm",
-    slug: "the-calm",
-    name: "The Calm",
-    meta: "Howlite · Matte Agate",
-    price: "KES 4,000",
-    image:
-      "https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778",
-  },
-  {
-    id: "the-explorer",
-    slug: "the-explorer",
-    name: "The Explorer",
-    meta: "African Turquoise · Lava Stone",
-    price: "KES 4,800",
-    image:
-      "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
-  },
-];
-
-export default function FeaturedCollections() {
+export default async function FeaturedCollections() {
+  const products = await getStorefrontCatalogue();
+  const featuredProducts = (
+    products.some((product) => product.featured || product.trending)
+      ? products.filter((product) => product.featured || product.trending)
+      : products
+  ).slice(0, 4);
   return (
     <section className="section" id="shop">
       <div className="container">
@@ -54,20 +22,25 @@ export default function FeaturedCollections() {
         </div>
 
         <div className="product-grid">
-          {featuredProducts.map((p) => (
+          {featuredProducts.map((product) => (
             <Link
-              key={p.id}
-              href={`/product/${p.slug}`}
+              key={product.id}
+              href={`/product/${product.slug}`}
               className="product-card"
             >
               <div className="product-image">
-                <img src={p.image} alt={p.name} loading="lazy" />
+                <img
+                  src={product.images[0]}
+                  alt={product.title}
+                  loading="lazy"
+                />
               </div>
               <div className="product-info">
-                <div className="product-name">{p.name}</div>
-                <div className="product-meta">{p.meta}</div>
+                <div className="product-name">{product.title}</div>
+                <div className="product-meta">{product.subtitle}</div>
                 <div className="product-price">
-                  {p.price} <span className="product-arrow">→</span>
+                  KES {product.price.toLocaleString()}{" "}
+                  <span className="product-arrow">→</span>
                 </div>
               </div>
             </Link>

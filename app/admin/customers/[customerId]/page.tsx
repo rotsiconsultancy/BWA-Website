@@ -12,7 +12,7 @@ export default async function CustomerDetail({
   const { data: customer } = await admin
     .from("customers")
     .select(
-      "id,first_name,last_name,email,phone,whatsapp_opt_in,marketing_opt_in,source,created_at,customer_addresses(address,city,county,delivery_note,is_default),orders(order_number,status,total_amount,created_at),custom_bracelet_requests(request_number,status,intention,palette,created_at)",
+      "id,first_name,last_name,email,phone,whatsapp_opt_in,marketing_opt_in,source,created_at,customer_addresses(address,city,county,delivery_note,is_default),orders(order_number,status,total_amount,created_at),custom_bracelet_requests(request_number,status,intention,palette,created_at),quiz_sessions(completed_at,quiz_results(selected_product_id,ranked_products))",
     )
     .eq("id", customerId)
     .maybeSingle();
@@ -52,6 +52,31 @@ export default async function CustomerDetail({
             <span>
               Source<strong>{customer.source}</strong>
             </span>
+          </div>
+        </section>
+        <section className="admin-panel">
+          <p className="admin-kicker">Bracelet discovery</p>
+          <div className="admin-data-list">
+            {customer.quiz_sessions?.length ? (
+              customer.quiz_sessions.map((session: any, index: number) => {
+                const result = session.quiz_results?.[0];
+                const primary = result?.ranked_products?.[0];
+                return (
+                  <span key={`${session.completed_at}-${index}`}>
+                    <strong>{primary?.title || "Quiz completed"}</strong>
+                    <em>
+                      {session.completed_at
+                        ? new Date(session.completed_at).toLocaleDateString(
+                            "en-KE",
+                          )
+                        : "In progress"}
+                    </em>
+                  </span>
+                );
+              })
+            ) : (
+              <p>No saved bracelet discovery yet.</p>
+            )}
           </div>
         </section>
         <section className="admin-panel">

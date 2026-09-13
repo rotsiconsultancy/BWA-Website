@@ -15,6 +15,7 @@ export default async function FindYourBraceletPage() {
     <FindYourBracelet
       products={products}
       questions={quiz?.questions || fallbackQuestions}
+      quizVersionId={quiz?.id}
     />
   );
 }

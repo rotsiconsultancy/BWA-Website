@@ -1,8 +1,19 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function BespokePage() {
+  const [discoveryContext, setDiscoveryContext] = useState({
+    product: "",
+    quiz: "",
+  });
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    setDiscoveryContext({
+      product: query.get("product") || "",
+      quiz: query.get("quiz") || "",
+    });
+  }, []);
   const [form, setForm] = useState({
     firstName: "",
     phone: "",
@@ -28,6 +39,8 @@ export default function BespokePage() {
         palette: form.palette ? [form.palette] : [],
         wristSize: form.wristSize,
         budgetRange: form.budgetRange,
+        startingProductId: discoveryContext.product || undefined,
+        quizSessionToken: discoveryContext.quiz || undefined,
       }),
     });
     const data = await response.json();

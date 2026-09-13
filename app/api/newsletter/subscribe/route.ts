@@ -15,13 +15,10 @@ export async function POST(request: Request) {
     const listId = Number(process.env.BREVO_LIST_ID || 2);
 
     if (!apiKey) {
-      console.warn(
-        "BREVO_API_KEY is not configured. Subscription logged locally.",
+      return NextResponse.json(
+        { error: "Newsletter is being configured. Please try again shortly." },
+        { status: 503 },
       );
-      return NextResponse.json({
-        success: true,
-        message: "Subscription received (Local Fallback).",
-      });
     }
 
     const response = await fetch("https://api.brevo.com/v3/contacts", {

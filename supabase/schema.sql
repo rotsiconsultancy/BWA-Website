@@ -107,6 +107,15 @@ create table if not exists public.quiz_results (
   id uuid primary key default gen_random_uuid(), quiz_session_id uuid not null references public.quiz_sessions(id) on delete cascade,
   ranked_products jsonb not null, selected_product_id uuid references public.products(id), created_at timestamptz not null default now()
 );
+alter table public.quiz_sessions add column if not exists customer_id uuid references public.customers(id);
+create table if not exists public.discovery_events (
+  id uuid primary key default gen_random_uuid(), quiz_session_id uuid references public.quiz_sessions(id) on delete set null,
+  event_type text not null check (event_type in ('quiz_completed','recommendation_viewed','added_to_bag','bespoke_started','order_created')),
+  product_id uuid references public.products(id), order_id uuid references public.orders(id),
+  created_at timestamptz not null default now()
+);
+create index if not exists discovery_events_type_created_at_idx on public.discovery_events(event_type, created_at desc);
+create index if not exists quiz_sessions_customer_id_idx on public.quiz_sessions(customer_id);
 create table if not exists public.drops (
   id uuid primary key default gen_random_uuid(), slug text unique not null, title text not null, story text, hero_image_url text,
   starts_at timestamptz, ends_at timestamptz, active boolean not null default false, created_at timestamptz not null default now()

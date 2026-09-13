@@ -207,8 +207,8 @@ export default function NewsletterPopup() {
               lineHeight: 1.5,
             }}
           >
-            Subscribe to receive 10% off your first handcrafted bracelet and
-            early access to rare stone releases.
+            Subscribe for first access to rare stone releases and the stories
+            behind each collection.
           </p>
 
           <form onSubmit={handleSubmit} style={{ display: "flex", gap: "8px" }}>

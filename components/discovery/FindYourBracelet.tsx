@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   recommendProducts,
   type QuizAnswer,
 } from "@/lib/commerce/recommendations";
 import type { DiscoveryQuestion } from "@/lib/commerce/quiz-types";
 import type { CommerceProduct } from "@/lib/commerce/types";
+import { useCart } from "@/context/CartContext";
 
 export const fallbackQuestions: DiscoveryQuestion[] = [
   {
@@ -126,12 +127,17 @@ export const fallbackQuestions: DiscoveryQuestion[] = [
 export default function FindYourBracelet({
   products,
   questions,
+  quizVersionId,
 }: {
   products: CommerceProduct[];
   questions: DiscoveryQuestion[];
+  quizVersionId?: string;
 }) {
   const [step, setStep] = useState(-1);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const savedRun = useRef<string | null>(null);
+  const { addToCart, setDiscoverySessionToken } = useCart();
   const result = useMemo(
     () => recommendProducts(products, answers),
     [answers, products],
@@ -142,6 +148,50 @@ export default function FindYourBracelet({
       { ...answer, key: questions[step].key },
     ]);
     setStep((current) => current + 1);
+  };
+  const completed = step >= questions.length;
+  const primaryMatch = result[0];
+  useEffect(() => {
+    if (!completed || !primaryMatch) return;
+    const run = answers
+      .map((answer) => `${answer.key}:${answer.value}`)
+      .join("|");
+    if (savedRun.current === run) return;
+    savedRun.current = run;
+    const token = crypto.randomUUID();
+    setSessionToken(token);
+    setDiscoverySessionToken(token);
+    void fetch("/api/discovery/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionToken: token,
+        quizVersionId,
+        answers: Object.fromEntries(
+          answers.map((answer) => [answer.key, answer.value]),
+        ),
+        selectedProductId: primaryMatch.product.id,
+        rankedProducts: result.slice(0, 3).map(({ product, score }) => ({
+          id: product.id,
+          slug: product.slug,
+          title: product.title,
+          score,
+        })),
+      }),
+    });
+  }, [
+    answers,
+    completed,
+    primaryMatch,
+    quizVersionId,
+    result,
+    setDiscoverySessionToken,
+  ]);
+  const restart = () => {
+    setStep(-1);
+    setAnswers([]);
+    setSessionToken(null);
+    savedRun.current = null;
   };
 
   if (step === -1)
@@ -173,7 +223,10 @@ export default function FindYourBracelet({
             Nothing in the current collection is a close enough match. Tell us
             what you have in mind and our concierge will guide the next step.
           </p>
-          <Link className="btn btn-primary" href="/bespoke">
+          <Link
+            className="btn btn-primary"
+            href={`/bespoke?quiz=${sessionToken || ""}`}
+          >
             Start a bespoke request
           </Link>
         </main>
@@ -193,19 +246,48 @@ export default function FindYourBracelet({
             <p className="product-price">
               KES {match.product.price.toLocaleString()}
             </p>
-            <Link
-              className="btn btn-primary"
-              href={`/product/${match.product.slug}`}
-            >
-              Discover your bracelet
-            </Link>
-            <button
-              className="quiz-restart"
-              onClick={() => {
-                setStep(-1);
-                setAnswers([]);
-              }}
-            >
+            <div className="quiz-result-actions">
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  const variant = match.product.variants.find(
+                    (item) => item.available,
+                  );
+                  if (!variant) return;
+                  addToCart({
+                    productId: match.product.id,
+                    variantId: variant.id,
+                    slug: match.product.slug,
+                    title: match.product.title,
+                    subtitle: match.product.subtitle,
+                    image: match.product.images[0],
+                    unitPrice: match.product.price + variant.priceAdjustment,
+                    variantName: variant.name,
+                  });
+                  if (sessionToken)
+                    void fetch("/api/discovery/event", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        sessionToken,
+                        eventType: "added_to_bag",
+                        productId: match.product.id,
+                      }),
+                    });
+                }}
+              >
+                Add to bag
+              </button>
+              <Link
+                href={`/bespoke?product=${match.product.id}&quiz=${sessionToken || ""}`}
+              >
+                Start customising this
+              </Link>
+              <Link href={`/product/${match.product.slug}`}>
+                View bracelet details
+              </Link>
+            </div>
+            <button className="quiz-restart" onClick={restart}>
               Start again
             </button>
           </div>
