@@ -195,7 +195,8 @@ h3 {
 .site-header {
   position: absolute;
   inset: 0 0 auto;
-  z-index: 20;
+  z-index: 200;
+  isolation: isolate;
   color: var(--white);
 }
 
@@ -993,6 +994,7 @@ footer,
     width: 34px;
     height: 34px;
     border-color: rgba(23, 23, 22, 0.22);
+    touch-action: manipulation;
   }
   .site-header .cart-badge {
     border-color: var(--ivory);

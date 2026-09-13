@@ -220,3 +220,8 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 - **Agent**: Codex
 - **Changes**: Made the storefront header consistently sticky on mobile, including the home page where it was previously absolutely positioned and scrolled away. The mobile header now has an explicit viewport width, compact action spacing, and a constrained navigation drawer to prevent side-to-side drift.
+
+### [2026-09-13 14:10] — Mobile Header Touch Hardening
+
+- **Agent**: Codex
+- **Changes**: Raised and isolated the mobile header stacking layer above storefront media and added direct touch-action handling to its controls, protecting search, bag, and menu taps from overlapping visual layers on mobile Safari.
