@@ -6,7 +6,8 @@ export default function SocialProof() {
           <p className="eyebrow">Real people. Real stories.</p>
           <h2>Loved by many.</h2>
           <p className="quote">
-            “The quality is incredible and the story behind it makes it even more special. I get compliments every time I wear it.”
+            “The quality is incredible and the story behind it makes it even
+            more special. I get compliments every time I wear it.”
           </p>
           <p className="reviewer">— James K.</p>
           <div className="stars">★★★★★</div>

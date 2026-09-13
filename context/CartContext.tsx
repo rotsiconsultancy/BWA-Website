@@ -1,181 +1,149 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import type { CartLine } from "@/lib/commerce/types";
 
-export interface CartItem {
-  id: string;
-  slug: string;
-  title: string;
-  subtitle: string;
-  price: number;
-  image: string;
-  quantity: number;
-  size: string;
-}
-
-interface ToastNotification {
+type Toast = {
   id: number;
   message: string;
   type: "success" | "info" | "error";
-}
-
-interface CartContextType {
-  items: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
-  removeFromCart: (id: string, size: string) => void;
-  updateQuantity: (id: string, size: string, quantity: number) => void;
-  clearCart: () => void;
+};
+type CartContextValue = {
+  items: CartLine[];
   cartCount: number;
   subtotal: number;
-  toast: ToastNotification | null;
-  showToast: (message: string, type?: "success" | "info" | "error") => void;
-}
-
-const CartContext = createContext<CartContextType | undefined>(undefined);
-
-const LOCAL_STORAGE_KEY = "bwa_cart_items_v2";
-
-const INITIAL_CART_ITEM: CartItem = {
-  id: "bwa-001",
-  slug: "the-grounded",
-  title: "THE GROUNDED",
-  subtitle: "Black Onyx + Lava Stone",
-  price: 3800,
-  image: "/images/hero-find-your-vibe.png",
-  quantity: 1,
-  size: "M / 18cm",
+  drawerOpen: boolean;
+  toast: Toast | null;
+  addToCart: (item: Omit<CartLine, "quantity"> & { quantity?: number }) => void;
+  updateQuantity: (
+    productId: string,
+    variantId: string,
+    quantity: number,
+  ) => void;
+  removeFromCart: (productId: string, variantId: string) => void;
+  clearCart: () => void;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+  showToast: (message: string, type?: Toast["type"]) => void;
 };
 
+const CartContext = createContext<CartContextValue | undefined>(undefined);
+const CART_KEY = "bwa_cart_items_v3";
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [toast, setToast] = useState<ToastNotification | null>(null);
-
-  // Hydrate from localStorage
+  const [items, setItems] = useState<CartLine[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [toast, setToast] = useState<Toast | null>(null);
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (saved) {
-        setItems(JSON.parse(saved));
-      } else {
-        // Default with initial sample item for rich demo experience
-        setItems([INITIAL_CART_ITEM]);
-      }
+      const stored = localStorage.getItem(CART_KEY);
+      if (stored) setItems(JSON.parse(stored));
     } catch {
-      setItems([INITIAL_CART_ITEM]);
+      localStorage.removeItem(CART_KEY);
+    } finally {
+      setLoaded(true);
     }
-    setIsLoaded(true);
   }, []);
-
-  // Save to localStorage
   useEffect(() => {
-    if (!isLoaded) return;
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(items));
-    } catch (err) {
-      console.error("Failed to save cart to localStorage:", err);
-    }
-  }, [items, isLoaded]);
-
-  const showToast = (message: string, type: "success" | "info" | "error" = "success") => {
+    if (loaded) localStorage.setItem(CART_KEY, JSON.stringify(items));
+  }, [items, loaded]);
+  useEffect(() => {
+    document.body.style.overflow = drawerOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [drawerOpen]);
+  const showToast = (message: string, type: Toast["type"] = "success") => {
     const id = Date.now();
     setToast({ id, message, type });
-    setTimeout(() => {
-      setToast((current) => (current?.id === id ? null : current));
-    }, 3500);
-  };
-
-  const addToCart = (newItem: Omit<CartItem, "quantity"> & { quantity?: number }) => {
-    const qty = newItem.quantity || 1;
-    const targetSize = newItem.size || "M / 18cm";
-
-    setItems((prevItems) => {
-      const existingIndex = prevItems.findIndex(
-        (i) => i.id === newItem.id && i.size === targetSize
-      );
-
-      if (existingIndex > -1) {
-        const updated = [...prevItems];
-        updated[existingIndex].quantity += qty;
-        return updated;
-      } else {
-        return [
-          ...prevItems,
-          {
-            ...newItem,
-            size: targetSize,
-            quantity: qty,
-          },
-        ];
-      }
-    });
-
-    showToast(`Added "${newItem.title}" to your bag.`, "success");
-  };
-
-  const removeFromCart = (id: string, size: string) => {
-    setItems((prevItems) => prevItems.filter((i) => !(i.id === id && i.size === size)));
-    showToast("Item removed from your bag.", "info");
-  };
-
-  const updateQuantity = (id: string, size: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id, size);
-      return;
-    }
-
-    setItems((prevItems) =>
-      prevItems.map((i) => (i.id === id && i.size === size ? { ...i, quantity } : i))
+    window.setTimeout(
+      () => setToast((current) => (current?.id === id ? null : current)),
+      3600,
     );
   };
-
-  const clearCart = () => {
-    setItems([]);
+  const addToCart: CartContextValue["addToCart"] = (newLine) => {
+    const quantity = newLine.quantity ?? 1;
+    setItems((current) => {
+      const existing = current.find(
+        (line) =>
+          line.productId === newLine.productId &&
+          line.variantId === newLine.variantId,
+      );
+      if (!existing) return [...current, { ...newLine, quantity }];
+      return current.map((line) =>
+        line === existing
+          ? { ...line, quantity: line.quantity + quantity }
+          : line,
+      );
+    });
+    setDrawerOpen(true);
+    showToast(newLine.title + " added to your bag.");
   };
-
-  const cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
+  const updateQuantity = (
+    productId: string,
+    variantId: string,
+    quantity: number,
+  ) => {
+    if (quantity <= 0)
+      return setItems((current) =>
+        current.filter(
+          (line) =>
+            !(line.productId === productId && line.variantId === variantId),
+        ),
+      );
+    setItems((current) =>
+      current.map((line) =>
+        line.productId === productId && line.variantId === variantId
+          ? { ...line, quantity }
+          : line,
+      ),
+    );
+  };
+  const removeFromCart = (productId: string, variantId: string) => {
+    setItems((current) =>
+      current.filter(
+        (line) =>
+          !(line.productId === productId && line.variantId === variantId),
+      ),
+    );
+    showToast("Removed from your bag.", "info");
+  };
+  const value = useMemo(
+    () => ({
+      items,
+      cartCount: items.reduce((count, line) => count + line.quantity, 0),
+      subtotal: items.reduce(
+        (total, line) => total + line.unitPrice * line.quantity,
+        0,
+      ),
+      drawerOpen,
+      toast,
+      addToCart,
+      updateQuantity,
+      removeFromCart,
+      clearCart: () => setItems([]),
+      openDrawer: () => setDrawerOpen(true),
+      closeDrawer: () => setDrawerOpen(false),
+      showToast,
+    }),
+    [items, drawerOpen, toast],
+  );
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        cartCount,
-        subtotal,
-        toast,
-        showToast,
-      }}
-    >
+    <CartContext.Provider value={value}>
       {children}
-      {/* Toast Notification Container */}
       {toast && (
         <div
+          className={"commerce-toast commerce-toast--" + toast.type}
           role="status"
-          style={{
-            position: "fixed",
-            bottom: "24px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 1000,
-            background: toast.type === "error" ? "var(--error)" : "var(--charcoal)",
-            color: "var(--ivory)",
-            padding: "14px 24px",
-            borderRadius: "6px",
-            fontSize: "13px",
-            fontWeight: 600,
-            boxShadow: "0 12px 36px rgba(0, 0, 0, 0.28)",
-            border: "1px solid rgba(245, 241, 232, 0.18)",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            animation: "slideInUp 250ms ease-out",
-          }}
         >
-          <span>{toast.message}</span>
+          {toast.message}
         </div>
       )}
     </CartContext.Provider>
@@ -184,8 +152,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
 export function useCart() {
   const context = useContext(CartContext);
-  if (!context) {
-    throw new Error("useCart must be used within a CartProvider");
-  }
+  if (!context) throw new Error("useCart must be used within CartProvider");
   return context;
 }

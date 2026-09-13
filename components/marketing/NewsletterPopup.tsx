@@ -9,7 +9,9 @@ const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 export default function NewsletterPopup() {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -30,7 +32,8 @@ export default function NewsletterPopup() {
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const totalHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const scrollPercent = (scrollPosition / Math.max(totalHeight, 1)) * 100;
 
       // Trigger popup after scrolling past 40%
@@ -147,10 +150,22 @@ export default function NewsletterPopup() {
           >
             <Check size={20} />
           </div>
-          <h4 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "22px", margin: "0 0 6px" }}>
+          <h4
+            style={{
+              fontFamily: "Cormorant Garamond, serif",
+              fontSize: "22px",
+              margin: "0 0 6px",
+            }}
+          >
             Welcome to the Circle
           </h4>
-          <p style={{ fontSize: "12px", color: "rgba(245,241,232,0.7)", margin: 0 }}>
+          <p
+            style={{
+              fontSize: "12px",
+              color: "rgba(245,241,232,0.7)",
+              margin: 0,
+            }}
+          >
             You will be the first to know about new stone drops and stories.
           </p>
         </div>
@@ -172,12 +187,28 @@ export default function NewsletterPopup() {
             <Sparkles size={14} /> VIP Access
           </div>
 
-          <h4 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "24px", fontWeight: 500, margin: "0 0 8px", lineHeight: 1.1 }}>
+          <h4
+            style={{
+              fontFamily: "Cormorant Garamond, serif",
+              fontSize: "24px",
+              fontWeight: 500,
+              margin: "0 0 8px",
+              lineHeight: 1.1,
+            }}
+          >
             Wear stories worth telling.
           </h4>
 
-          <p style={{ fontSize: "12px", color: "rgba(245,241,232,0.72)", marginBottom: "18px", lineHeight: 1.5 }}>
-            Subscribe to receive 10% off your first handcrafted bracelet and early access to rare stone releases.
+          <p
+            style={{
+              fontSize: "12px",
+              color: "rgba(245,241,232,0.72)",
+              marginBottom: "18px",
+              lineHeight: 1.5,
+            }}
+          >
+            Subscribe to receive 10% off your first handcrafted bracelet and
+            early access to rare stone releases.
           </p>
 
           <form onSubmit={handleSubmit} style={{ display: "flex", gap: "8px" }}>
@@ -200,7 +231,15 @@ export default function NewsletterPopup() {
                   outline: "none",
                 }}
               />
-              <Mail size={14} style={{ position: "absolute", left: "12px", top: "15px", color: "rgba(245,241,232,0.4)" }} />
+              <Mail
+                size={14}
+                style={{
+                  position: "absolute",
+                  left: "12px",
+                  top: "15px",
+                  color: "rgba(245,241,232,0.4)",
+                }}
+              />
             </div>
 
             <button
@@ -224,7 +263,14 @@ export default function NewsletterPopup() {
           </form>
 
           {status === "error" && (
-            <p style={{ fontSize: "11px", color: "#e57373", marginTop: "8px", margin: "8px 0 0" }}>
+            <p
+              style={{
+                fontSize: "11px",
+                color: "#e57373",
+                marginTop: "8px",
+                margin: "8px 0 0",
+              }}
+            >
               {errorMessage}
             </p>
           )}

@@ -37,7 +37,10 @@ export const PRODUCTS: Product[] = [
       "Raw brass spacer bead with BWA emblem",
       "Handcrafted in Nairobi, Kenya",
     ],
-    images: ["/images/hero-find-your-vibe.png", "/images/wear-sth-that-story-section.png"],
+    images: [
+      "/images/hero-find-your-vibe.png",
+      "/images/wear-sth-that-story-section.png",
+    ],
     featured: true,
     in_stock: true,
     stock_count: 12,
@@ -89,7 +92,9 @@ export const PRODUCTS: Product[] = [
       "Double-bonded elastic stretch cord",
       "Includes BWA linen travel pouch",
     ],
-    images: ["/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png"],
+    images: [
+      "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png",
+    ],
     featured: true,
     in_stock: true,
     stock_count: 5,
@@ -115,7 +120,9 @@ export const PRODUCTS: Product[] = [
       "Heavy-duty elastic filament",
       "Handmade in Nairobi",
     ],
-    images: ["/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png"],
+    images: [
+      "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
+    ],
     featured: false,
     in_stock: true,
     stock_count: 15,

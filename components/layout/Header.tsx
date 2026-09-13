@@ -10,7 +10,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const { cartCount } = useCart();
+  const { cartCount, openDrawer } = useCart();
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -50,8 +50,17 @@ export default function Header() {
             <Link href="/shop" className={pathname === "/shop" ? "active" : ""}>
               Shop
             </Link>
-            <Link href="/find-your-bracelet" className={pathname === "/find-your-bracelet" ? "active" : ""}>
+            <Link
+              href="/find-your-bracelet"
+              className={pathname === "/find-your-bracelet" ? "active" : ""}
+            >
               Find Your Bracelet
+            </Link>
+            <Link
+              href="/bespoke"
+              className={pathname === "/bespoke" ? "active" : ""}
+            >
+              Bespoke
             </Link>
             <Link href="/#story">Our Story</Link>
             <Link href="/#journal">Journal</Link>
@@ -65,30 +74,46 @@ export default function Header() {
             <button className="icon-btn" aria-label="Account">
               <User size={16} strokeWidth={1.75} />
             </button>
-            <Link href="/cart" className="icon-btn" aria-label="Cart" style={{ position: "relative" }}>
+            <button
+              className="icon-btn"
+              aria-label="Open bag"
+              onClick={openDrawer}
+              style={{ position: "relative" }}
+            >
               <ShoppingBag size={16} strokeWidth={1.75} />
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-            </Link>
+            </button>
             <button
               className="icon-btn menu-btn"
               onClick={() => setOpen((prev) => !prev)}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
             >
-              {open ? <X size={16} strokeWidth={1.75} /> : <Menu size={16} strokeWidth={1.75} />}
+              {open ? (
+                <X size={16} strokeWidth={1.75} />
+              ) : (
+                <Menu size={16} strokeWidth={1.75} />
+              )}
             </button>
           </div>
         </div>
       </header>
 
       {/* Mobile Drawer */}
-      <aside className={`mobile-menu ${open ? "open" : ""}`} aria-hidden={!open}>
+      <aside
+        className={`mobile-menu ${open ? "open" : ""}`}
+        aria-hidden={!open}
+      >
         <div className="mobile-menu-head">
           <Link className="brand" href="/" onClick={() => setOpen(false)}>
             <span className="brand-emblem" aria-hidden="true" />
             <span className="brand-meta">BEADS WORLD AFRICA</span>
           </Link>
-          <button className="icon-btn" onClick={() => setOpen(false)} aria-label="Close menu">
+          <button
+            className="icon-btn"
+            onClick={() => setOpen(false)}
+            aria-label="Close menu"
+          >
             <X size={16} strokeWidth={1.75} />
           </button>
         </div>
@@ -98,6 +123,9 @@ export default function Header() {
           </Link>
           <Link href="/find-your-bracelet" onClick={() => setOpen(false)}>
             Find Your Bracelet
+          </Link>
+          <Link href="/bespoke" onClick={() => setOpen(false)}>
+            Bespoke
           </Link>
           <Link href="/#story" onClick={() => setOpen(false)}>
             Our Story

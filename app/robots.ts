@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/checkout/"],
+      disallow: ["/api/", "/checkout/", "/cart/", "/order/", "/admin/"],
     },
     sitemap: "https://beadsworldafrica.com/sitemap.xml",
   };

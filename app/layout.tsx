@@ -3,6 +3,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import NewsletterPopup from "@/components/marketing/NewsletterPopup";
 import { CartProvider } from "@/context/CartContext";
+import CartDrawer from "@/components/commerce/CartDrawer";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -63,6 +64,7 @@ export default function RootLayout({
           {children}
           <Footer />
           <NewsletterPopup />
+          <CartDrawer />
         </CartProvider>
       </body>
     </html>

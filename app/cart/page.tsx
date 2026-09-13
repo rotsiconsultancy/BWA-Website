@@ -1,235 +1,101 @@
 "use client";
 
 import Link from "next/link";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 
 export default function CartPage() {
-  const { items, removeFromCart, updateQuantity, subtotal, cartCount } = useCart();
-  const deliveryFee = items.length > 0 ? 250 : 0;
-  const total = subtotal + deliveryFee;
-
-  if (items.length === 0) {
+  const { items, subtotal, updateQuantity, removeFromCart } = useCart();
+  if (!items.length)
     return (
-      <main style={{ minHeight: "65vh", display: "grid", placeItems: "center", padding: "80px 20px" }}>
-        <div style={{ textAlign: "center", maxWidth: "420px" }}>
-          <div
-            style={{
-              width: "64px",
-              height: "64px",
-              borderRadius: "50%",
-              background: "var(--soft)",
-              display: "grid",
-              placeItems: "center",
-              margin: "0 auto 20px",
-              color: "var(--muted)",
-            }}
-          >
-            <ShoppingBag size={28} />
-          </div>
-          <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "38px", margin: "0 0 10px" }}>
-            Your bag is empty
-          </h1>
-          <p style={{ fontSize: "14px", color: "var(--muted)", marginBottom: "28px", lineHeight: "1.6" }}>
-            Discover contemporary bracelets crafted from natural stones and handmade in Africa.
-          </p>
-          <Link className="btn btn-primary" href="/shop">
-            Explore Collection <ArrowRight size={16} />
-          </Link>
-        </div>
+      <main className="empty-state">
+        <h1>Your bag is waiting.</h1>
+        <p>A bracelet begins with a feeling. Find the one that is yours.</p>
+        <Link href="/shop" className="btn btn-primary">
+          Explore bracelets
+        </Link>
       </main>
     );
-  }
-
   return (
-    <main>
-      <div
-        className="container"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 380px",
-          gap: "70px",
-          padding: "65px 0 110px",
-        }}
-      >
-        {/* Left: Cart items */}
-        <div>
-          <h1
-            style={{
-              fontFamily: "Cormorant Garamond, serif",
-              fontWeight: 500,
-              fontSize: "clamp(45px,5vw,58px)",
-              margin: "10px 0 45px",
-              lineHeight: 0.98,
-            }}
-          >
-            Your Bag ({cartCount})
-          </h1>
-
-          {/* Cart items list */}
-          <div style={{ display: "grid", gap: "20px" }}>
-            {items.map((item) => (
-              <div
-                key={`${item.id}-${item.size}`}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "100px 1fr auto",
-                  gap: "22px",
-                  borderTop: "1px solid var(--line)",
-                  paddingTop: "24px",
-                }}
-              >
-                <div
-                  style={{
-                    aspectRatio: "4/5",
-                    borderRadius: "4px",
-                    overflow: "hidden",
-                    background: "var(--stone)",
-                  }}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontFamily: "Cormorant Garamond, serif",
-                      fontSize: "24px",
-                      fontWeight: 500,
-                      lineHeight: 1.05,
-                      marginBottom: "5px",
-                    }}
-                  >
-                    {item.title}
-                  </div>
-                  <div style={{ fontSize: "11px", color: "var(--muted)", lineHeight: "1.5" }}>
-                    {item.subtitle}
-                    <br />
-                    Size: {item.size}
-                  </div>
-
-                  {/* Quantity controls & Remove */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "18px", marginTop: "18px" }}>
-                    <div className="qty-box" style={{ width: "95px", height: "36px" }}>
-                      <button onClick={() => updateQuantity(item.id, item.size, item.quantity - 1)}>-</button>
-                      <span style={{ fontSize: "12px" }}>{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)}>+</button>
-                    </div>
-
+    <main className="container bag-page">
+      <div>
+        <p className="eyebrow">Your selection</p>
+        <h1>Your Bag</h1>
+        <div className="bag-lines">
+          {items.map((line) => (
+            <article key={line.productId + line.variantId} className="bag-line">
+              <img src={line.image} alt={line.title} />
+              <div className="bag-line-copy">
+                <h2>{line.title}</h2>
+                <p>
+                  {line.subtitle}
+                  <br />
+                  {line.variantName}
+                </p>
+                <div className="bag-controls">
+                  <div className="product-quantity">
                     <button
-                      onClick={() => removeFromCart(item.id, item.size)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        fontSize: "11px",
-                        color: "var(--muted)",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
+                      onClick={() =>
+                        updateQuantity(
+                          line.productId,
+                          line.variantId,
+                          line.quantity - 1,
+                        )
+                      }
                     >
-                      <Trash2 size={14} /> Remove
+                      <Minus size={15} />
+                    </button>
+                    <span>{line.quantity}</span>
+                    <button
+                      onClick={() =>
+                        updateQuantity(
+                          line.productId,
+                          line.variantId,
+                          line.quantity + 1,
+                        )
+                      }
+                    >
+                      <Plus size={15} />
                     </button>
                   </div>
-                </div>
-
-                <div style={{ fontSize: "14px", fontWeight: 700, textAlign: "right" }}>
-                  KES {(item.price * item.quantity).toLocaleString()}
+                  <button
+                    onClick={() =>
+                      removeFromCart(line.productId, line.variantId)
+                    }
+                    className="bag-remove"
+                  >
+                    <Trash2 size={15} /> Remove
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-
-          <Link
-            href="/shop"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              fontSize: "11px",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              marginTop: "36px",
-              fontWeight: 600,
-            }}
-          >
-            ← Continue shopping
-          </Link>
-        </div>
-
-        {/* Right: Order Summary */}
-        <div
-          style={{
-            background: "#fff",
-            border: "1px solid var(--line)",
-            padding: "28px",
-            alignSelf: "start",
-            position: "sticky",
-            top: "100px",
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: "Cormorant Garamond, serif",
-              fontSize: "31px",
-              fontWeight: 500,
-              margin: "0 0 24px",
-            }}
-          >
-            Order summary
-          </h2>
-
-          <div style={{ display: "grid", gap: "13px", fontSize: "12px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Subtotal</span>
-              <span>KES {subtotal.toLocaleString()}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Estimated Delivery</span>
-              <span>KES {deliveryFee.toLocaleString()}</span>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontWeight: 600,
-                fontSize: "15px",
-                paddingTop: "17px",
-                borderTop: "1px solid var(--line)",
-              }}
-            >
-              <span>Total</span>
-              <span>KES {total.toLocaleString()}</span>
-            </div>
-          </div>
-
-          <Link
-            href="/checkout"
-            style={{
-              display: "block",
-              width: "100%",
-              height: "52px",
-              background: "var(--charcoal)",
-              color: "var(--ivory)",
-              border: "1px solid var(--charcoal)",
-              textAlign: "center",
-              lineHeight: "52px",
-              fontSize: "12px",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              marginTop: "22px",
-              borderRadius: "4px",
-            }}
-          >
-            Proceed to checkout
-          </Link>
+              <strong>
+                KES {(line.unitPrice * line.quantity).toLocaleString()}
+              </strong>
+            </article>
+          ))}
         </div>
       </div>
+      <aside className="bag-summary">
+        <p className="eyebrow">Order summary</p>
+        <div>
+          <span>Subtotal</span>
+          <strong>KES {subtotal.toLocaleString()}</strong>
+        </div>
+        <div>
+          <span>Delivery</span>
+          <span>Confirmed at checkout</span>
+        </div>
+        <div className="bag-total">
+          <span>Estimated total</span>
+          <strong>KES {(subtotal + 250).toLocaleString()}</strong>
+        </div>
+        <Link href="/checkout" className="btn btn-primary">
+          Continue to order
+        </Link>
+        <p>
+          Your bracelet is reserved only once our concierge confirms payment.
+        </p>
+      </aside>
     </main>
   );
 }

@@ -13,15 +13,27 @@ const HERO_IMAGES = [
   {
     url: "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png",
     eyebrow: "Crafted for adventure.",
-    title: <>Authentic materials.<br />Timeless design.</>,
-    copy: "Handcrafted with genuine semi-precious stones sourced across the African continent."
+    title: (
+      <>
+        Authentic materials.
+        <br />
+        Timeless design.
+      </>
+    ),
+    copy: "Handcrafted with genuine semi-precious stones sourced across the African continent.",
   },
   {
     url: "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
     eyebrow: "Personal statement.",
-    title: <>Find your energy.<br />Wear your vision.</>,
-    copy: "Every bracelet carries unique energy, history, and craftsmanship."
-  }
+    title: (
+      <>
+        Find your energy.
+        <br />
+        Wear your vision.
+      </>
+    ),
+    copy: "Every bracelet carries unique energy, history, and craftsmanship.",
+  },
 ];
 
 export default function Hero() {
@@ -63,7 +75,11 @@ export default function Hero() {
         </div>
 
         {/* Carousel Indicators */}
-        <div className="hero-indicators" role="tablist" aria-label="Hero slides">
+        <div
+          className="hero-indicators"
+          role="tablist"
+          aria-label="Hero slides"
+        >
           {HERO_IMAGES.map((_, idx) => (
             <button
               key={idx}

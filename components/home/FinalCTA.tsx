@@ -6,7 +6,10 @@ export default function FinalCTA() {
       <div className="container final-cta-content">
         <p className="eyebrow">Your bracelet is out there.</p>
         <h2>Find yours.</h2>
-        <p>Discover the bracelet that fits your style, your story and the way you want to wear it.</p>
+        <p>
+          Discover the bracelet that fits your style, your story and the way you
+          want to wear it.
+        </p>
         <Link className="btn btn-light" href="/find-your-bracelet">
           Find My Bracelet <span>→</span>
         </Link>

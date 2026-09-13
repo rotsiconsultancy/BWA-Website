@@ -1,8 +1,10 @@
 import { MetadataRoute } from "next";
+import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://beadsworldafrica.com";
 
+  const products = await getStorefrontCatalogue();
   return [
     {
       url: baseUrl,
@@ -23,16 +25,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/cart`,
+      url: `${baseUrl}/bespoke`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
-    {
-      url: `${baseUrl}/checkout`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
+    ...products
+      .filter((product) => product.active)
+      .map((product) => ({
+        url: `${baseUrl}/product/${product.slug}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      })),
   ];
 }

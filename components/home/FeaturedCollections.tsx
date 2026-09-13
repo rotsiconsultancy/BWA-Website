@@ -7,7 +7,8 @@ const featuredProducts = [
     name: "The Grounded",
     meta: "Black Onyx · Lava Stone",
     price: "KES 4,500",
-    image: "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
+    image:
+      "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
   },
   {
     id: "the-bold",
@@ -15,7 +16,8 @@ const featuredProducts = [
     name: "The Bold",
     meta: "Tiger's Eye · Onyx",
     price: "KES 4,200",
-    image: "https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048",
+    image:
+      "https://aurumbrothers.com/cdn/shop/files/square1-SodaliteBraceletVII_12mm_2.webp?v=1746155632&width=2048",
   },
   {
     id: "the-calm",
@@ -23,7 +25,8 @@ const featuredProducts = [
     name: "The Calm",
     meta: "Howlite · Matte Agate",
     price: "KES 4,000",
-    image: "https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778",
+    image:
+      "https://www.artoftibet.com/cdn/shop/files/blue-tiger-eye-with-dragon-vein-stone-divider-radiance-bracelet-6377513.png?v=1776133778",
   },
   {
     id: "the-explorer",
@@ -31,7 +34,8 @@ const featuredProducts = [
     name: "The Explorer",
     meta: "African Turquoise · Lava Stone",
     price: "KES 4,800",
-    image: "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
+    image:
+      "https://stonemart.co.in/_next/image?q=65&url=https%3A%2F%2Fstonemart-media.b76109dna.workers.dev%2Fproducts%2Fnatural-tiger-eye-bracelet-12mm-beads-stretchable-unisex-gemstone-bracelet-for-strength-confidence-protection%2Fimages%2Fae6e4ccd-3809-4730-9cbc-9cff5a6eec00.webp&w=3840",
   },
 ];
 
@@ -51,7 +55,11 @@ export default function FeaturedCollections() {
 
         <div className="product-grid">
           {featuredProducts.map((p) => (
-            <Link key={p.id} href={`/product/${p.slug}`} className="product-card">
+            <Link
+              key={p.id}
+              href={`/product/${p.slug}`}
+              className="product-card"
+            >
               <div className="product-image">
                 <img src={p.image} alt={p.name} loading="lazy" />
               </div>
