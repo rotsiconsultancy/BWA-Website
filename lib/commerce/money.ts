@@ -16,6 +16,4 @@ export const priceFor = (prices: Prices, currency: StoreCurrency) =>
   prices[currency];
 
 export const deliveryFeeFor = (currency: StoreCurrency) =>
-  currency === "KES"
-    ? 250
-    : Number(process.env.STANDARD_DELIVERY_USD || "3");
+  currency === "KES" ? 250 : Number(process.env.STANDARD_DELIVERY_USD || "3");

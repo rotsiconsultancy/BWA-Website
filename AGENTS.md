@@ -237,3 +237,8 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 - **Agent**: Codex
 - **Changes**: Added safe cart restoration for visitors with the prior KES-only `unitPrice` local-storage format. Existing bags now retain their KES amount; USD remains unavailable for that line until a deliberate USD product price is entered.
+
+### [2026-09-13 14:50] — Marketing Consent Interaction Hardening
+
+- **Agent**: Codex
+- **Changes**: Rendered the Meta consent prompt directly at the document body layer and isolated its touch targets above storefront drawers, headers, and overlays, ensuring its accept/decline buttons receive mouse and mobile-tap events.

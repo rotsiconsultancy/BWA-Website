@@ -4266,7 +4266,7 @@ body {
 }
 .marketing-consent {
   position: fixed;
-  z-index: 120;
+  z-index: 1000;
   right: 20px;
   bottom: 20px;
   max-width: 360px;
@@ -4275,6 +4275,8 @@ body {
   color: var(--ivory);
   border: 1px solid rgba(245, 241, 232, 0.18);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+  pointer-events: auto;
+  isolation: isolate;
 }
 .marketing-consent p {
   margin: 0 0 14px;
@@ -4292,6 +4294,8 @@ body {
   color: inherit;
   padding: 8px 12px;
   cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
 }
 .marketing-consent button:last-child {
   background: var(--ivory);

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
 
 const CONSENT_KEY = "bwa_marketing_consent";
-const pixelId = process.env.META_PIXEL_ID;
+const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 export default function MetaPixel() {
   const pathname = usePathname();
