@@ -1,4 +1,3 @@
-import { catalogue } from "@/lib/commerce/catalogue";
 import type { CommerceProduct } from "@/lib/commerce/types";
 
 export type QuizAnswer = {
@@ -13,8 +12,11 @@ const matches = (product: CommerceProduct, token: string) => {
   return Array.isArray(values) && (values as string[]).includes(value);
 };
 
-export function recommendProducts(answers: QuizAnswer[]) {
-  return catalogue
+export function recommendProducts(
+  products: CommerceProduct[],
+  answers: QuizAnswer[],
+) {
+  return products
     .filter(
       (product) =>
         product.active &&

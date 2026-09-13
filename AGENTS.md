@@ -171,3 +171,24 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 - **Agent**: Codex
 - **Changes**: Added BWA-owned customer list and profile workspaces covering contact details, operational/marketing consent, saved delivery addresses, order history, and bespoke-request context.
+
+### [2026-09-13 10:00] — Discovery Workspace Foundation
+
+- **Agent**: Codex
+- **Changes**: Added the protected Discovery workspace and navigation entry, reading Supabase quiz versions with separate draft/published states as the basis for editable Find Your Bracelet operations.
+
+### [2026-09-13 10:25] — Editable Find Your Bracelet Publishing
+
+- **Agent**: Codex
+- **Changes**: Added draft quiz-version creation, editable questions and answers, ordering/active controls, managed hidden taxonomy-weight signals (including removal), publishing checks, archival of the former live version, and audit entries for discovery operations.
+- **Storefront**: Find Your Bracelet now reads the published Supabase quiz and live Supabase product catalogue at request time; it retains the original four-question configuration only until a valid version is published, and recommendations are scored from configured product tags rather than visible copy.
+
+### [2026-09-13 10:45] — Guided Discovery Editor
+
+- **Agent**: Codex
+- **Changes**: Reworked Discovery into a staff-friendly guided workflow. Staff can create a complete BWA four-question starter template in one click, use plain-language product matches such as “Grounded feeling” and “Tiger Eye,” and add customer-facing questions/answers without entering internal taxonomy keys or answer order values.
+
+### [2026-09-13 11:05] — Discovery Step Wizard
+
+- **Agent**: Codex
+- **Changes**: Added a keyboard-accessible three-step editor: Set up, Build, and Review. Each step isolates its task, the publish control is available only in Review, and server actions return staff to the relevant Build step after saving questions, answers, or bracelet matches.
