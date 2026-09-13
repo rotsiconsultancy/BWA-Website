@@ -227,7 +227,7 @@ export default function Header() {
             Shop
           </Link>
           <Link href="/bracelets" onClick={() => setOpen(false)}>
-            Bracelet
+            Bracelets
           </Link>
           <Link href="/find-your-bracelet" onClick={() => setOpen(false)}>
             Find Your Bracelet
