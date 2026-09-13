@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
+import Money from "@/components/commerce/Money";
 
 export default async function FeaturedCollections() {
   const products = await getStorefrontCatalogue();
@@ -39,7 +40,7 @@ export default async function FeaturedCollections() {
                 <div className="product-name">{product.title}</div>
                 <div className="product-meta">{product.subtitle}</div>
                 <div className="product-price">
-                  KES {product.price.toLocaleString()}{" "}
+                  <Money prices={product.prices} />{" "}
                   <span className="product-arrow">→</span>
                 </div>
               </div>

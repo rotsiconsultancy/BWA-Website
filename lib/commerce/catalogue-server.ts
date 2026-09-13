@@ -11,7 +11,8 @@ type ProductRow = {
   subtitle: string | null;
   descriptor: string | null;
   price: number | string;
-  currency: "KES";
+  price_kes: number | string;
+  price_usd: number | string | null;
   category: string;
   story: string | null;
   details: string[] | null;
@@ -35,6 +36,8 @@ type ProductRow = {
         title: string;
         sku: string;
         price_adjustment: number | string;
+        price_adjustment_kes: number | string;
+        price_adjustment_usd: number | string | null;
         stock_quantity: number;
         reserved_quantity: number;
         active: boolean;
@@ -52,7 +55,13 @@ function mapProduct(product: ProductRow): CommerceProduct {
       id: variant.id,
       name: variant.title,
       sku: variant.sku,
-      priceAdjustment: Number(variant.price_adjustment),
+      priceAdjustments: {
+        KES: Number(variant.price_adjustment_kes ?? variant.price_adjustment),
+        USD:
+          variant.price_adjustment_usd === null
+            ? null
+            : Number(variant.price_adjustment_usd),
+      },
       stock,
       available: variant.active && stock > 0,
     };
@@ -64,8 +73,10 @@ function mapProduct(product: ProductRow): CommerceProduct {
     title: product.title,
     subtitle: product.subtitle || "Hand-finished natural stone bracelet",
     descriptor: product.descriptor || "Made in considered small batches.",
-    price: Number(product.price),
-    currency: product.currency,
+    prices: {
+      KES: Number(product.price_kes ?? product.price),
+      USD: product.price_usd === null ? null : Number(product.price_usd),
+    },
     category: product.category,
     collection: product.collections?.title || "BWA Collection",
     story: product.story || "A BWA piece, made to become part of your rhythm.",
@@ -97,7 +108,7 @@ async function loadProducts(slug?: string): Promise<CommerceProduct[] | null> {
   let query = admin
     .from("products")
     .select(
-      "id,slug,title,subtitle,descriptor,price,currency,category,story,details,featured,is_trending,active,energy_vibe,intention,stone_type,color_palette,style_tags,wrist_fits,occasion,recipient,collections(title),product_images(url,alt_text,sort_order),product_variants(id,title,sku,price_adjustment,stock_quantity,reserved_quantity,active)",
+      "id,slug,title,subtitle,descriptor,price,price_kes,price_usd,category,story,details,featured,is_trending,active,energy_vibe,intention,stone_type,color_palette,style_tags,wrist_fits,occasion,recipient,collections(title),product_images(url,alt_text,sort_order),product_variants(id,title,sku,price_adjustment,price_adjustment_kes,price_adjustment_usd,stock_quantity,reserved_quantity,active)",
     )
     .eq("active", true)
     .order("featured", { ascending: false })

@@ -6,3 +6,4 @@ out
 .zip*
 .next
 # next-env.d.ts
+.txt

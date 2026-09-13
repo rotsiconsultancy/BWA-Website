@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type { CommerceProduct } from "@/lib/commerce/types";
+import Money from "@/components/commerce/Money";
+import { useCurrency } from "@/context/CurrencyContext";
 export default function ShopCatalogue({
   catalogue,
 }: {
@@ -11,6 +13,7 @@ export default function ShopCatalogue({
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("featured");
+  const { currency } = useCurrency();
   const products = useMemo(
     () =>
       catalogue
@@ -30,12 +33,14 @@ export default function ShopCatalogue({
         )
         .sort((a, b) =>
           sort === "low"
-            ? a.price - b.price
+            ? (a.prices[currency] ?? Number.POSITIVE_INFINITY) -
+              (b.prices[currency] ?? Number.POSITIVE_INFINITY)
             : sort === "high"
-              ? b.price - a.price
+              ? (b.prices[currency] ?? Number.NEGATIVE_INFINITY) -
+                (a.prices[currency] ?? Number.NEGATIVE_INFINITY)
               : Number(b.featured) - Number(a.featured),
         ),
-    [catalogue, filter, query, sort],
+    [catalogue, filter, query, sort, currency],
   );
   return (
     <main className="catalogue-page">
@@ -114,7 +119,9 @@ export default function ShopCatalogue({
                 <p>{p.collection}</p>
                 <h2>{p.title}</h2>
                 <span>{p.subtitle}</span>
-                <strong>KES {p.price.toLocaleString()}</strong>
+                <strong>
+                  <Money prices={p.prices} />
+                </strong>
               </div>
             </Link>
           ))}

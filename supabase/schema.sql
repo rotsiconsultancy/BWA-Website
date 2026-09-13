@@ -11,7 +11,7 @@ create table if not exists public.products (
   id uuid primary key default gen_random_uuid(), crm_external_id text unique, slug text unique not null,
   sku text unique not null, title text not null, subtitle text, descriptor text,
   category text not null default 'Bracelets', collection_id uuid references public.collections(id) on delete set null,
-  price numeric(10,2) not null check (price >= 0), cost_price numeric(10,2), currency text not null default 'KES',
+  price numeric(10,2) not null check (price >= 0), price_kes numeric(10,2) not null check (price_kes >= 0), price_usd numeric(10,2) check (price_usd >= 0), cost_price numeric(10,2), currency text not null default 'KES',
   story text, description text, details text[] not null default '{}', featured boolean not null default false,
   is_trending boolean not null default false, active boolean not null default false,
   availability text not null default 'in_stock' check (availability in ('in_stock','made_to_order','preorder','unavailable')),
@@ -31,11 +31,36 @@ create table if not exists public.product_images (
 create table if not exists public.product_variants (
   id uuid primary key default gen_random_uuid(), product_id uuid not null references public.products(id) on delete cascade,
   crm_external_id text unique, sku text unique not null, title text not null,
-  price_adjustment numeric(10,2) not null default 0, stock_quantity integer not null default 0 check (stock_quantity >= 0),
+  price_adjustment numeric(10,2) not null default 0, price_adjustment_kes numeric(10,2) not null default 0, price_adjustment_usd numeric(10,2) check (price_adjustment_usd >= 0), stock_quantity integer not null default 0 check (stock_quantity >= 0),
   reserved_quantity integer not null default 0 check (reserved_quantity >= 0),
   low_stock_threshold integer not null default 3 check (low_stock_threshold >= 0),
   active boolean not null default true, created_at timestamptz not null default now(), updated_at timestamptz not null default now()
 );
+
+-- Existing BWA catalogues keep their KES amounts; USD is deliberately entered
+-- by staff, never calculated from an exchange rate.
+alter table public.products add column if not exists price_kes numeric(10,2);
+alter table public.products add column if not exists price_usd numeric(10,2);
+update public.products set price_kes = price where price_kes is null;
+alter table public.products alter column price_kes set not null;
+alter table public.product_variants add column if not exists price_adjustment_kes numeric(10,2);
+alter table public.product_variants add column if not exists price_adjustment_usd numeric(10,2);
+update public.product_variants set price_adjustment_kes = price_adjustment where price_adjustment_kes is null;
+alter table public.product_variants alter column price_adjustment_kes set not null;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'products_price_kes_nonnegative') then
+    alter table public.products add constraint products_price_kes_nonnegative check (price_kes >= 0) not valid;
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'products_price_usd_nonnegative') then
+    alter table public.products add constraint products_price_usd_nonnegative check (price_usd is null or price_usd >= 0) not valid;
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'product_variants_price_adjustment_kes_nonnegative') then
+    alter table public.product_variants add constraint product_variants_price_adjustment_kes_nonnegative check (price_adjustment_kes >= 0) not valid;
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'product_variants_price_adjustment_usd_nonnegative') then
+    alter table public.product_variants add constraint product_variants_price_adjustment_usd_nonnegative check (price_adjustment_usd is null or price_adjustment_usd >= 0) not valid;
+  end if;
+end $$;
 create table if not exists public.inventory_movements (
   id uuid primary key default gen_random_uuid(), variant_id uuid not null references public.product_variants(id) on delete cascade,
   quantity_delta integer not null, reason text not null check (reason in ('initial','sale','reservation','release','restock','adjustment','return')),

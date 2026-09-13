@@ -13,7 +13,7 @@ export type CommerceVariant = {
   id: string;
   name: string;
   sku: string;
-  priceAdjustment: number;
+  priceAdjustments: import("@/lib/commerce/money").Prices;
   stock: number;
   available: boolean;
 };
@@ -24,8 +24,7 @@ export type CommerceProduct = ProductTaxonomy & {
   title: string;
   subtitle: string;
   descriptor: string;
-  price: number;
-  currency: "KES";
+  prices: import("@/lib/commerce/money").Prices;
   category: string;
   collection: string;
   story: string;
@@ -44,7 +43,7 @@ export type CartLine = {
   title: string;
   subtitle: string;
   image: string;
-  unitPrice: number;
+  unitPrices: import("@/lib/commerce/money").Prices;
   variantName: string;
   quantity: number;
 };

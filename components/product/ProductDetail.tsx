@@ -5,6 +5,10 @@ import { useState } from "react";
 import type { CommerceProduct } from "@/lib/commerce/types";
 import { useCart } from "@/context/CartContext";
 import { hubsForProduct } from "@/lib/commerce/seo-hubs";
+import Money from "@/components/commerce/Money";
+import { useCurrency } from "@/context/CurrencyContext";
+import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
+import { useEffect } from "react";
 
 export default function ProductDetail({
   product,
@@ -14,6 +18,7 @@ export default function ProductDetail({
   related: CommerceProduct[];
 }) {
   const { addToCart } = useCart();
+  const { currency } = useCurrency();
   const [imageIndex, setImageIndex] = useState(0);
   const [variantId, setVariantId] = useState(
     product.variants.find((v) => v.available)?.id ?? "",
@@ -21,8 +26,24 @@ export default function ProductDetail({
   const [quantity, setQuantity] = useState(1);
   const variant =
     product.variants.find((v) => v.id === variantId) ?? product.variants[0];
-  const price = product.price + variant.priceAdjustment;
+  const prices = {
+    KES: product.prices.KES + (variant.priceAdjustments.KES ?? 0),
+    USD:
+      product.prices.USD === null || variant.priceAdjustments.USD === null
+        ? null
+        : product.prices.USD + variant.priceAdjustments.USD,
+  };
   const discoveryHubs = hubsForProduct(product).slice(0, 3);
+  useEffect(() => {
+    const price = prices[currency];
+    if (price !== null)
+      trackMetaEvent("ViewContent", {
+        value: price,
+        currency,
+        content_ids: [product.id],
+        contents: [{ id: product.id, item_price: price }],
+      });
+  }, [currency, product.id, prices.KES, prices.USD]);
   return (
     <main className="product-page">
       <div className="container product-breadcrumb">
@@ -58,7 +79,9 @@ export default function ProductDetail({
           <p className="eyebrow">{product.collection}</p>
           <h1>{product.title}</h1>
           <p className="product-descriptor">{product.descriptor}</p>
-          <p className="product-price">KES {price.toLocaleString()}</p>
+          <p className="product-price">
+            <Money prices={prices} />
+          </p>
           <p className="product-story">{product.story}</p>
           <div className="product-rule" />
           <fieldset>
@@ -103,7 +126,7 @@ export default function ProductDetail({
             </div>
             <button
               className="btn btn-primary"
-              disabled={!variant.available}
+              disabled={!variant.available || prices[currency] === null}
               onClick={() =>
                 addToCart({
                   productId: product.id,
@@ -112,7 +135,7 @@ export default function ProductDetail({
                   title: product.title,
                   subtitle: product.subtitle,
                   image: product.images[0],
-                  unitPrice: price,
+                  unitPrices: prices,
                   variantName: variant.name,
                   quantity,
                 })
@@ -180,7 +203,9 @@ export default function ProductDetail({
               <div className="catalogue-product-copy">
                 <p>{item.collection}</p>
                 <h2>{item.title}</h2>
-                <strong>KES {item.price.toLocaleString()}</strong>
+                <strong>
+                  <Money prices={item.prices} />
+                </strong>
               </div>
             </Link>
           ))}

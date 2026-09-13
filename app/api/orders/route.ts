@@ -25,6 +25,7 @@ export async function POST(request: Request) {
     );
   try {
     const body = await request.json();
+    const currency = body.currency === "USD" ? "USD" : "KES";
     const customer = body.customer ?? {};
     const lines = Array.isArray(body.lines) ? body.lines : [];
     if (
@@ -65,7 +66,7 @@ export async function POST(request: Request) {
     const { data: variants, error: variantError } = await supabase
       .from("product_variants")
       .select(
-        "id, title, sku, stock_quantity, reserved_quantity, price_adjustment, product_id, products!inner(id,title,subtitle,price,active)",
+        "id, title, sku, stock_quantity, reserved_quantity, price_adjustment, price_adjustment_kes, price_adjustment_usd, product_id, products!inner(id,title,subtitle,price,price_kes,price_usd,active)",
       )
       .in("id", variantIds)
       .eq("active", true);
@@ -94,11 +95,33 @@ export async function POST(request: Request) {
           { status: 409 },
         );
       }
+      const productPrice =
+        currency === "USD"
+          ? product.price_usd
+          : (product.price_kes ?? product.price);
+      const variantAdjustment =
+        currency === "USD"
+          ? variant.price_adjustment_usd
+          : (variant.price_adjustment_kes ?? variant.price_adjustment);
+      if (
+        productPrice === null ||
+        productPrice === undefined ||
+        variantAdjustment === null ||
+        variantAdjustment === undefined
+      )
+        return NextResponse.json(
+          { error: `This bracelet does not yet have a ${currency} price.` },
+          { status: 409 },
+        );
       subtotal +=
-        (Number(product.price) + Number(variant.price_adjustment)) *
-        line.quantity;
+        (Number(productPrice) + Number(variantAdjustment)) * line.quantity;
     }
-    const deliveryFee = body.deliveryMethod === "pickup" ? 0 : 250;
+    const deliveryFee =
+      body.deliveryMethod === "pickup"
+        ? 0
+        : currency === "USD"
+          ? Number(process.env.STANDARD_DELIVERY_USD || "3")
+          : 250;
     const total = subtotal + deliveryFee;
     const { data: savedCustomer, error: customerError } = await supabase
       .from("customers")
@@ -135,6 +158,7 @@ export async function POST(request: Request) {
         subtotal,
         delivery_fee: deliveryFee,
         total_amount: total,
+        currency,
       })
       .select()
       .single();
@@ -146,7 +170,16 @@ export async function POST(request: Request) {
         const variant: any = byId.get(line.variantId);
         const product = variant.products;
         const unitPrice =
-          Number(product.price) + Number(variant.price_adjustment);
+          Number(
+            currency === "USD"
+              ? product.price_usd
+              : (product.price_kes ?? product.price),
+          ) +
+          Number(
+            currency === "USD"
+              ? variant.price_adjustment_usd
+              : (variant.price_adjustment_kes ?? variant.price_adjustment),
+          );
         return {
           order_id: order.id,
           product_id: product.id,
@@ -200,7 +233,12 @@ export async function POST(request: Request) {
           order_id: order.id,
         });
     }
-    return NextResponse.json({ orderNumber: reference, total, phone });
+    return NextResponse.json({
+      orderNumber: reference,
+      total,
+      currency,
+      phone,
+    });
   } catch (error) {
     console.error("BWA order creation failed", error);
     return NextResponse.json(

@@ -1,5 +1,6 @@
 import PageHeader from "@/components/admin/PageHeader";
 import ProductPublishForm from "@/components/admin/ProductPublishForm";
+import { updateProductPrices } from "@/app/admin/products/actions";
 import { requireAdmin } from "@/lib/admin/auth";
 
 export default async function AdminProducts({
@@ -12,7 +13,7 @@ export default async function AdminProducts({
   const { data: products } = await admin
     .from("products")
     .select(
-      "title,sku,active,price,product_variants(title,stock_quantity,reserved_quantity)",
+      "id,title,sku,active,price,price_kes,price_usd,product_variants(title,stock_quantity,reserved_quantity)",
     )
     .limit(40);
 
@@ -47,7 +48,7 @@ export default async function AdminProducts({
         <div className="admin-table-head">
           <span>Product</span>
           <span>State</span>
-          <span>Price</span>
+          <span>Store prices</span>
           <span>Variants</span>
         </div>
         {products?.map((product: any) => (
@@ -61,7 +62,31 @@ export default async function AdminProducts({
             >
               {product.active ? "Live" : "Draft"}
             </span>
-            <strong>KES {Number(product.price).toLocaleString()}</strong>
+            <form action={updateProductPrices} className="admin-price-editor">
+              <input type="hidden" name="product_id" value={product.id} />
+              <label>
+                <span>KES</span>
+                <input
+                  name="price_kes"
+                  type="number"
+                  min="0"
+                  step="1"
+                  defaultValue={product.price_kes ?? product.price}
+                />
+              </label>
+              <label>
+                <span>USD</span>
+                <input
+                  name="price_usd"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  defaultValue={product.price_usd ?? ""}
+                  required
+                />
+              </label>
+              <button type="submit">Save</button>
+            </form>
             <span>
               {product.product_variants
                 ?.map(

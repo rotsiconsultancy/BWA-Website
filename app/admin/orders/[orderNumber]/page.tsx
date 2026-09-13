@@ -34,7 +34,9 @@ export default async function AdminOrderDetail({
       <header className="admin-order-header">
         <div>
           <p className="admin-kicker">Order {order.order_number}</p>
-          <h1>KES {Number(order.total_amount).toLocaleString()}</h1>
+          <h1>
+            {order.currency} {Number(order.total_amount).toLocaleString()}
+          </h1>
           <p>
             {new Date(order.created_at).toLocaleString("en-KE", {
               dateStyle: "medium",
@@ -123,8 +125,8 @@ export default async function AdminOrderDetail({
                   {item.product_title_snapshot} · {item.variant_title_snapshot}
                 </strong>
                 <em>
-                  {item.quantity} × KES{" "}
-                  {Number(item.unit_price).toLocaleString()} = KES{" "}
+                  {item.quantity} × {order.currency}{" "}
+                  {Number(item.unit_price).toLocaleString()} = {order.currency}{" "}
                   {Number(item.line_total).toLocaleString()}
                 </em>
               </span>

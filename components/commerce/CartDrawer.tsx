@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function CartDrawer() {
   const {
@@ -14,6 +15,7 @@ export default function CartDrawer() {
     updateQuantity,
     removeFromCart,
   } = useCart();
+  const { currency, format } = useCurrency();
   const closeButton = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (!drawerOpen) return;
@@ -75,7 +77,11 @@ export default function CartDrawer() {
                     <strong>{line.title}</strong>
                     <span>{line.variantName}</span>
                     <span>
-                      KES {(line.unitPrice * line.quantity).toLocaleString()}
+                      {line.unitPrices[currency] === null
+                        ? "Price unavailable"
+                        : format(
+                            (line.unitPrices[currency] ?? 0) * line.quantity,
+                          )}
                     </span>
                     <div className="drawer-quantity">
                       <button
@@ -119,7 +125,7 @@ export default function CartDrawer() {
             <div className="cart-drawer-foot">
               <div>
                 <span>Subtotal</span>
-                <strong>KES {subtotal.toLocaleString()}</strong>
+                <strong>{format(subtotal)}</strong>
               </div>
               <p>Delivery is confirmed with your WhatsApp concierge.</p>
               <Link

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
 
 export default function BespokePage() {
   const [discoveryContext, setDiscoveryContext] = useState({
@@ -44,6 +45,7 @@ export default function BespokePage() {
       }),
     });
     const data = await response.json();
+    if (response.ok) trackMetaEvent("Lead");
     setMessage(
       response.ok
         ? "Your request " +
@@ -84,6 +86,7 @@ export default function BespokePage() {
           <input
             type="email"
             value={form.email}
+            autoComplete="email"
             onChange={(event) => update("email", event.target.value)}
           />
         </label>

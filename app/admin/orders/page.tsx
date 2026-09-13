@@ -6,7 +6,7 @@ export default async function AdminOrders() {
   const { data: orders } = await admin
     .from("orders")
     .select(
-      "order_number,status,payment_status,total_amount,created_at,customers(first_name,last_name,phone)",
+      "order_number,status,payment_status,total_amount,currency,created_at,customers(first_name,last_name,phone)",
     )
     .order("created_at", { ascending: false })
     .limit(40);
@@ -46,7 +46,9 @@ export default async function AdminOrders() {
             <span className={`admin-status admin-status-${order.status}`}>
               {order.status.replaceAll("_", " ")}
             </span>
-            <strong>KES {Number(order.total_amount).toLocaleString()}</strong>
+            <strong>
+              {order.currency} {Number(order.total_amount).toLocaleString()}
+            </strong>
           </Link>
         )) || <p className="admin-table-empty">No orders yet.</p>}
       </div>

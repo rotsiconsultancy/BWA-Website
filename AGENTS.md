@@ -225,3 +225,15 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 - **Agent**: Codex
 - **Changes**: Raised and isolated the mobile header stacking layer above storefront media and added direct touch-action handling to its controls, protecting search, bag, and menu taps from overlapping visual layers on mobile Safari.
+
+### [2026-09-13 14:35] — Explicit KES/USD Pricing & Consent-Gated Meta Pixel
+
+- **Agent**: Codex
+- **Pricing**: Added independently entered KES and USD prices for products and variant adjustments. Customer currency preference now carries through catalogue, search, product, quiz, bag, cart, checkout, WhatsApp handoff, server-side order recalculation, and saved order currency—without exchange-rate conversion.
+- **Operations**: Product publishing requires both currencies; existing KES prices are preserved through the schema migration while USD values are intentionally left for staff to enter. Order views now display the currency captured on each order.
+- **Marketing**: Added an optional Meta Pixel integration using `META_PIXEL_ID`, a remembered accept/decline marketing-consent prompt, and PageView, ViewContent, AddToCart, InitiateCheckout, and Lead events. The Pixel does not load in admin routes or before consent.
+
+### [2026-09-13 14:45] — Legacy Cart Price Compatibility
+
+- **Agent**: Codex
+- **Changes**: Added safe cart restoration for visitors with the prior KES-only `unitPrice` local-storage format. Existing bags now retain their KES amount; USD remains unavailable for that line until a deliberate USD product price is entered.

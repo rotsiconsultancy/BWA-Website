@@ -46,7 +46,14 @@ export async function createProduct(
   const sku = value(formData, "sku").toUpperCase();
   const imageUrl = value(formData, "image_url");
   const imageAlt = value(formData, "image_alt");
-  const price = Number(value(formData, "price"));
+  const priceKes = Number(value(formData, "price_kes"));
+  const priceUsd = Number(value(formData, "price_usd"));
+  const variantPriceAdjustmentKes = Number(
+    value(formData, "variant_price_adjustment_kes") || "0",
+  );
+  const variantPriceAdjustmentUsd = Number(
+    value(formData, "variant_price_adjustment_usd") || "0",
+  );
   const stock = Number(value(formData, "stock"));
   const publish = formData.get("publish") === "on";
   const tags = Object.fromEntries(
@@ -63,8 +70,14 @@ export async function createProduct(
     !title ||
     !slugIsValid ||
     !sku ||
-    !Number.isFinite(price) ||
-    price < 0 ||
+    !Number.isFinite(priceKes) ||
+    priceKes < 0 ||
+    !Number.isFinite(priceUsd) ||
+    priceUsd < 0 ||
+    !Number.isFinite(variantPriceAdjustmentKes) ||
+    variantPriceAdjustmentKes < 0 ||
+    !Number.isFinite(variantPriceAdjustmentUsd) ||
+    variantPriceAdjustmentUsd < 0 ||
     !Number.isInteger(stock) ||
     stock < 0 ||
     !imageUrl ||
@@ -73,12 +86,13 @@ export async function createProduct(
   ) {
     return {
       error:
-        "Complete the required fields before publishing: name, public URL, SKU, price, stock, image, and the four required discovery traits.",
+        "Complete the required fields before publishing: name, public URL, SKU, KES and USD prices, stock, image, and the four required discovery traits.",
       fields: [
         "title",
         "slug",
         "sku",
-        "price",
+        "price_kes",
+        "price_usd",
         "stock",
         "image_url",
         "image_alt",
@@ -97,7 +111,10 @@ export async function createProduct(
     subtitle: value(formData, "subtitle") || null,
     descriptor: value(formData, "descriptor") || null,
     category: "Bracelets",
-    price,
+    // `price` remains the legacy KES value for compatibility with existing data.
+    price: priceKes,
+    price_kes: priceKes,
+    price_usd: priceUsd,
     currency: "KES",
     story: value(formData, "story") || null,
     details: parseLines(formData.get("details")),
@@ -134,6 +151,9 @@ export async function createProduct(
       product_id: product.id,
       sku: variantSku,
       title: variantTitle,
+      price_adjustment: variantPriceAdjustmentKes,
+      price_adjustment_kes: variantPriceAdjustmentKes,
+      price_adjustment_usd: variantPriceAdjustmentUsd,
       stock_quantity: stock,
       active: true,
     })
@@ -180,4 +200,42 @@ export async function createProduct(
   revalidatePath(`/product/${slug}`);
   revalidatePath("/sitemap.xml");
   redirect(`/admin/products?created=${slug}`);
+}
+
+export async function updateProductPrices(formData: FormData) {
+  const { admin, profile, user } = await requireAdmin();
+  if (!["owner", "commerce_manager"].includes(profile.role)) return;
+  const productId = value(formData, "product_id");
+  const priceKes = Number(value(formData, "price_kes"));
+  const priceUsd = Number(value(formData, "price_usd"));
+  if (
+    !productId ||
+    !Number.isFinite(priceKes) ||
+    priceKes < 0 ||
+    !Number.isFinite(priceUsd) ||
+    priceUsd < 0
+  )
+    return;
+  const { data: previous } = await admin
+    .from("products")
+    .select("price,price_kes,price_usd")
+    .eq("id", productId)
+    .maybeSingle();
+  const { error } = await admin
+    .from("products")
+    .update({ price: priceKes, price_kes: priceKes, price_usd: priceUsd })
+    .eq("id", productId);
+  if (error) return;
+  await admin.from("admin_audit_log").insert({
+    actor_id: user.id,
+    entity_type: "product",
+    entity_id: productId,
+    action: "updated_currency_prices",
+    before_value: previous,
+    after_value: { price_kes: priceKes, price_usd: priceUsd },
+  });
+  revalidatePath("/");
+  revalidatePath("/bracelets");
+  revalidatePath("/shop");
+  revalidatePath("/admin/products");
 }

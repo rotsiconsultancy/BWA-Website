@@ -4,6 +4,8 @@ import Footer from "@/components/layout/Footer";
 import NewsletterPopup from "@/components/marketing/NewsletterPopup";
 import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/commerce/CartDrawer";
+import { CurrencyProvider } from "@/context/CurrencyContext";
+import MetaPixel from "@/components/marketing/MetaPixel";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -62,13 +64,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CartProvider>
-          <Header />
-          {children}
-          <Footer />
-          <NewsletterPopup />
-          <CartDrawer />
-        </CartProvider>
+        <CurrencyProvider>
+          <CartProvider>
+            <Header />
+            {children}
+            <Footer />
+            <NewsletterPopup />
+            <CartDrawer />
+            <MetaPixel />
+          </CartProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );

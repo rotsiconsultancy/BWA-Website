@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       slug: product.slug,
       title: product.title,
       subtitle: product.subtitle,
-      price: product.price,
+      prices: product.prices,
       image: product.images[0],
     }));
   return NextResponse.json({ products: matches });

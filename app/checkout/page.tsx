@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
+import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
+import { deliveryFeeFor } from "@/lib/commerce/money";
 
 type Confirmation = { orderNumber: string; total: number } | null;
 
@@ -15,9 +18,11 @@ export default function CheckoutPage() {
     clearCart,
     discoverySessionToken,
     setDiscoverySessionToken,
+    hasUnavailableCurrencyPrice,
   } = useCart();
+  const { currency, format } = useCurrency();
   const [deliveryMethod, setDeliveryMethod] = useState<"standard" | "pickup">(
-    "standard",
+    "pickup",
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -33,7 +38,21 @@ export default function CheckoutPage() {
     note: "",
     marketingOptIn: false,
   });
-  const deliveryFee = deliveryMethod === "pickup" ? 0 : 250;
+  const deliveryFee =
+    deliveryMethod === "pickup" ? 0 : deliveryFeeFor(currency);
+  useEffect(() => {
+    if (!items.length || hasUnavailableCurrencyPrice) return;
+    trackMetaEvent("InitiateCheckout", {
+      value: subtotal + deliveryFee,
+      currency,
+      content_ids: items.map((line) => line.variantId),
+      contents: items.map((line) => ({
+        id: line.variantId,
+        quantity: line.quantity,
+        item_price: line.unitPrices[currency] ?? 0,
+      })),
+    });
+  }, [currency, deliveryFee, hasUnavailableCurrencyPrice, items, subtotal]);
   if (!items.length && !confirmation)
     return (
       <main className="empty-state">
@@ -60,6 +79,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           customer: form,
           deliveryMethod,
+          currency,
           lines: items.map((line) => ({
             variantId: line.variantId,
             quantity: line.quantity,
@@ -71,14 +91,24 @@ export default function CheckoutPage() {
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.error || "Could not create your order.");
+      trackMetaEvent("Lead", {
+        value: Number(data.total),
+        currency,
+        content_ids: items.map((line) => line.variantId),
+        contents: items.map((line) => ({
+          id: line.variantId,
+          quantity: line.quantity,
+          item_price: line.unitPrices[currency] ?? 0,
+        })),
+      });
       setConfirmation({ orderNumber: data.orderNumber, total: data.total });
       clearCart();
       setDiscoverySessionToken(null);
       const message =
         "Hello BWA, I have placed website order " +
         data.orderNumber +
-        " for KES " +
-        Number(data.total).toLocaleString() +
+        " for " +
+        format(Number(data.total)) +
         ". Please confirm payment and delivery details.";
       window.open(
         "https://wa.me/" +
@@ -111,7 +141,7 @@ export default function CheckoutPage() {
         </p>
         <div>
           <span>Total</span>
-          <strong>KES {confirmation.total.toLocaleString()}</strong>
+          <strong>{format(confirmation.total)}</strong>
         </div>
         <Link
           href={"/order/" + confirmation.orderNumber}
@@ -147,6 +177,7 @@ export default function CheckoutPage() {
                 <input
                   required
                   value={form.firstName}
+                  autoComplete="first-name"
                   onChange={(event) => update("firstName", event.target.value)}
                 />
               </label>
@@ -154,6 +185,7 @@ export default function CheckoutPage() {
                 Last name
                 <input
                   value={form.lastName}
+                  autoComplete="last-name"
                   onChange={(event) => update("lastName", event.target.value)}
                 />
               </label>
@@ -163,6 +195,7 @@ export default function CheckoutPage() {
                   required
                   placeholder="+254 7XX XXX XXX"
                   value={form.phone}
+                  autoComplete="tel"
                   onChange={(event) => update("phone", event.target.value)}
                 />
               </label>
@@ -171,6 +204,7 @@ export default function CheckoutPage() {
                 <input
                   type="email"
                   value={form.email}
+                  autoComplete="email"
                   onChange={(event) => update("email", event.target.value)}
                 />
               </label>
@@ -193,7 +227,12 @@ export default function CheckoutPage() {
                 className={deliveryMethod === "standard" ? "is-selected" : ""}
               >
                 <strong>Doorstep delivery</strong>
-                <span>Kenya delivery · KES 250</span>
+                <span>
+                  Kenya delivery ·{" "}
+                  {currency === "KES"
+                    ? "KES 250"
+                    : "USD price confirmed with BWA"}
+                </span>
               </button>
             </div>
             {deliveryMethod === "standard" && (
@@ -203,6 +242,7 @@ export default function CheckoutPage() {
                   <input
                     required
                     value={form.address}
+                    autoComplete="street-address"
                     onChange={(event) => update("address", event.target.value)}
                   />
                 </label>
@@ -211,6 +251,7 @@ export default function CheckoutPage() {
                   <input
                     required
                     value={form.city}
+                    autoComplete="city"
                     onChange={(event) => update("city", event.target.value)}
                   />
                 </label>
@@ -219,6 +260,7 @@ export default function CheckoutPage() {
                   <input
                     required
                     value={form.county}
+                    autoComplete="county"
                     onChange={(event) => update("county", event.target.value)}
                   />
                 </label>
@@ -249,7 +291,7 @@ export default function CheckoutPage() {
             </p>
           )}
           <button
-            disabled={loading}
+            disabled={loading || hasUnavailableCurrencyPrice}
             className="btn btn-primary checkout-submit"
           >
             {loading ? "Creating your order…" : "Create order & open WhatsApp"}{" "}
@@ -264,23 +306,23 @@ export default function CheckoutPage() {
                 {line.title} · {line.variantName} × {line.quantity}
               </span>
               <strong>
-                KES {(line.unitPrice * line.quantity).toLocaleString()}
+                {line.unitPrices[currency] === null
+                  ? "Price unavailable"
+                  : format((line.unitPrices[currency] ?? 0) * line.quantity)}
               </strong>
             </div>
           ))}
           <div>
             <span>Subtotal</span>
-            <strong>KES {subtotal.toLocaleString()}</strong>
+            <strong>{format(subtotal)}</strong>
           </div>
           <div>
             <span>Delivery</span>
-            <strong>
-              {deliveryFee ? "KES " + deliveryFee.toLocaleString() : "Free"}
-            </strong>
+            <strong>{deliveryFee ? format(deliveryFee) : "Free"}</strong>
           </div>
           <div className="checkout-total">
             <span>Total</span>
-            <strong>KES {(subtotal + deliveryFee).toLocaleString()}</strong>
+            <strong>{format(subtotal + deliveryFee)}</strong>
           </div>
         </aside>
       </div>

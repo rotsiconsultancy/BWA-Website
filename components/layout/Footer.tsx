@@ -70,6 +70,7 @@ export default function Footer() {
                 aria-label="Email address"
                 required
                 value={email}
+                autoComplete="email"
                 onChange={(event) => setEmail(event.target.value)}
               />
               <button type="submit" disabled={status === "loading"}>

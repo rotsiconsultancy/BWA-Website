@@ -8,6 +8,8 @@ import React, {
   useState,
 } from "react";
 import type { CartLine } from "@/lib/commerce/types";
+import { useCurrency } from "@/context/CurrencyContext";
+import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
 
 type Toast = {
   id: number;
@@ -18,6 +20,7 @@ type CartContextValue = {
   items: CartLine[];
   cartCount: number;
   subtotal: number;
+  hasUnavailableCurrencyPrice: boolean;
   drawerOpen: boolean;
   discoverySessionToken: string | null;
   toast: Toast | null;
@@ -39,7 +42,50 @@ const CartContext = createContext<CartContextValue | undefined>(undefined);
 const CART_KEY = "bwa_cart_items_v3";
 const DISCOVERY_KEY = "bwa_discovery_session";
 
+function restoreCart(value: unknown): CartLine[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((entry) => {
+    if (!entry || typeof entry !== "object") return [];
+    const line = entry as Partial<CartLine> & { unitPrice?: unknown };
+    if (
+      !line.productId ||
+      !line.variantId ||
+      !line.slug ||
+      !line.title ||
+      !line.subtitle ||
+      !line.image ||
+      !line.variantName
+    )
+      return [];
+    const storedPrices = line.unitPrices;
+    const kesPrice = storedPrices?.KES ?? line.unitPrice;
+    if (typeof kesPrice !== "number" || !Number.isFinite(kesPrice)) return [];
+    return [
+      {
+        productId: line.productId,
+        variantId: line.variantId,
+        slug: line.slug,
+        title: line.title,
+        subtitle: line.subtitle,
+        image: line.image,
+        variantName: line.variantName,
+        quantity:
+          typeof line.quantity === "number" && line.quantity > 0
+            ? line.quantity
+            : 1,
+        // KES-only carts saved before dual pricing remain valid. USD is
+        // intentionally unavailable until the product is priced in USD.
+        unitPrices: {
+          KES: kesPrice,
+          USD: typeof storedPrices?.USD === "number" ? storedPrices.USD : null,
+        },
+      },
+    ];
+  });
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
+  const { currency } = useCurrency();
   const [items, setItems] = useState<CartLine[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -50,7 +96,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(CART_KEY);
-      if (stored) setItems(JSON.parse(stored));
+      if (stored) setItems(restoreCart(JSON.parse(stored)));
       setDiscoverySessionToken(sessionStorage.getItem(DISCOVERY_KEY));
     } catch {
       localStorage.removeItem(CART_KEY);
@@ -97,6 +143,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
     setDrawerOpen(true);
     showToast(newLine.title + " added to your bag.");
+    const price = newLine.unitPrices[currency];
+    if (price !== null)
+      trackMetaEvent("AddToCart", {
+        value: price * quantity,
+        currency,
+        content_ids: [newLine.variantId],
+        contents: [{ id: newLine.variantId, quantity, item_price: price }],
+      });
   };
   const updateQuantity = (
     productId: string,
@@ -132,8 +186,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       items,
       cartCount: items.reduce((count, line) => count + line.quantity, 0),
       subtotal: items.reduce(
-        (total, line) => total + line.unitPrice * line.quantity,
+        (total, line) =>
+          total + (line.unitPrices[currency] ?? 0) * line.quantity,
         0,
+      ),
+      hasUnavailableCurrencyPrice: items.some(
+        (line) => line.unitPrices[currency] === null,
       ),
       drawerOpen,
       discoverySessionToken,
@@ -147,7 +205,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       showToast,
       setDiscoverySessionToken: saveDiscoverySession,
     }),
-    [items, drawerOpen, toast, discoverySessionToken],
+    [items, drawerOpen, toast, discoverySessionToken, currency],
   );
   return (
     <CartContext.Provider value={value}>

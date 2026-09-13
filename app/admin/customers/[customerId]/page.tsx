@@ -12,7 +12,7 @@ export default async function CustomerDetail({
   const { data: customer } = await admin
     .from("customers")
     .select(
-      "id,first_name,last_name,email,phone,whatsapp_opt_in,marketing_opt_in,source,created_at,customer_addresses(address,city,county,delivery_note,is_default),orders(order_number,status,total_amount,created_at),custom_bracelet_requests(request_number,status,intention,palette,created_at),quiz_sessions(completed_at,quiz_results(selected_product_id,ranked_products))",
+      "id,first_name,last_name,email,phone,whatsapp_opt_in,marketing_opt_in,source,created_at,customer_addresses(address,city,county,delivery_note,is_default),orders(order_number,status,total_amount,currency,created_at),custom_bracelet_requests(request_number,status,intention,palette,created_at),quiz_sessions(completed_at,quiz_results(selected_product_id,ranked_products))",
     )
     .eq("id", customerId)
     .maybeSingle();
@@ -108,7 +108,7 @@ export default async function CustomerDetail({
                   href={`/admin/orders/${order.order_number}`}
                 >
                   <strong>
-                    {order.order_number} · KES{" "}
+                    {order.order_number} · {order.currency}{" "}
                     {Number(order.total_amount).toLocaleString()}
                   </strong>
                   <em>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { CommerceProduct } from "@/lib/commerce/types";
+import Money from "@/components/commerce/Money";
 
 export default function SeoProductGrid({
   products,
@@ -25,7 +26,9 @@ export default function SeoProductGrid({
             <p>{product.collection}</p>
             <h2>{product.title}</h2>
             <span>{product.subtitle}</span>
-            <strong>KES {product.price.toLocaleString()}</strong>
+            <strong>
+              <Money prices={product.prices} />
+            </strong>
           </div>
         </Link>
       ))}

@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
+import Money from "@/components/commerce/Money";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -15,7 +17,7 @@ export default function Header() {
       slug: string;
       title: string;
       subtitle: string;
-      price: number;
+      prices: import("@/lib/commerce/money").Prices;
       image: string;
     }[]
   >([]);
@@ -23,6 +25,7 @@ export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const { cartCount, openDrawer } = useCart();
+  const { currency, setCurrency } = useCurrency();
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -109,6 +112,18 @@ export default function Header() {
           </nav>
 
           <div className="nav-actions">
+            <label className="currency-switcher">
+              <span className="sr-only">Display currency</span>
+              <select
+                value={currency}
+                onChange={(event) =>
+                  setCurrency(event.target.value as "KES" | "USD")
+                }
+              >
+                <option value="KES">KES</option>
+                <option value="USD">USD</option>
+              </select>
+            </label>
             <button
               className="icon-btn"
               aria-label="Search"
@@ -195,7 +210,9 @@ export default function Header() {
                     <strong>{product.title}</strong>
                     <small>{product.subtitle}</small>
                   </span>
-                  <b>KES {product.price.toLocaleString()}</b>
+                  <b>
+                    <Money prices={product.prices} />
+                  </b>
                 </Link>
               ))}
             </div>
@@ -222,6 +239,18 @@ export default function Header() {
           </button>
         </div>
         <nav className="mobile-links">
+          <label className="currency-switcher currency-switcher--mobile">
+            Display currency
+            <select
+              value={currency}
+              onChange={(event) =>
+                setCurrency(event.target.value as "KES" | "USD")
+              }
+            >
+              <option value="KES">KES</option>
+              <option value="USD">USD</option>
+            </select>
+          </label>
           <Link href="/shop" onClick={() => setOpen(false)}>
             Shop
           </Link>

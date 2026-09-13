@@ -9,6 +9,8 @@ import {
 import type { DiscoveryQuestion } from "@/lib/commerce/quiz-types";
 import type { CommerceProduct } from "@/lib/commerce/types";
 import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
+import Money from "@/components/commerce/Money";
 
 export const fallbackQuestions: DiscoveryQuestion[] = [
   {
@@ -138,6 +140,7 @@ export default function FindYourBracelet({
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const savedRun = useRef<string | null>(null);
   const { addToCart, setDiscoverySessionToken } = useCart();
+  const { currency } = useCurrency();
   const result = useMemo(
     () => recommendProducts(products, answers),
     [answers, products],
@@ -244,7 +247,7 @@ export default function FindYourBracelet({
               {answers.map((answer) => answer.value.toLowerCase()).join(", ")}.
             </p>
             <p className="product-price">
-              KES {match.product.price.toLocaleString()}
+              <Money prices={match.product.prices} />
             </p>
             <div className="quiz-result-actions">
               <button
@@ -261,7 +264,16 @@ export default function FindYourBracelet({
                     title: match.product.title,
                     subtitle: match.product.subtitle,
                     image: match.product.images[0],
-                    unitPrice: match.product.price + variant.priceAdjustment,
+                    unitPrices: {
+                      KES:
+                        match.product.prices.KES + variant.priceAdjustments.KES,
+                      USD:
+                        match.product.prices.USD === null ||
+                        variant.priceAdjustments.USD === null
+                          ? null
+                          : match.product.prices.USD +
+                            variant.priceAdjustments.USD,
+                    },
                     variantName: variant.name,
                   });
                   if (sessionToken)
@@ -275,6 +287,7 @@ export default function FindYourBracelet({
                       }),
                     });
                 }}
+                disabled={match.product.prices[currency] === null}
               >
                 Add to bag
               </button>

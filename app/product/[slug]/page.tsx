@@ -44,7 +44,7 @@ export default async function ProductPage({ params }: Props) {
     offers: {
       "@type": "Offer",
       priceCurrency: "KES",
-      price: product.price,
+      price: product.prices.KES,
       availability: product.variants.some((variant) => variant.available)
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",

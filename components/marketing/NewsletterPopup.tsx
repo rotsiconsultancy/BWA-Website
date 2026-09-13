@@ -184,7 +184,7 @@ export default function NewsletterPopup() {
               marginBottom: "8px",
             }}
           >
-            <Sparkles size={14} /> VIP Access
+            VIP Access
           </div>
 
           <h4
@@ -218,6 +218,7 @@ export default function NewsletterPopup() {
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 required
                 style={{
                   width: "100%",

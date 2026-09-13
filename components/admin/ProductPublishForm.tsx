@@ -305,14 +305,25 @@ export default function ProductPublishForm({
             <input name="title" required placeholder="e.g. The Grounded" />
           </label>
           <label>
-            Price (KES)
+            Base price (KES)
             <input
-              name="price"
+              name="price_kes"
               required
               type="number"
               min="0"
               step="1"
               placeholder="e.g. 3800"
+            />
+          </label>
+          <label>
+            Base price (USD)
+            <input
+              name="price_usd"
+              required
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="e.g. 35"
             />
           </label>
           <label>
@@ -335,6 +346,26 @@ export default function ProductPublishForm({
           <label>
             Variant SKU
             <input name="variant_sku" placeholder="e.g. BWA-GRD-M" />
+          </label>
+          <label>
+            Variant adjustment (KES)
+            <input
+              name="variant_price_adjustment_kes"
+              type="number"
+              min="0"
+              step="1"
+              defaultValue="0"
+            />
+          </label>
+          <label>
+            Variant adjustment (USD)
+            <input
+              name="variant_price_adjustment_usd"
+              type="number"
+              min="0"
+              step="0.01"
+              defaultValue="0"
+            />
           </label>
           <label>
             Opening stock

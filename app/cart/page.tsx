@@ -3,9 +3,19 @@
 import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
+import { deliveryFeeFor } from "@/lib/commerce/money";
 
 export default function CartPage() {
-  const { items, subtotal, updateQuantity, removeFromCart } = useCart();
+  const {
+    items,
+    subtotal,
+    updateQuantity,
+    removeFromCart,
+    hasUnavailableCurrencyPrice,
+  } = useCart();
+  const { currency, format } = useCurrency();
+  const deliveryFee = deliveryFeeFor(currency);
   if (!items.length)
     return (
       <main className="empty-state">
@@ -69,7 +79,9 @@ export default function CartPage() {
                 </div>
               </div>
               <strong>
-                KES {(line.unitPrice * line.quantity).toLocaleString()}
+                {line.unitPrices[currency] === null
+                  ? "Price unavailable"
+                  : format((line.unitPrices[currency] ?? 0) * line.quantity)}
               </strong>
             </article>
           ))}
@@ -79,7 +91,7 @@ export default function CartPage() {
         <p className="eyebrow">Order summary</p>
         <div>
           <span>Subtotal</span>
-          <strong>KES {subtotal.toLocaleString()}</strong>
+          <strong>{format(subtotal)}</strong>
         </div>
         <div>
           <span>Delivery</span>
@@ -87,9 +99,19 @@ export default function CartPage() {
         </div>
         <div className="bag-total">
           <span>Estimated total</span>
-          <strong>KES {(subtotal + 250).toLocaleString()}</strong>
+          <strong>{format(subtotal + deliveryFee)}</strong>
         </div>
-        <Link href="/checkout" className="btn btn-primary">
+        {hasUnavailableCurrencyPrice && (
+          <p>One or more pieces do not yet have a {currency} price.</p>
+        )}
+        <Link
+          href="/checkout"
+          className="btn btn-primary"
+          aria-disabled={hasUnavailableCurrencyPrice}
+          onClick={(event) =>
+            hasUnavailableCurrencyPrice && event.preventDefault()
+          }
+        >
           Continue to order
         </Link>
         <p>
