@@ -223,8 +223,11 @@ export default function Header() {
           </button>
         </div>
         <nav className="mobile-links">
-          <Link href="/bracelets" onClick={() => setOpen(false)}>
+          <Link href="/shop" onClick={() => setOpen(false)}>
             Shop
+          </Link>
+          <Link href="/bracelets" onClick={() => setOpen(false)}>
+            Bracelet
           </Link>
           <Link href="/find-your-bracelet" onClick={() => setOpen(false)}>
             Find Your Bracelet
