@@ -82,7 +82,14 @@ export default function Header() {
           </Link>
 
           <nav className="desktop-nav" aria-label="Primary">
-            <Link href="/shop" className={pathname === "/shop" ? "active" : ""}>
+            <Link
+              href="/bracelets"
+              className={
+                pathname === "/shop" || pathname.startsWith("/bracelets")
+                  ? "active"
+                  : ""
+              }
+            >
               Shop
             </Link>
             <Link
@@ -216,7 +223,7 @@ export default function Header() {
           </button>
         </div>
         <nav className="mobile-links">
-          <Link href="/shop" onClick={() => setOpen(false)}>
+          <Link href="/bracelets" onClick={() => setOpen(false)}>
             Shop
           </Link>
           <Link href="/find-your-bracelet" onClick={() => setOpen(false)}>

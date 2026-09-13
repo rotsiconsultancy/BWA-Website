@@ -58,7 +58,7 @@ export default function CartDrawer() {
           <div className="cart-empty">
             <ShoppingBag size={28} />
             <p>Your bag is waiting for a piece with meaning.</p>
-            <Link href="/shop" onClick={closeDrawer}>
+            <Link href="/bracelets" onClick={closeDrawer}>
               Explore the collection
             </Link>
           </div>

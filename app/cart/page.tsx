@@ -11,7 +11,7 @@ export default function CartPage() {
       <main className="empty-state">
         <h1>Your bag is waiting.</h1>
         <p>A bracelet begins with a feeling. Find the one that is yours.</p>
-        <Link href="/shop" className="btn btn-primary">
+        <Link href="/bracelets" className="btn btn-primary">
           Explore bracelets
         </Link>
       </main>

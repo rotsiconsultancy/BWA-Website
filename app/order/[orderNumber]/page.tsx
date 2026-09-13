@@ -95,7 +95,7 @@ export default function OrderTrackingPage() {
           </ul>
         </section>
       )}
-      <Link href="/shop">Return to the collection</Link>
+      <Link href="/bracelets">Return to the collection</Link>
     </main>
   );
 }

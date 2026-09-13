@@ -69,7 +69,7 @@ export default function Hero() {
           <Link className="btn btn-light" href="/find-your-bracelet">
             Find My Bracelet <span>→</span>
           </Link>
-          <Link className="btn btn-outline" href="/shop">
+          <Link className="btn btn-outline" href="/bracelets">
             Shop All Bracelets <span>→</span>
           </Link>
         </div>

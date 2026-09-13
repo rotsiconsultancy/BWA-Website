@@ -206,3 +206,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Changes**: Replaced Popular Picks’ unauthorised external placeholders with the BWA-owned storefront catalogue and each product’s approved image, adding a safe catalogue fallback when no product is marked featured.
 - **Experience**: Added a header search overlay with Cmd/Ctrl+K, Escape, live product/stone/mood suggestions, and a bespoke no-result route. Footer subscription now submits through the Brevo API route with visible success/error feedback.
 - **Brand/SEO**: Registered the BWA emblem SVG as the favicon and fixed social-card metadata to use an available owned image.
+
+### [2026-09-13 12:35] — Product SEO & Bracelet Discovery Hubs
+
+- **Agent**: Codex
+- **Changes**:
+  1. Added the canonical, indexable `/bracelets` collection page and BWA-owned discovery hubs for live stone, feeling, intention, and everyday bracelet edits.
+  2. Each hub uses current Supabase catalogue data, has unique page metadata and `CollectionPage`/`ItemList` structured data, excludes empty collections, and is included in the dynamic sitemap only when matching live products exist.
+  3. Enriched product metadata and Product structured data with natural-stone context, brand, category, and condition; product pages now link to relevant discovery hubs for stronger internal discovery.
+  4. Made `/bracelets` the primary shop destination and canonical target; `/shop` remains available for filtering but is intentionally non-indexed to avoid competing duplicate catalogue pages.

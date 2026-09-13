@@ -16,7 +16,7 @@ export default async function FeaturedCollections() {
             <p className="eyebrow">Featured collections</p>
             <h2>Popular Picks</h2>
           </div>
-          <Link className="text-link" href="/shop">
+          <Link className="text-link" href="/bracelets">
             Shop all →
           </Link>
         </div>

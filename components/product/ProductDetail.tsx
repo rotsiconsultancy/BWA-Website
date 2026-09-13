@@ -4,6 +4,7 @@ import { Minus, Plus, ShieldCheck, Truck } from "lucide-react";
 import { useState } from "react";
 import type { CommerceProduct } from "@/lib/commerce/types";
 import { useCart } from "@/context/CartContext";
+import { hubsForProduct } from "@/lib/commerce/seo-hubs";
 
 export default function ProductDetail({
   product,
@@ -21,10 +22,11 @@ export default function ProductDetail({
   const variant =
     product.variants.find((v) => v.id === variantId) ?? product.variants[0];
   const price = product.price + variant.priceAdjustment;
+  const discoveryHubs = hubsForProduct(product).slice(0, 3);
   return (
     <main className="product-page">
       <div className="container product-breadcrumb">
-        <Link href="/shop">Collection</Link>
+        <Link href="/bracelets">Collection</Link>
         <span>/</span>
         <span>{product.title}</span>
       </div>
@@ -145,13 +147,25 @@ export default function ProductDetail({
           </div>
         </div>
       </section>
+      {discoveryHubs.length > 0 && (
+        <section className="container product-discovery-links">
+          <p className="eyebrow">Explore this bracelet further</p>
+          <div>
+            {discoveryHubs.map((hub) => (
+              <Link key={hub.slug} href={`/bracelets/${hub.slug}`}>
+                {hub.title.replace(" in Kenya", "")}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
       <section className="container product-related">
         <div className="product-related-head">
           <div>
             <p className="eyebrow">Wear & stack</p>
             <h2>Other ways to wear your story.</h2>
           </div>
-          <Link href="/shop">View the collection →</Link>
+          <Link href="/bracelets">View the collection →</Link>
         </div>
         <div className="catalogue-grid catalogue-grid--three">
           {related.map((item) => (

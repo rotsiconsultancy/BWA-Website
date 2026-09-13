@@ -12,8 +12,12 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = await getStorefrontProduct((await params).slug);
   if (!product) return {};
-  const title = `${product.title} | Beads World Africa`;
-  const description = product.story.slice(0, 155);
+  const title = `${product.title} ${product.subtitle} Bracelet | Beads World Africa`;
+  const description =
+    `Shop ${product.title}, a ${product.subtitle.toLowerCase()} natural stone bracelet by Beads World Africa. ${product.story}`.slice(
+      0,
+      160,
+    );
   return {
     title,
     description,
@@ -35,6 +39,8 @@ export default async function ProductPage({ params }: Props) {
     description: product.story,
     image: product.images,
     sku: product.variants[0]?.sku,
+    brand: { "@type": "Brand", name: "Beads World Africa" },
+    category: "Bracelets",
     offers: {
       "@type": "Offer",
       priceCurrency: "KES",
@@ -42,6 +48,7 @@ export default async function ProductPage({ params }: Props) {
       availability: product.variants.some((variant) => variant.available)
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
       url: `https://beadsworldafrica.com/product/${product.slug}`,
     },
   };

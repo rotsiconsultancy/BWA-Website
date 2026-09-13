@@ -38,7 +38,7 @@ export default function CheckoutPage() {
     return (
       <main className="empty-state">
         <h1>Your bag is empty.</h1>
-        <Link href="/shop" className="btn btn-primary">
+        <Link href="/bracelets" className="btn btn-primary">
           Return to collection
         </Link>
       </main>
@@ -82,7 +82,7 @@ export default function CheckoutPage() {
         ". Please confirm payment and delivery details.";
       window.open(
         "https://wa.me/" +
-          (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "254712345678") +
+          (process.env.WHATSAPP_NUMBER || "254712345678") +
           "?text=" +
           encodeURIComponent(message),
         "_blank",
@@ -119,7 +119,7 @@ export default function CheckoutPage() {
         >
           Track your order
         </Link>
-        <Link href="/shop">Continue exploring</Link>
+        <Link href="/bracelets">Continue exploring</Link>
       </main>
     );
   return (

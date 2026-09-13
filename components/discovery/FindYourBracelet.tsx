@@ -207,7 +207,7 @@ export default function FindYourBracelet({
           <button className="btn btn-primary" onClick={() => setStep(0)}>
             Begin discovery
           </button>
-          <Link href="/shop">I already know what I want</Link>
+          <Link href="/bracelets">I already know what I want</Link>
         </section>
       </main>
     );
