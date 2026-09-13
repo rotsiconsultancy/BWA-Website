@@ -242,3 +242,16 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 - **Agent**: Codex
 - **Changes**: Rendered the Meta consent prompt directly at the document body layer and isolated its touch targets above storefront drawers, headers, and overlays, ensuring its accept/decline buttons receive mouse and mobile-tap events.
+
+### [2026-09-13 14:55] — Meta Pixel Loader Deduplication
+
+- **Agent**: Codex
+- **Changes**: Added guards for existing `fbq`, `_fbq`, and the BWA Pixel script ID so a host-level snippet or tag manager bootstrap cannot be initialized a second time by the storefront.
+
+### [2026-09-13 17:20] — Product Gallery & Catalogue Editing
+
+- **Agent**: Codex
+- **Catalogue**: Product creation now supports an ordered gallery of up to ten described image URLs. The first image becomes the storefront cover; later images can be marked as gallery, detail, or lifestyle imagery and are delivered to the existing product gallery in order.
+- **Operations**: Added protected per-product editing from the catalogue table. Staff can modify commerce copy, KES/USD prices, primary variant details, stock, storefront state, discovery tags, SEO fields, and the full gallery without recreating the product.
+- **Integrity**: Stock edits write an inventory adjustment movement; product edits write an audit record, queue a downstream CRM update, and revalidate storefront, discovery, product, and sitemap paths.
+- **Configuration**: Corrected Supabase clients to read `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, matching the project environment template. The browser placeholder error is resolved after valid values are supplied and the app is restarted/redeployed.

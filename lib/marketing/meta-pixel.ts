@@ -5,6 +5,7 @@ import type { StoreCurrency } from "@/lib/commerce/money";
 declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
+    _fbq?: (...args: unknown[]) => void;
   }
 }
 

@@ -2,6 +2,7 @@ import PageHeader from "@/components/admin/PageHeader";
 import ProductPublishForm from "@/components/admin/ProductPublishForm";
 import { updateProductPrices } from "@/app/admin/products/actions";
 import { requireAdmin } from "@/lib/admin/auth";
+import Link from "next/link";
 
 export default async function AdminProducts({
   searchParams,
@@ -41,7 +42,7 @@ export default async function AdminProducts({
           {products?.length || 0} product{products?.length === 1 ? "" : "s"}
         </p>
         <span className="admin-toolbar-note">
-          Product creation is the next operational release.
+          Select Edit to manage product copy, imagery, tags, pricing, and stock.
         </span>
       </div>
       <div className="admin-table admin-products-table">
@@ -50,6 +51,7 @@ export default async function AdminProducts({
           <span>State</span>
           <span>Store prices</span>
           <span>Variants</span>
+          <span>Manage</span>
         </div>
         {products?.map((product: any) => (
           <div key={product.sku}>
@@ -97,6 +99,12 @@ export default async function AdminProducts({
                 )
                 .join(" · ")}
             </span>
+            <Link
+              className="admin-table-action"
+              href={`/admin/products/${product.id}`}
+            >
+              Edit product →
+            </Link>
           </div>
         )) || <p className="admin-table-empty">No products yet.</p>}
       </div>

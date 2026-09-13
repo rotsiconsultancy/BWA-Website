@@ -1,8 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl =
-  process.env.SUPABASE_URL || "https://placeholder.supabase.co";
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
 const supabasePublishableKey =
-  process.env.SUPABASE_PUBLISHABLE_KEY || "placeholder-publishable-key";
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  "placeholder-publishable-key";
 
 export const supabase = createClient(supabaseUrl, supabasePublishableKey);

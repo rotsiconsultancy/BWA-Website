@@ -6,13 +6,18 @@ import { createProduct } from "@/app/admin/products/actions";
 import type { ProductActionState } from "@/app/admin/products/actions";
 import { useProductDraftStore } from "@/lib/admin/product-draft-store";
 
-type TagGroup = {
+export type TagGroup = {
   name: string;
   label: string;
   required?: boolean;
   options: [string, string][];
 };
-const groups: TagGroup[] = [
+export type GalleryImage = {
+  url: string;
+  alt: string;
+  kind: "hero" | "gallery" | "detail" | "lifestyle";
+};
+export const groups: TagGroup[] = [
   {
     name: "energy_vibe",
     label: "Energy",
@@ -107,7 +112,102 @@ const groups: TagGroup[] = [
 ];
 const initialProductActionState: ProductActionState = {};
 
-function TagPicker({
+export function GalleryFields({
+  images,
+  onChange,
+}: {
+  images: GalleryImage[];
+  onChange: (images: GalleryImage[]) => void;
+}) {
+  const update = (index: number, patch: Partial<GalleryImage>) =>
+    onChange(
+      images.map((image, imageIndex) =>
+        imageIndex === index ? { ...image, ...patch } : image,
+      ),
+    );
+  return (
+    <div className="admin-gallery-fields admin-form-wide">
+      <input type="hidden" name="images" value={JSON.stringify(images)} />
+      <div className="admin-gallery-heading">
+        <div>
+          <strong>Product gallery</strong>
+          <p>
+            Add up to 10 image links. The first image is the cover customers see
+            first.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() =>
+            onChange([...images, { url: "", alt: "", kind: "gallery" }])
+          }
+          disabled={images.length >= 10}
+        >
+          <Plus size={15} aria-hidden="true" /> Add image
+        </button>
+      </div>
+      <div className="admin-gallery-list">
+        {images.map((image, index) => (
+          <div className="admin-gallery-row" key={index}>
+            <span className="admin-gallery-number">
+              {index === 0 ? "Cover" : index + 1}
+            </span>
+            <label>
+              Image URL
+              <input
+                type="url"
+                value={image.url}
+                onChange={(event) => update(index, { url: event.target.value })}
+                placeholder="https://…"
+                required={index === 0}
+              />
+            </label>
+            <label>
+              Describe the image
+              <input
+                value={image.alt}
+                onChange={(event) => update(index, { alt: event.target.value })}
+                placeholder="e.g. Detail of Tiger Eye bead texture"
+                required={index === 0}
+              />
+            </label>
+            {index > 0 && (
+              <label>
+                Image role
+                <select
+                  value={image.kind}
+                  onChange={(event) =>
+                    update(index, {
+                      kind: event.target.value as GalleryImage["kind"],
+                    })
+                  }
+                >
+                  <option value="gallery">Gallery</option>
+                  <option value="detail">Detail</option>
+                  <option value="lifestyle">Lifestyle</option>
+                </select>
+              </label>
+            )}
+            {images.length > 1 && (
+              <button
+                type="button"
+                className="admin-gallery-remove"
+                onClick={() =>
+                  onChange(images.filter((_, item) => item !== index))
+                }
+                aria-label={`Remove image ${index + 1}`}
+              >
+                <X size={16} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function TagPicker({
   group,
   selected,
   onChange,
@@ -199,6 +299,9 @@ export default function ProductPublishForm({
     initialProductActionState,
   );
   const formRef = useRef<HTMLFormElement>(null);
+  const [images, setImages] = useState<GalleryImage[]>([
+    { url: "", alt: "", kind: "hero" },
+  ]);
   useEffect(() => {
     if (!formRef.current) return;
     Object.entries(values).forEach(([name, value]) => {
@@ -417,23 +520,7 @@ export default function ProductPublishForm({
               }
             />
           </label>
-          <label>
-            Hero image URL
-            <input
-              name="image_url"
-              required
-              type="url"
-              placeholder="Paste an image URL"
-            />
-          </label>
-          <label>
-            Describe the image
-            <input
-              name="image_alt"
-              required
-              placeholder="e.g. Black Onyx and Lava Stone bracelet"
-            />
-          </label>
+          <GalleryFields images={images} onChange={setImages} />
         </div>
       </div>
       <div className="admin-form-section">

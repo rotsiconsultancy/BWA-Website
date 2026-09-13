@@ -18,7 +18,15 @@ export default function MetaPixel() {
     if (saved === "accepted" || saved === "declined") setConsent(saved);
   }, []);
   useEffect(() => {
-    if (isAdmin || consent !== "accepted" || !pixelId || window.fbq) return;
+    if (
+      isAdmin ||
+      consent !== "accepted" ||
+      !pixelId ||
+      window.fbq ||
+      window._fbq ||
+      document.getElementById("bwa-meta-pixel")
+    )
+      return;
     const queue: unknown[][] = [];
     const fbq = ((...args: unknown[]) => {
       queue.push(args);
@@ -32,6 +40,7 @@ export default function MetaPixel() {
     fbq.version = "2.0";
     window.fbq = fbq;
     const script = document.createElement("script");
+    script.id = "bwa-meta-pixel";
     script.async = true;
     script.src = "https://connect.facebook.net/en_US/fbevents.js";
     document.head.appendChild(script);

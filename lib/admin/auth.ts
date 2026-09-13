@@ -4,8 +4,8 @@ import { redirect } from "next/navigation";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 
 export async function requireAdmin() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   const admin = getSupabaseAdmin();
   if (!url || !key || !admin) redirect("/admin/login?reason=config");
   const store = await cookies();
