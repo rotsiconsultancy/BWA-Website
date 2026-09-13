@@ -83,14 +83,16 @@ export default function Header() {
 
           <nav className="desktop-nav" aria-label="Primary">
             <Link
-              href="/bracelets"
-              className={
-                pathname === "/shop" || pathname.startsWith("/bracelets")
-                  ? "active"
-                  : ""
-              }
+              href="/shop"
+              className={pathname === "/shop" ? "active" : ""}
             >
               Shop
+            </Link>
+            <Link
+              href="/bracelets"
+              className={pathname === "/bracelets" ? "active" : ""}
+            >
+              Bracelets
             </Link>
             <Link
               href="/find-your-bracelet"

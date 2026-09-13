@@ -40,6 +40,7 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Shop</h4>
             <div className="footer-links">
+              <Link href="/shop">Shop</Link>
               <Link href="/bracelets">All Bracelets</Link>
               <Link href="/bracelets">Popular picks</Link>
               <Link href="/find-your-bracelet">Find your bracelet</Link>
