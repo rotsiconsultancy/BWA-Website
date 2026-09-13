@@ -82,10 +82,7 @@ export default function Header() {
           </Link>
 
           <nav className="desktop-nav" aria-label="Primary">
-            <Link
-              href="/shop"
-              className={pathname === "/shop" ? "active" : ""}
-            >
+            <Link href="/shop" className={pathname === "/shop" ? "active" : ""}>
               Shop
             </Link>
             <Link

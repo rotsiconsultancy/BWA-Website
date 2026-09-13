@@ -215,3 +215,8 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
   2. Each hub uses current Supabase catalogue data, has unique page metadata and `CollectionPage`/`ItemList` structured data, excludes empty collections, and is included in the dynamic sitemap only when matching live products exist.
   3. Enriched product metadata and Product structured data with natural-stone context, brand, category, and condition; product pages now link to relevant discovery hubs for stronger internal discovery.
   4. Made `/bracelets` the primary shop destination and canonical target; `/shop` remains available for filtering but is intentionally non-indexed to avoid competing duplicate catalogue pages.
+
+### [2026-09-13 13:50] — Mobile Sticky Header Stability
+
+- **Agent**: Codex
+- **Changes**: Made the storefront header consistently sticky on mobile, including the home page where it was previously absolutely positioned and scrolled away. The mobile header now has an explicit viewport width, compact action spacing, and a constrained navigation drawer to prevent side-to-side drift.
