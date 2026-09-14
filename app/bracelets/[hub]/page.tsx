@@ -35,13 +35,13 @@ export default async function BraceletHubPage({ params }: Props) {
     "@type": "CollectionPage",
     name: hub.title,
     description: hub.description,
-    url: `https://beadsworldafrica.com/bracelets/${hub.slug}`,
+    url: `https://beadsworldafrica.co.ke/bracelets/${hub.slug}`,
     mainEntity: {
       "@type": "ItemList",
       itemListElement: products.map((product, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        url: `https://beadsworldafrica.com/product/${product.slug}`,
+        url: `https://beadsworldafrica.co.ke/product/${product.slug}`,
         name: product.title,
       })),
     },

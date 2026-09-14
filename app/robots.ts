@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/checkout/", "/cart/", "/order/", "/admin/"],
     },
-    sitemap: "https://beadsworldafrica.com/sitemap.xml",
+    sitemap: "https://beadsworldafrica.co.ke/sitemap.xml",
   };
 }

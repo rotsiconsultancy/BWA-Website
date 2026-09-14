@@ -49,7 +49,7 @@ export default async function ProductPage({ params }: Props) {
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
-      url: `https://beadsworldafrica.com/product/${product.slug}`,
+      url: `https://beadsworldafrica.co.ke/product/${product.slug}`,
     },
   };
   return (

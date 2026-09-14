@@ -22,12 +22,12 @@ export const metadata: Metadata = {
     "men stone bracelets Nairobi",
   ],
   authors: [{ name: "Beads World Africa" }],
-  metadataBase: new URL("https://beadsworldafrica.com"),
+  metadataBase: new URL("https://beadsworldafrica.co.ke"),
   openGraph: {
     title: "Beads World Africa — Natural Stone Bracelets Handmade in Africa",
     description:
       "Contemporary bracelets designed around natural materials, personal style, and the stories we choose to wear.",
-    url: "https://beadsworldafrica.com",
+    url: "https://beadsworldafrica.co.ke",
     siteName: "Beads World Africa",
     images: [
       {

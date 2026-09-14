@@ -23,13 +23,13 @@ export default async function BraceletsPage() {
     "@type": "CollectionPage",
     name: "Natural Stone Bracelets in Kenya",
     description: metadata.description,
-    url: "https://beadsworldafrica.com/bracelets",
+    url: "https://beadsworldafrica.co.ke/bracelets",
     mainEntity: {
       "@type": "ItemList",
       itemListElement: products.map((product, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        url: `https://beadsworldafrica.com/product/${product.slug}`,
+        url: `https://beadsworldafrica.co.ke/product/${product.slug}`,
         name: product.title,
       })),
     },

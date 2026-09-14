@@ -3,7 +3,7 @@ import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://beadsworldafrica.com";
+  const baseUrl = "https://beadsworldafrica.co.ke";
 
   const products = await getStorefrontCatalogue();
   return [
