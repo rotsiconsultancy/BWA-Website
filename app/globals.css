@@ -1,6 +1,6 @@
-/* Hallmark · pre-emit critique: P5 H4 E4 S5 R4 V5
- * genre: editorial · macrostructure: Catalogue · theme: BWA mineral · enrichment: owned photography · nav: N11 · footer: Ft5
- * contrast: pass for new commerce surfaces · honest: pass · chrome: pass · tokens: pass for new commerce system
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5
+ * genre: editorial · macrostructure: Photographic · tone: luxury editorial · anchor hue: mineral forest
+ * enrichment: owned BWA photography · nav: N11 · footer: Ft5 · contrast: pass (40–41)
  */
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap");
 @import "../tokens.css";
@@ -4227,9 +4227,334 @@ body {
   }
 }
 
+/* Hallmark · macrostructure: Photographic · tone: luxury editorial · anchor hue: mineral forest
+ * collection-page enrichment: owned BWA photography · reveal: still image, no spatial motion
+ */
 /* Search-led collection and stone discovery pages */
 .seo-hub-page {
   padding-bottom: var(--space-10);
+}
+.bracelet-collection-page {
+  padding-bottom: var(--space-24);
+}
+.bracelet-collection-hero {
+  position: relative;
+  min-height: clamp(31rem, 66dvh, 48rem);
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-forest);
+}
+.bracelet-collection-hero > img,
+.bracelet-collection-hero-shade {
+  position: absolute;
+  inset: 0;
+}
+.bracelet-collection-hero > img {
+  object-position: center 42%;
+}
+.bracelet-collection-hero-shade {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--color-ink) 66%, transparent) 0%,
+    color-mix(in oklch, var(--color-ink) 31%, transparent) 48%,
+    color-mix(in oklch, var(--color-ink) 12%, transparent) 100%
+  );
+  z-index: 1;
+}
+.bracelet-collection-hero-copy {
+  position: relative;
+  z-index: 2;
+  width: min(var(--max), calc(100% - 2 * var(--pad)));
+  min-height: inherit;
+  margin-inline: auto;
+  padding: clamp(5rem, 11vw, 8.5rem) 0 var(--space-10);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: var(--color-paper);
+}
+.bracelet-collection-hero-copy > p {
+  margin: 0 0 var(--space-4);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.bracelet-collection-hero-copy h1 {
+  max-width: 8.5ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.8rem, 8.8vw, 8rem);
+  font-weight: 500;
+  line-height: 0.83;
+  letter-spacing: -0.055em;
+  overflow-wrap: anywhere;
+}
+.bracelet-collection-hero-copy > div {
+  display: grid;
+  grid-template-columns: minmax(0, 20rem) auto;
+  align-items: end;
+  gap: var(--space-8);
+  max-width: 43rem;
+  margin-top: var(--space-8);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+.bracelet-collection-hero-copy a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: fit-content;
+  padding-bottom: 5px;
+  border-bottom: var(--rule) solid currentColor;
+  color: var(--color-paper);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.bracelet-collection-hero-copy a:hover {
+  opacity: 0.72;
+}
+.bracelet-collection-hero-copy a:active {
+  transform: translateY(1px);
+}
+.bracelet-collection-intro {
+  padding-top: clamp(4rem, 9vw, 8.5rem);
+}
+.bracelet-collection-intro-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 0.55fr);
+  gap: var(--space-6);
+  align-items: end;
+  margin-bottom: var(--space-8);
+}
+.bracelet-collection-intro-head h2 {
+  max-width: 15ch;
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+.bracelet-collection-intro-head > p {
+  margin: 0;
+  max-width: 21rem;
+  justify-self: end;
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+.bracelet-collection-intro .seo-hub-links {
+  border: 0;
+  gap: 1px;
+  background: var(--color-line);
+}
+.bracelet-collection-intro .seo-hub-links a {
+  min-height: 12rem;
+  border: 0;
+  background: var(--color-paper);
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.bracelet-collection-intro .seo-hub-links a:hover {
+  background: var(--color-forest);
+  color: var(--color-paper);
+}
+.bracelet-collection-intro .seo-hub-links a:hover span,
+.bracelet-collection-intro .seo-hub-links a:hover i {
+  color: inherit;
+}
+.bracelet-collection-products {
+  padding-top: clamp(5.5rem, 12vw, 10rem);
+}
+.bracelet-collection-products-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-bottom: var(--space-5);
+}
+.bracelet-collection-products-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.7rem, 5vw, 5rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+.bracelet-collection-products .catalogue-grid-meta {
+  align-items: center;
+  padding: 0;
+  color: var(--color-muted);
+  text-align: right;
+}
+.bracelet-collection-products .catalogue-grid-meta a {
+  color: var(--color-ink);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.bracelet-collection-products .catalogue-grid-meta b {
+  color: var(--color-forest);
+  font-weight: 700;
+}
+.bracelet-collection-products .catalogue-grid {
+  border-inline: 0;
+}
+.bracelet-collection-products .catalogue-product-card:first-child {
+  border-left: var(--rule) solid var(--color-line);
+}
+.bracelet-hub-page {
+  padding-bottom: var(--space-24);
+}
+.bracelet-hub-hero {
+  position: relative;
+  min-height: clamp(28rem, 56dvh, 42rem);
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-forest);
+}
+.bracelet-hub-hero > img,
+.bracelet-hub-hero-shade {
+  position: absolute;
+  inset: 0;
+}
+.bracelet-hub-hero > img {
+  object-position: center 48%;
+}
+.bracelet-hub-hero-shade {
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--color-ink) 70%, transparent),
+    color-mix(in oklch, var(--color-ink) 18%, transparent)
+  );
+}
+.bracelet-hub-hero-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: min(var(--max), calc(100% - 2 * var(--pad)));
+  min-height: inherit;
+  margin-inline: auto;
+  padding: clamp(5rem, 10vw, 7.5rem) 0 var(--space-10);
+  color: var(--color-paper);
+}
+.bracelet-hub-hero-copy > p {
+  margin: 0 0 var(--space-3);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.bracelet-hub-hero-copy h1 {
+  max-width: 10ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.35rem, 7vw, 6.8rem);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  overflow-wrap: anywhere;
+}
+.bracelet-hub-hero-copy > div {
+  display: grid;
+  grid-template-columns: minmax(0, 27rem) auto;
+  align-items: end;
+  gap: var(--space-8);
+  max-width: 52rem;
+  margin-top: var(--space-6);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+.bracelet-hub-hero-copy a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: fit-content;
+  padding-bottom: 5px;
+  border-bottom: var(--rule) solid currentColor;
+  color: var(--color-paper);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.bracelet-hub-hero-copy a:hover {
+  opacity: 0.72;
+}
+.bracelet-hub-hero-copy a:active {
+  transform: translateY(1px);
+}
+.bracelet-hub-products {
+  padding-top: clamp(4.5rem, 9vw, 8rem);
+}
+@media (max-width: 48rem) {
+  .bracelet-collection-hero {
+    min-height: 36rem;
+  }
+  .bracelet-collection-hero > img {
+    object-position: 57% center;
+  }
+  .bracelet-collection-hero-shade {
+    background: linear-gradient(
+      0deg,
+      color-mix(in oklch, var(--color-ink) 74%, transparent),
+      color-mix(in oklch, var(--color-ink) 12%, transparent)
+    );
+  }
+  .bracelet-collection-hero-copy {
+    padding-bottom: var(--space-8);
+  }
+  .bracelet-collection-hero-copy > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+  .bracelet-collection-intro-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+  .bracelet-collection-intro-head > p {
+    justify-self: start;
+  }
+  .bracelet-collection-products-head {
+    align-items: start;
+    flex-direction: column;
+  }
+  .bracelet-collection-products .catalogue-grid-meta {
+    width: 100%;
+    text-align: left;
+  }
+  .bracelet-hub-hero {
+    min-height: 34rem;
+  }
+  .bracelet-hub-hero > img {
+    object-position: 59% center;
+  }
+  .bracelet-hub-hero-shade {
+    background: linear-gradient(
+      0deg,
+      color-mix(in oklch, var(--color-ink) 77%, transparent),
+      color-mix(in oklch, var(--color-ink) 14%, transparent)
+    );
+  }
+  .bracelet-hub-hero-copy {
+    padding-bottom: var(--space-8);
+  }
+  .bracelet-hub-hero-copy > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
 }
 .seo-hub-hero {
   padding: clamp(7rem, 15vw, 11rem) 0 clamp(4.5rem, 9vw, 7rem);

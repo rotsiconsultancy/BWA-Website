@@ -36,34 +36,42 @@ export default async function BraceletsPage() {
   };
 
   return (
-    <main className="seo-hub-page">
+    <main className="seo-hub-page bracelet-collection-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <section className="seo-hub-hero">
-        <div className="container">
-          <p className="eyebrow">BWA / The bracelet collection</p>
-          <h1>Natural stone bracelets, made for your rhythm.</h1>
-          <p>
-            Discover handcrafted BWA bracelets for daily wear, meaningful gifts,
-            and a stack that feels unmistakably yours.
-          </p>
-          <Link href="/find-your-bracelet" className="btn btn-primary">
-            Find your bracelet
-          </Link>
+      <section className="bracelet-collection-hero">
+        <img
+          src="/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png"
+          alt="Woman wearing a Beads World Africa natural stone bracelet outdoors"
+          fetchPriority="high"
+        />
+        <div className="bracelet-collection-hero-shade" aria-hidden="true" />
+        <div className="bracelet-collection-hero-copy">
+          <p>Beads World Africa · The bracelet collection</p>
+          <h1>Wear what moves with you.</h1>
+          <div>
+            <span>
+              Natural stone bracelets for every day, every intention, and every
+              stack.
+            </span>
+            <Link href="#collection">
+              Shop the collection <b aria-hidden="true">↓</b>
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="container seo-hub-section">
-        <div className="seo-hub-heading">
+      <section className="container bracelet-collection-intro">
+        <div className="bracelet-collection-intro-head">
           <div>
-            <p className="eyebrow">Explore the collection</p>
-            <h2>Choose by stone, feeling, or how you wear it.</h2>
+            <p className="eyebrow">Choose your starting point</p>
+            <h2>Find the piece that feels like yours.</h2>
           </div>
           <p>
-            Each edit is built from live BWA pieces, so what you see is ready to
-            explore now.
+            Choose by the stone you’re drawn to, the feeling you want to carry,
+            or the way you wear your bracelets.
           </p>
         </div>
         <div className="seo-hub-links">
@@ -77,10 +85,20 @@ export default async function BraceletsPage() {
         </div>
       </section>
 
-      <section className="container catalogue-grid-section seo-hub-products">
-        <div className="catalogue-grid-meta">
-          <span>{String(products.length).padStart(2, "0")} pieces</span>
-          <Link href="/find-your-bracelet">Not sure? Find yours →</Link>
+      <section
+        id="collection"
+        className="container catalogue-grid-section seo-hub-products bracelet-collection-products"
+      >
+        <div className="bracelet-collection-products-head">
+          <div>
+            <h2>The collection</h2>
+          </div>
+          <div className="catalogue-grid-meta">
+            <span>{String(products.length).padStart(2, "0")} pieces</span>
+            <Link href="/find-your-bracelet">
+              Need a little guidance? <b>Find yours</b>
+            </Link>
+          </div>
         </div>
         <SeoProductGrid products={products} />
       </section>

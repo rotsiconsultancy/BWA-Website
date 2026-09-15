@@ -1,0 +1,9 @@
+{
+  "scanned_at": "2026-09-15",
+  "font_stack": "Cormorant Garamond + Manrope (app/globals.css:5)",
+  "palette": "BWA mineral OKLCH tokens (tokens.css:3)",
+  "motion": "motion-cut (no motion library in package.json)",
+  "spacing": "4px semantic scale (tokens.css:15)",
+  "framework": "Next.js App Router (package.json:17)",
+  "preserve": ["font stack", "BWA mineral palette", "spacing scale"]
+}

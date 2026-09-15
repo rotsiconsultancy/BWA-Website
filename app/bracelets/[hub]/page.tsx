@@ -48,23 +48,34 @@ export default async function BraceletHubPage({ params }: Props) {
   };
 
   return (
-    <main className="seo-hub-page">
+    <main className="seo-hub-page bracelet-hub-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <section className="seo-hub-hero seo-hub-hero--compact">
-        <div className="container">
-          <p className="eyebrow">{hub.eyebrow}</p>
+      <section className="bracelet-hub-hero">
+        <img
+          src="/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png"
+          alt="Man wearing a Beads World Africa natural stone bracelet outdoors"
+          fetchPriority="high"
+        />
+        <div className="bracelet-hub-hero-shade" aria-hidden="true" />
+        <div className="bracelet-hub-hero-copy">
+          <p>{hub.eyebrow}</p>
           <h1>{hub.title}</h1>
-          <p>{hub.intro}</p>
-          <Link href="/find-your-bracelet" className="text-link">
-            Find the piece that fits you →
-          </Link>
+          <div>
+            <span>{hub.intro}</span>
+            <Link href="#collection">
+              Shop these pieces <b aria-hidden="true">↓</b>
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="container catalogue-grid-section seo-hub-products">
+      <section
+        id="collection"
+        className="container catalogue-grid-section seo-hub-products bracelet-hub-products"
+      >
         <div className="catalogue-grid-meta">
           <span>{String(products.length).padStart(2, "0")} pieces</span>
           <Link href="/bracelets">View all bracelets →</Link>

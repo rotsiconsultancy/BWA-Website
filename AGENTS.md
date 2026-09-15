@@ -255,3 +255,9 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Operations**: Added protected per-product editing from the catalogue table. Staff can modify commerce copy, KES/USD prices, primary variant details, stock, storefront state, discovery tags, SEO fields, and the full gallery without recreating the product.
 - **Integrity**: Stock edits write an inventory adjustment movement; product edits write an audit record, queue a downstream CRM update, and revalidate storefront, discovery, product, and sitemap paths.
 - **Configuration**: Corrected Supabase clients to read `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, matching the project environment template. The browser placeholder error is resolved after valid values are supplied and the app is restarted/redeployed.
+
+### [2026-09-15] — Bracelet Collection Sales-Page Redesign
+
+- **Agent**: Codex
+- **Changes**: Reworked `/bracelets` from a sparse text-first hero into a centered, owned-photography collection introduction with a direct “Shop the collection” handoff. The page now brings shop-by discovery routes and live products into a more deliberate sales-led sequence, while retaining live Supabase catalogue data, SEO metadata, and structured data.
+- **Follow-up**: Applied the matching image-led hero treatment to every `/bracelets/[hub]` discovery page, preserving each hub’s live SEO content while directing visitors straight to its filtered product collection.
