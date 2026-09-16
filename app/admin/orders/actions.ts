@@ -41,7 +41,9 @@ export async function updateOrder(formData: FormData) {
   const note = String(formData.get("note") || "").trim() || null;
   const { data: previous } = await admin
     .from("orders")
-    .select("status,payment_status,courier_name,tracking_reference")
+    .select(
+      "status,payment_status,courier_name,tracking_reference,discount_code_snapshot",
+    )
     .eq("id", orderId)
     .maybeSingle();
   const { error } = await admin
@@ -54,6 +56,32 @@ export async function updateOrder(formData: FormData) {
     })
     .eq("id", orderId);
   if (error) redirect(`/admin/orders/${orderNumber}?error=save`);
+  const shouldReleaseDiscount =
+    (status === "cancelled" && previous?.status !== "cancelled") ||
+    (paymentStatus === "failed" && previous?.payment_status !== "failed");
+  if (shouldReleaseDiscount) {
+    const { data: releasedCodeId } = await (admin as any).rpc(
+      "release_discount_redemption",
+      {
+        p_order_id: orderId,
+        p_reason:
+          status === "cancelled"
+            ? "Order cancelled by BWA staff."
+            : "Payment marked as failed by BWA staff.",
+      },
+    );
+    if (releasedCodeId)
+      await admin.from("admin_audit_log").insert({
+        actor_id: user.id,
+        entity_type: "discount_code",
+        entity_id: releasedCodeId,
+        action: "released_discount_redemption",
+        after_value: {
+          order_number: orderNumber,
+          reason: status === "cancelled" ? "cancelled" : "payment_failed",
+        },
+      });
+  }
   if (previous?.status !== status || note)
     await admin
       .from("order_status_history")

@@ -16,7 +16,7 @@ export default async function AdminOrderDetail({
   const { data: order } = await admin
     .from("orders")
     .select(
-      "id,order_number,status,payment_status,total_amount,currency,delivery_method,delivery_address,city,county,delivery_note,courier_name,tracking_reference,created_at,customers(first_name,last_name,email,phone,whatsapp_opt_in,marketing_opt_in),order_items(product_title_snapshot,variant_title_snapshot,quantity,unit_price,line_total,image_snapshot),order_status_history(status,note,created_at)",
+      "id,order_number,status,payment_status,subtotal,discount_amount,discount_code_snapshot,delivery_fee,total_amount,currency,delivery_method,delivery_address,city,county,delivery_note,courier_name,tracking_reference,created_at,customers(first_name,last_name,email,phone,whatsapp_opt_in,marketing_opt_in),order_items(product_title_snapshot,variant_title_snapshot,quantity,unit_price,line_total,image_snapshot),order_status_history(status,note,created_at)",
     )
     .eq("order_number", orderNumber.toUpperCase())
     .maybeSingle();
@@ -131,6 +131,40 @@ export default async function AdminOrderDetail({
                 </em>
               </span>
             ))}
+          </div>
+        </section>
+        <section className="admin-panel">
+          <p className="admin-kicker">Order total</p>
+          <div className="admin-data-list">
+            <span>
+              Bracelet subtotal
+              <strong>
+                {order.currency} {Number(order.subtotal).toLocaleString()}
+              </strong>
+            </span>
+            {Number(order.discount_amount) > 0 && (
+              <span>
+                {order.discount_code_snapshot || "Discount"}
+                <strong>
+                  −{order.currency}{" "}
+                  {Number(order.discount_amount).toLocaleString()}
+                </strong>
+              </span>
+            )}
+            <span>
+              Delivery
+              <strong>
+                {Number(order.delivery_fee) > 0
+                  ? `${order.currency} ${Number(order.delivery_fee).toLocaleString()}`
+                  : "Free"}
+              </strong>
+            </span>
+            <span>
+              Total
+              <strong>
+                {order.currency} {Number(order.total_amount).toLocaleString()}
+              </strong>
+            </span>
           </div>
         </section>
         <section className="admin-panel admin-order-history">

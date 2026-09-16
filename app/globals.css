@@ -2312,6 +2312,62 @@ body {
 .checkout-summary > div span {
   color: var(--color-muted);
 }
+.checkout-discount {
+  display: block !important;
+}
+.checkout-discount > span {
+  display: block;
+  margin-bottom: var(--space-2);
+}
+.checkout-discount-input,
+.checkout-discount-applied {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.checkout-discount-input input {
+  min-width: 0;
+  flex: 1;
+  height: 38px;
+  padding: 0 var(--space-3);
+  border: var(--rule) solid var(--color-line);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font: inherit;
+  text-transform: uppercase;
+}
+.checkout-discount button {
+  min-height: 38px;
+  padding: 0 var(--space-3);
+  border: var(--rule) solid var(--color-forest);
+  color: var(--color-forest);
+  font-size: 11px;
+  font-weight: 700;
+}
+.checkout-discount button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.checkout-discount-applied strong {
+  color: var(--color-forest);
+  letter-spacing: 0.05em;
+}
+.checkout-discount small {
+  display: block;
+  margin-top: var(--space-2);
+  font-size: 10px;
+  line-height: 1.4;
+}
+.checkout-discount small.is-success,
+.checkout-savings strong {
+  color: var(--success);
+}
+.checkout-discount small.is-error {
+  color: var(--color-danger);
+}
+.checkout-savings {
+  color: var(--success);
+}
 .checkout-total {
   border-bottom: 0 !important;
   font-size: 16px !important;
@@ -2920,6 +2976,11 @@ body {
     minmax(130px, 1fr) minmax(150px, 1.25fr) minmax(105px, 0.65fr)
     minmax(120px, 0.75fr) max-content;
 }
+.admin-discounts-table > div {
+  grid-template-columns:
+    minmax(130px, 1fr) minmax(145px, 1.2fr) minmax(105px, 0.8fr)
+    minmax(90px, 0.65fr) max-content;
+}
 .admin-table-action {
   color: var(--color-forest);
   font-size: 11px;
@@ -2979,9 +3040,16 @@ body {
 .admin-status-order_received,
 .admin-status-payment_pending,
 .admin-status-pending,
-.admin-status-draft {
+.admin-status-draft,
+.admin-status-scheduled {
   background: color-mix(in oklch, var(--color-brass) 15%, var(--color-paper));
   color: var(--color-ink);
+}
+.admin-status-paused,
+.admin-status-expired,
+.admin-status-exhausted {
+  background: color-mix(in oklch, var(--color-ink) 9%, var(--color-paper));
+  color: var(--color-muted);
 }
 .admin-loading {
   min-height: 220px;
@@ -3071,6 +3139,10 @@ body {
   .admin-table > div span:nth-child(n + 3),
   .admin-table > div strong:nth-child(4) {
     display: none;
+  }
+  .admin-discounts-table > div span:nth-child(4),
+  .admin-discounts-table > div a {
+    display: inline-flex;
   }
 }
 @media (max-width: 768px) {
@@ -4140,6 +4212,77 @@ body {
 .admin-order-form button {
   justify-self: start;
 }
+.admin-discount-form {
+  margin-top: var(--space-5);
+}
+.admin-discount-form small {
+  color: var(--color-muted);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+.admin-discount-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+.admin-discount-metrics > div,
+.admin-discount-toggle {
+  border: var(--rule) solid var(--color-line);
+  background: var(--color-paper);
+  padding: var(--space-4);
+}
+.admin-discount-metrics span,
+.admin-discount-toggle span {
+  display: block;
+  color: var(--color-muted);
+  font-size: 11px;
+}
+.admin-discount-metrics strong {
+  display: block;
+  margin-top: var(--space-2);
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 500;
+}
+.admin-discount-metrics strong small {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+}
+.admin-discount-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+.admin-discount-toggle strong {
+  display: block;
+  margin-bottom: 3px;
+}
+.admin-secondary-action {
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: var(--rule) solid var(--color-ink);
+  color: var(--color-ink);
+  font-size: 11px;
+  font-weight: 700;
+}
+.admin-discount-redemptions {
+  margin-top: var(--space-5);
+}
+.admin-discount-redemptions h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 500;
+}
+.admin-discount-redemptions small {
+  color: var(--color-muted);
+  font-size: 10px;
+}
 .admin-data-list {
   display: grid;
   gap: var(--space-3);
@@ -4208,6 +4351,16 @@ body {
   }
   .admin-order-history {
     grid-column: auto;
+  }
+  .admin-discount-metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-discount-toggle {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .admin-secondary-action {
+    width: 100%;
   }
 }
 @media (max-width: 40rem) {

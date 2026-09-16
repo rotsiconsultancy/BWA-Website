@@ -9,6 +9,7 @@ import {
   Sparkles,
   RefreshCw,
   ShoppingBag,
+  TicketPercent,
   Users,
 } from "lucide-react";
 
@@ -17,6 +18,7 @@ const navigation = [
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/products", label: "Catalogue", icon: Package },
+  { href: "/admin/discounts", label: "Offers", icon: TicketPercent },
   { href: "/admin/discovery", label: "Discovery", icon: Sparkles },
   { href: "/admin/sync", label: "CRM sync", icon: RefreshCw },
 ];

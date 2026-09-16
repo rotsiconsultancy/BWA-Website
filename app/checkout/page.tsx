@@ -9,7 +9,18 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
 import { deliveryFeeFor } from "@/lib/commerce/money";
 
-type Confirmation = { orderNumber: string; total: number } | null;
+type Confirmation = {
+  orderNumber: string;
+  total: number;
+  discountAmount: number;
+  discountCode: string | null;
+} | null;
+
+type AppliedDiscount = {
+  code: string;
+  discountAmount: number;
+  discountedSubtotal: number;
+};
 
 export default function CheckoutPage() {
   const {
@@ -27,6 +38,11 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState<Confirmation>(null);
+  const [discountCode, setDiscountCode] = useState("");
+  const [appliedDiscount, setAppliedDiscount] =
+    useState<AppliedDiscount | null>(null);
+  const [discountMessage, setDiscountMessage] = useState("");
+  const [discountLoading, setDiscountLoading] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -40,6 +56,7 @@ export default function CheckoutPage() {
   });
   const deliveryFee =
     deliveryMethod === "pickup" ? 0 : deliveryFeeFor(currency);
+  const discountAmount = appliedDiscount?.discountAmount || 0;
   useEffect(() => {
     if (!items.length || hasUnavailableCurrencyPrice) return;
     trackMetaEvent("InitiateCheckout", {
@@ -53,6 +70,11 @@ export default function CheckoutPage() {
       })),
     });
   }, [currency, deliveryFee, hasUnavailableCurrencyPrice, items, subtotal]);
+  useEffect(() => {
+    if (!appliedDiscount) return;
+    setAppliedDiscount(null);
+    setDiscountMessage("Your bag changed, so please apply your code again.");
+  }, [currency, items]);
   if (!items.length && !confirmation)
     return (
       <main className="empty-state">
@@ -64,6 +86,67 @@ export default function CheckoutPage() {
     );
   const update = (key: keyof typeof form, value: string | boolean) =>
     setForm((current) => ({ ...current, [key]: value }));
+  const applyDiscount = async () => {
+    const code = discountCode.trim();
+    if (!code) {
+      setDiscountMessage("Enter a discount code first.");
+      return;
+    }
+    if (hasUnavailableCurrencyPrice) {
+      setDiscountMessage(
+        `Your bag needs ${currency} prices before a code can be applied.`,
+      );
+      return;
+    }
+    setDiscountLoading(true);
+    setDiscountMessage("");
+    try {
+      const response = await fetch("/api/discounts/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code,
+          currency,
+          lines: items.map((line) => ({
+            variantId: line.variantId,
+            quantity: line.quantity,
+            image: line.image,
+          })),
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.error || "We could not check that code.");
+      if (!data.valid) {
+        setAppliedDiscount(null);
+        setDiscountMessage(
+          data.error || "This discount code is not available.",
+        );
+        return;
+      }
+      setDiscountCode(data.code);
+      setAppliedDiscount({
+        code: data.code,
+        discountAmount: Number(data.discountAmount),
+        discountedSubtotal: Number(data.discountedSubtotal),
+      });
+      setDiscountMessage(`${data.code} applied to your order.`);
+    } catch (reason) {
+      setAppliedDiscount(null);
+      setDiscountMessage(
+        reason instanceof Error
+          ? reason.message
+          : "We could not check that code.",
+      );
+    } finally {
+      setDiscountLoading(false);
+    }
+  };
+  const removeDiscount = () => {
+    setAppliedDiscount(null);
+    setDiscountCode("");
+    setDiscountMessage("Discount code removed.");
+  };
   const order = async (event: FormEvent) => {
     event.preventDefault();
     setLoading(true);
@@ -85,6 +168,7 @@ export default function CheckoutPage() {
             quantity: line.quantity,
             image: line.image,
           })),
+          discountCode: appliedDiscount?.code || null,
           discoverySessionToken,
         }),
       });
@@ -101,7 +185,12 @@ export default function CheckoutPage() {
           item_price: line.unitPrices[currency] ?? 0,
         })),
       });
-      setConfirmation({ orderNumber: data.orderNumber, total: data.total });
+      setConfirmation({
+        orderNumber: data.orderNumber,
+        total: Number(data.total),
+        discountAmount: Number(data.discountAmount || 0),
+        discountCode: data.discountCode || null,
+      });
       clearCart();
       setDiscoverySessionToken(null);
       const message =
@@ -109,7 +198,10 @@ export default function CheckoutPage() {
         data.orderNumber +
         " for " +
         format(Number(data.total)) +
-        ". Please confirm payment and delivery details.";
+        (data.discountCode
+          ? ` after ${data.discountCode} saved ${format(Number(data.discountAmount || 0))}.`
+          : ".") +
+        " Please confirm payment and delivery details.";
       window.open(
         "https://wa.me/" +
           (process.env.WHATSAPP_NUMBER || "254712345678") +
@@ -143,6 +235,13 @@ export default function CheckoutPage() {
           <span>Total</span>
           <strong>{format(confirmation.total)}</strong>
         </div>
+        {confirmation.discountCode && (
+          <p>
+            {confirmation.discountCode} saved{" "}
+            {format(confirmation.discountAmount)}
+            on this order.
+          </p>
+        )}
         <Link
           href={"/order/" + confirmation.orderNumber}
           className="btn btn-primary"
@@ -316,13 +415,55 @@ export default function CheckoutPage() {
             <span>Subtotal</span>
             <strong>{format(subtotal)}</strong>
           </div>
+          <div className="checkout-discount">
+            <span>Discount code</span>
+            {appliedDiscount ? (
+              <div className="checkout-discount-applied">
+                <strong>{appliedDiscount.code}</strong>
+                <button type="button" onClick={removeDiscount}>
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <div className="checkout-discount-input">
+                <input
+                  value={discountCode}
+                  onChange={(event) => setDiscountCode(event.target.value)}
+                  placeholder="Enter code"
+                  aria-label="Discount code"
+                  autoCapitalize="characters"
+                />
+                <button
+                  type="button"
+                  onClick={applyDiscount}
+                  disabled={discountLoading || hasUnavailableCurrencyPrice}
+                >
+                  {discountLoading ? "Checking…" : "Apply"}
+                </button>
+              </div>
+            )}
+            {discountMessage && (
+              <small
+                className={appliedDiscount ? "is-success" : "is-error"}
+                role="status"
+              >
+                {discountMessage}
+              </small>
+            )}
+          </div>
+          {appliedDiscount && (
+            <div className="checkout-savings">
+              <span>{appliedDiscount.code} savings</span>
+              <strong>−{format(discountAmount)}</strong>
+            </div>
+          )}
           <div>
             <span>Delivery</span>
             <strong>{deliveryFee ? format(deliveryFee) : "Free"}</strong>
           </div>
           <div className="checkout-total">
             <span>Total</span>
-            <strong>{format(subtotal + deliveryFee)}</strong>
+            <strong>{format(subtotal - discountAmount + deliveryFee)}</strong>
           </div>
         </aside>
       </div>

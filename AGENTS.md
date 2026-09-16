@@ -261,3 +261,10 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Agent**: Codex
 - **Changes**: Reworked `/bracelets` from a sparse text-first hero into a centered, owned-photography collection introduction with a direct “Shop the collection” handoff. The page now brings shop-by discovery routes and live products into a more deliberate sales-led sequence, while retaining live Supabase catalogue data, SEO metadata, and structured data.
 - **Follow-up**: Applied the matching image-led hero treatment to every `/bracelets/[hub]` discovery page, preserving each hub’s live SEO content while directing visitors straight to its filtered product collection.
+
+### [2026-09-16] — Supabase-Owned Discount Campaigns & Checkout Pricing
+
+- **Checkout**: Added one-code-per-order checkout discounts with percentage or exact KES/USD fixed reductions, minimum merchandise subtotals, optional campaign dates, active controls, and redemption caps. Discounts never reduce delivery.
+- **Integrity**: Live product prices are recalculated server-side for quote and final order creation. A transactional Supabase RPC locks campaign capacity, saves the order/item/discount snapshots and redemption together, and keeps idempotent retries safe.
+- **Operations**: Added the protected Offers workspace for owners and commerce managers to create, edit, pause/reactivate, inspect campaign status and redemption value, and follow linked orders. Codes become immutable after their first redemption.
+- **Fulfilment**: Cancelling an order or marking payment as failed releases its unused redemption exactly once; original order pricing remains historically intact.

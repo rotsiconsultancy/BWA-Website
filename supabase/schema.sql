@@ -89,6 +89,47 @@ create table if not exists public.orders (
   currency text not null default 'KES', source text not null default 'website', whatsapp_handoff_at timestamptz,
   crm_last_synced_at timestamptz, created_at timestamptz not null default now(), updated_at timestamptz not null default now()
 );
+-- Discount campaigns are owned by BWA. They are deliberately not public: all
+-- eligibility checks happen through the server checkout routes and RPC below.
+create table if not exists public.discount_codes (
+  id uuid primary key default gen_random_uuid(),
+  code text not null unique check (code = upper(code) and code ~ '^[A-Z0-9][A-Z0-9_-]{1,31}$'),
+  name text not null,
+  discount_type text not null check (discount_type in ('percentage','fixed')),
+  percentage_basis_points integer check (percentage_basis_points between 1 and 10000),
+  fixed_amount_kes numeric(10,2) check (fixed_amount_kes > 0),
+  fixed_amount_usd numeric(10,2) check (fixed_amount_usd > 0),
+  minimum_subtotal_kes numeric(10,2) check (minimum_subtotal_kes >= 0),
+  minimum_subtotal_usd numeric(10,2) check (minimum_subtotal_usd >= 0),
+  max_redemptions integer check (max_redemptions > 0),
+  starts_at timestamptz,
+  ends_at timestamptz,
+  active boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  check (
+    (discount_type = 'percentage' and percentage_basis_points is not null and fixed_amount_kes is null and fixed_amount_usd is null)
+    or
+    (discount_type = 'fixed' and percentage_basis_points is null and fixed_amount_kes is not null and fixed_amount_usd is not null)
+  ),
+  check (ends_at is null or starts_at is null or ends_at > starts_at)
+);
+alter table public.orders add column if not exists discount_code_id uuid references public.discount_codes(id) on delete set null;
+alter table public.orders add column if not exists discount_code_snapshot text;
+create table if not exists public.discount_redemptions (
+  id uuid primary key default gen_random_uuid(),
+  discount_code_id uuid not null references public.discount_codes(id),
+  order_id uuid not null unique references public.orders(id) on delete restrict,
+  code_snapshot text not null,
+  discount_type_snapshot text not null check (discount_type_snapshot in ('percentage','fixed')),
+  configured_value_snapshot numeric(10,2) not null,
+  qualifying_subtotal numeric(10,2) not null check (qualifying_subtotal >= 0),
+  discount_amount numeric(10,2) not null check (discount_amount >= 0),
+  currency text not null check (currency in ('KES','USD')),
+  released_at timestamptz,
+  released_reason text,
+  created_at timestamptz not null default now()
+);
 create table if not exists public.order_items (
   id uuid primary key default gen_random_uuid(), order_id uuid not null references public.orders(id) on delete cascade,
   product_id uuid references public.products(id) on delete set null, variant_id uuid references public.product_variants(id) on delete set null,
@@ -204,6 +245,8 @@ create index if not exists products_active_slug_idx on public.products(active, s
 create index if not exists variants_product_active_idx on public.product_variants(product_id, active);
 create index if not exists orders_customer_created_idx on public.orders(customer_id, created_at desc);
 create index if not exists crm_sync_outbox_status_idx on public.crm_sync_outbox(status, created_at);
+create index if not exists discount_redemptions_code_active_idx on public.discount_redemptions(discount_code_id, created_at) where released_at is null;
+create index if not exists discount_redemptions_order_idx on public.discount_redemptions(order_id);
 
 -- Safe additions for projects that applied an earlier version of this schema.
 alter table public.orders add column if not exists courier_name text;
@@ -219,6 +262,8 @@ alter table public.lookbook_entries enable row level security;
 alter table public.product_stacks enable row level security;
 alter table public.product_stack_items enable row level security;
 alter table public.admin_profiles enable row level security;
+alter table public.discount_codes enable row level security;
+alter table public.discount_redemptions enable row level security;
 create policy "Public can read active products" on public.products for select using (active = true);
 create policy "Public can read product images" on public.product_images for select using (true);
 create policy "Public can read active variants" on public.product_variants for select using (active = true);
@@ -228,3 +273,149 @@ create policy "Public can read published lookbook" on public.lookbook_entries fo
 create policy "Public can read active stacks" on public.product_stacks for select using (active = true);
 create policy "Public can read active stack items" on public.product_stack_items for select using (true);
 create policy "Staff can read their own profile" on public.admin_profiles for select using (auth.uid() = user_id);
+
+-- Final checkout persistence is a single transaction. The route has already
+-- priced the live variant data, but this function owns the capacity-sensitive
+-- discount validation and the immutable order/redemption snapshots.
+create or replace function public.create_checkout_order(
+  p_order jsonb,
+  p_items jsonb,
+  p_discount_code text default null
+)
+returns table (
+  order_id uuid,
+  order_number text,
+  subtotal numeric,
+  discount_amount numeric,
+  delivery_fee numeric,
+  total_amount numeric,
+  currency text,
+  discount_code text
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_existing public.orders%rowtype;
+  v_campaign public.discount_codes%rowtype;
+  v_order public.orders%rowtype;
+  v_subtotal numeric(10,2);
+  v_delivery numeric(10,2);
+  v_discount numeric(10,2) := 0;
+  v_currency text;
+  v_active_redemptions integer := 0;
+  v_normalised_code text;
+  v_configured_value numeric(10,2);
+begin
+  select * into v_existing
+  from public.orders
+  where idempotency_key = p_order->>'idempotency_key';
+  if found then
+    return query select v_existing.id, v_existing.order_number, v_existing.subtotal,
+      v_existing.discount_amount, v_existing.delivery_fee, v_existing.total_amount,
+      v_existing.currency, v_existing.discount_code_snapshot;
+    return;
+  end if;
+
+  v_subtotal := (p_order->>'subtotal')::numeric;
+  v_delivery := (p_order->>'delivery_fee')::numeric;
+  v_currency := p_order->>'currency';
+  if v_subtotal < 0 or v_delivery < 0 or v_currency not in ('KES', 'USD') then
+    raise exception 'CHECKOUT_INVALID';
+  end if;
+
+  v_normalised_code := nullif(upper(trim(coalesce(p_discount_code, ''))), '');
+  if v_normalised_code is not null then
+    select * into v_campaign
+    from public.discount_codes
+    where code = v_normalised_code
+    for update;
+    if not found or not v_campaign.active
+      or (v_campaign.starts_at is not null and v_campaign.starts_at > now())
+      or (v_campaign.ends_at is not null and v_campaign.ends_at <= now()) then
+      raise exception 'DISCOUNT_UNAVAILABLE';
+    end if;
+    select count(*) into v_active_redemptions
+    from public.discount_redemptions
+    where discount_code_id = v_campaign.id and released_at is null;
+    if v_campaign.max_redemptions is not null and v_active_redemptions >= v_campaign.max_redemptions then
+      raise exception 'DISCOUNT_UNAVAILABLE';
+    end if;
+    if (v_currency = 'KES' and coalesce(v_campaign.minimum_subtotal_kes, 0) > v_subtotal)
+      or (v_currency = 'USD' and coalesce(v_campaign.minimum_subtotal_usd, 0) > v_subtotal) then
+      raise exception 'DISCOUNT_UNAVAILABLE';
+    end if;
+    if v_campaign.discount_type = 'percentage' then
+      v_discount := round(v_subtotal * v_campaign.percentage_basis_points / 10000, case when v_currency = 'USD' then 2 else 0 end);
+      v_configured_value := v_campaign.percentage_basis_points / 100.0;
+    else
+      v_discount := least(v_subtotal, case when v_currency = 'USD' then v_campaign.fixed_amount_usd else v_campaign.fixed_amount_kes end);
+      v_configured_value := case when v_currency = 'USD' then v_campaign.fixed_amount_usd else v_campaign.fixed_amount_kes end;
+    end if;
+  end if;
+
+  insert into public.orders (
+    order_number, idempotency_key, customer_id, delivery_method,
+    delivery_address, city, county, delivery_note, subtotal, delivery_fee,
+    discount_amount, total_amount, currency, discount_code_id, discount_code_snapshot
+  ) values (
+    p_order->>'order_number', p_order->>'idempotency_key', (p_order->>'customer_id')::uuid,
+    p_order->>'delivery_method', nullif(p_order->>'delivery_address', ''),
+    nullif(p_order->>'city', ''), nullif(p_order->>'county', ''),
+    nullif(p_order->>'delivery_note', ''), v_subtotal, v_delivery, v_discount,
+    v_subtotal - v_discount + v_delivery, v_currency,
+    case when v_normalised_code is null then null else v_campaign.id end, v_normalised_code
+  ) returning * into v_order;
+
+  insert into public.order_items (
+    order_id, product_id, variant_id, product_title_snapshot,
+    variant_title_snapshot, image_snapshot, sku_snapshot, unit_price,
+    quantity, line_total
+  )
+  select v_order.id, (item->>'product_id')::uuid, (item->>'variant_id')::uuid,
+    item->>'product_title_snapshot', item->>'variant_title_snapshot',
+    nullif(item->>'image_snapshot', ''), item->>'sku_snapshot',
+    (item->>'unit_price')::numeric, (item->>'quantity')::integer,
+    (item->>'line_total')::numeric
+  from jsonb_array_elements(p_items) item;
+
+  if v_normalised_code is not null then
+    insert into public.discount_redemptions (
+      discount_code_id, order_id, code_snapshot, discount_type_snapshot,
+      configured_value_snapshot, qualifying_subtotal, discount_amount, currency
+    ) values (
+      v_campaign.id, v_order.id, v_campaign.code, v_campaign.discount_type,
+      v_configured_value, v_subtotal, v_discount, v_currency
+    );
+  end if;
+  return query select v_order.id, v_order.order_number, v_order.subtotal,
+    v_order.discount_amount, v_order.delivery_fee, v_order.total_amount,
+    v_order.currency, v_order.discount_code_snapshot;
+end;
+$$;
+
+create or replace function public.release_discount_redemption(
+  p_order_id uuid,
+  p_reason text
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_code_id uuid;
+begin
+  update public.discount_redemptions
+  set released_at = now(), released_reason = p_reason
+  where order_id = p_order_id and released_at is null
+  returning discount_code_id into v_code_id;
+  return v_code_id;
+end;
+$$;
+
+revoke all on function public.create_checkout_order(jsonb, jsonb, text) from public;
+revoke all on function public.release_discount_redemption(uuid, text) from public;
+grant execute on function public.create_checkout_order(jsonb, jsonb, text) to service_role;
+grant execute on function public.release_discount_redemption(uuid, text) to service_role;

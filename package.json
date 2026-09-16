@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest run",
     "format": "prettier --write AGENTS.md app components context lib tokens.css package.json .env.local.example",
     "format:check": "prettier --check AGENTS.md app components context lib tokens.css package.json .env.local.example"
   },
@@ -25,6 +26,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "prettier": "^3.9.6",
-    "typescript": "latest"
+    "typescript": "5.8.3",
+    "vitest": "3.2.4"
   }
 }
