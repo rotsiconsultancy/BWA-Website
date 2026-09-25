@@ -1,4 +1,4 @@
-import type { CommerceProduct } from "@/lib/commerce/types";
+import type { CommerceProduct, ProductTaxonomy } from "@/lib/commerce/types";
 
 /**
  * `field` must match a `name` in TAXONOMIES (lib/commerce/taxonomy.ts).
@@ -157,10 +157,21 @@ export function getSeoHub(slug: string) {
   return seoHubs.find((hub) => hub.slug === slug);
 }
 
+function taxonomyValues(product: CommerceProduct, field: string) {
+  if (!(field in product)) return undefined;
+
+  const value = product[field as keyof ProductTaxonomy];
+  return Array.isArray(value) ? value : undefined;
+}
+
 export function productsForSeoHub(products: CommerceProduct[], hub: SeoHub) {
-  return products.filter((product) => product[hub.field]?.includes(hub.value));
+  return products.filter((product) =>
+    taxonomyValues(product, hub.field)?.includes(hub.value),
+  );
 }
 
 export function hubsForProduct(product: CommerceProduct) {
-  return seoHubs.filter((hub) => product[hub.field]?.includes(hub.value));
+  return seoHubs.filter((hub) =>
+    taxonomyValues(product, hub.field)?.includes(hub.value),
+  );
 }

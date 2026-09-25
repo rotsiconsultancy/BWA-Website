@@ -32,6 +32,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-09-25 08:55] — SEO Hub Type-Safe Taxonomy Lookup
+
+- **Agent**: Codex
+- **Changes**: Kept SEO hub field names flexible for taxonomy evolution while safely resolving only array-based product taxonomy fields at runtime, fixing the production TypeScript build failure without reintroducing strict hub-field unions.
+
 ### [2026-09-11 10:37] — Hero Background Image Fix
 
 - **Agent**: Antigravity
