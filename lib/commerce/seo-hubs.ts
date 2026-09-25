@@ -75,7 +75,7 @@ export const seoHubs: SeoHub[] = [
       "Lapis Lazuli brings depth and a saturated blue note to a bracelet stack. Discover BWA pieces chosen for people drawn to colour with calm confidence.",
   },
   {
-    slug: "african-turquoise-bracelets",
+    slug: "turquoise-bracelets",
     field: "stone_type",
     value: "turquoise",
     title: "Turquoise Bracelets in Kenya",
