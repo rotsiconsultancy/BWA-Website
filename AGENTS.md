@@ -32,6 +32,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-09-25 09:20] — Bracelet Hub Empty-State Experience
+
+- **Agent**: Codex
+- **Changes**: Empty bracelet category hubs now remain accessible with a clear collection-in-progress message, direct links to the live collection and bracelet finder, and only related category links that currently contain products.
+
 ### [2026-09-25 09:05] — Discovery Alternative Product Previews
 
 - **Agent**: Codex

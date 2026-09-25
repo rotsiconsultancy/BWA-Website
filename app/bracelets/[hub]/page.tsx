@@ -48,11 +48,14 @@ export default async function BraceletHubPage({ params }: Props) {
   const hub = getSeoHub((await params).hub);
   if (!hub) notFound();
 
-  const products = productsForSeoHub(await getStorefrontCatalogue(), hub);
-  if (!products.length) notFound();
-
+  const catalogue = await getStorefrontCatalogue();
+  const products = productsForSeoHub(catalogue, hub);
   const relatedHubs = seoHubs
-    .filter((candidate) => candidate.slug !== hub.slug)
+    .filter(
+      (candidate) =>
+        candidate.slug !== hub.slug &&
+        productsForSeoHub(catalogue, candidate).length > 0,
+    )
     .slice(0, 6);
   const jsonLd = {
     "@context": "https://schema.org",
@@ -100,23 +103,51 @@ export default async function BraceletHubPage({ params }: Props) {
         id="collection"
         className="container catalogue-grid-section seo-hub-products bracelet-hub-products"
       >
-        <div className="catalogue-grid-meta">
-          <span>{String(products.length).padStart(2, "0")} pieces</span>
-          <Link href="/bracelets">View all bracelets →</Link>
-        </div>
-        <SeoProductGrid products={products} />
+        {products.length ? (
+          <>
+            <div className="catalogue-grid-meta">
+              <span>{String(products.length).padStart(2, "0")} pieces</span>
+              <Link href="/bracelets">View all bracelets →</Link>
+            </div>
+            <SeoProductGrid products={products} />
+          </>
+        ) : (
+          <div className="bracelet-hub-empty">
+            <p className="eyebrow">New edit in progress</p>
+            <h2>Oops — this collection is still taking shape.</h2>
+            <p>
+              We do not have any{" "}
+              {hub.title.replace(" in Kenya", "").toLowerCase()}
+              available just yet. Browse the pieces currently in the collection,
+              or let us help you find a bracelet that suits you.
+            </p>
+            <div>
+              <Link className="btn btn-primary" href="/bracelets">
+                Explore all bracelets
+              </Link>
+              <Link className="btn btn-outline" href="/find-your-bracelet">
+                Find your bracelet
+              </Link>
+            </div>
+          </div>
+        )}
       </section>
 
-      <section className="container seo-hub-related">
-        <p className="eyebrow">Keep exploring</p>
-        <div>
-          {relatedHubs.map((relatedHub) => (
-            <Link key={relatedHub.slug} href={`/bracelets/${relatedHub.slug}`}>
-              {relatedHub.title.replace(" in Kenya", "")}
-            </Link>
-          ))}
-        </div>
-      </section>
+      {relatedHubs.length > 0 && (
+        <section className="container seo-hub-related">
+          <p className="eyebrow">Other collections to explore</p>
+          <div>
+            {relatedHubs.map((relatedHub) => (
+              <Link
+                key={relatedHub.slug}
+                href={`/bracelets/${relatedHub.slug}`}
+              >
+                {relatedHub.title.replace(" in Kenya", "")}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
