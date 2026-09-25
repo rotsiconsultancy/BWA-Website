@@ -49,6 +49,7 @@ export const groups: TagGroup[] = [
     options: [
       ["tiger_eye", "Tiger Eye"],
       ["lava_stone", "Lava Stone"],
+      ["ukalite", "Ukalite"],
       ["matte_onyx", "Matte Onyx"],
       ["lapis_lazuli", "Lapis Lazuli"],
       ["african_turquoise", "African Turquoise"],

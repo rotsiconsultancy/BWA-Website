@@ -27,6 +27,7 @@ const productMatches = [
   ["intention:transformation", "Transformation"],
   ["stone_type:tiger_eye", "Tiger Eye"],
   ["stone_type:lava_stone", "Lava stone"],
+  ["stone_type:ukalite", "Ukalite"],
   ["stone_type:matte_onyx", "Matte Onyx"],
   ["stone_type:lapis_lazuli", "Lapis Lazuli"],
   ["stone_type:african_turquoise", "African Turquoise"],

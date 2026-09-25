@@ -37,6 +37,17 @@ export const seoHubs: SeoHub[] = [
       "Lava Stone has a tactile, raw surface that makes a quiet statement. These BWA bracelets are made for a more rugged, layered way of wearing natural stone.",
   },
   {
+    slug: "ukalite-bracelets",
+    field: "stone_type",
+    value: "ukalite",
+    title: "Ukalite Bracelets in Kenya",
+    eyebrow: "Stone guide / Ukalite",
+    description:
+      "Discover Ukalite bracelets by Beads World Africa: natural stone pieces with a soft, earthy green tone, handcrafted for everyday wear.",
+    intro:
+      "Ukalite brings a gentle, earthy green note to your bracelet collection. Explore BWA pieces chosen for their calm, natural presence and versatile style.",
+  },
+  {
     slug: "matte-onyx-bracelets",
     field: "stone_type",
     value: "matte_onyx",
