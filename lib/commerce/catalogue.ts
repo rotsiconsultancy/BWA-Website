@@ -30,7 +30,7 @@ export const catalogue: CommerceProduct[] = [
     trending: true,
     energy_vibe: ["grounding", "protection"],
     intention: ["inner_strength", "peace_mind"],
-    stone_type: ["matte_onyx", "lava_stone", "ukalite","lapis_lazuli"],
+    stone_type: ["matte_onyx", "lava_stone", "ukalite", "lapis_lazuli"],
     color_palette: ["dark_monochrome", "raw_natural"],
     style_tags: ["everyday_minimal", "raw_rugged"],
     wrist_fits: ["small_16cm", "medium_18cm", "large_20cm"],

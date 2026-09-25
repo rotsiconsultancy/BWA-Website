@@ -19,14 +19,14 @@
 
 To support the future automated **"Find Your Bracelet"** quiz recommendation engine, all product data in Supabase (`products` table) and local seed files must include the following attributes:
 
-| Field Name      | Type     | Options / Enum Examples                                                                                | Quiz Mapping Purpose                     |
-| :-------------- | :------- | :----------------------------------------------------------------------------------------------------- | :--------------------------------------- |
-| `energy_vibe`   | `text[]` | `'grounding'`, `'protection'`, `'vitality'`, `'focus'`, `'calm'`, `'clarity'`                          | Matches user's desired mood/energy state |
-| `intention`     | `text[]` | `'inner_strength'`, `'wealth_abundance'`, `'peace_mind'`, `'courage'`, `'transformation'`              | Matches user's personal goals/intentions |
-| `stone_type`    | `text[]` | `'tiger_eye'`, `'lava_stone'`, `'ukalite'` | `'matte_onyx'`, `'lapis_lazuli'`, `'turquoise'`, `'red_jasper'` | Stone material preference & properties   |
-| `color_palette` | `text[]` | `'earth_tones'`, `'dark_monochrome'`, `'vibrant'`, `'deep_blue'`, `'raw_natural'`                      | Aesthetic & wardrobe compatibility       |
-| `style_tags`    | `text[]` | `'everyday_minimal'`, `'bold_statement'`, `'stacked_layers'`, `'raw_rugged'`                           | Lifestyle & style density preference     |
-| `wrist_fits`    | `text[]` | `'small_16cm'`, `'medium_18cm'`, `'large_20cm'`, `'adjustable'`                                        | Sizing & fit compatibility               |
+| Field Name      | Type     | Options / Enum Examples                                                                   | Quiz Mapping Purpose                                            |
+| :-------------- | :------- | :---------------------------------------------------------------------------------------- | :-------------------------------------------------------------- |
+| `energy_vibe`   | `text[]` | `'grounding'`, `'protection'`, `'vitality'`, `'focus'`, `'calm'`, `'clarity'`             | Matches user's desired mood/energy state                        |
+| `intention`     | `text[]` | `'inner_strength'`, `'wealth_abundance'`, `'peace_mind'`, `'courage'`, `'transformation'` | Matches user's personal goals/intentions                        |
+| `stone_type`    | `text[]` | `'tiger_eye'`, `'lava_stone'`, `'ukalite'`                                                | `'matte_onyx'`, `'lapis_lazuli'`, `'turquoise'`, `'red_jasper'` | Stone material preference & properties |
+| `color_palette` | `text[]` | `'earth_tones'`, `'dark_monochrome'`, `'vibrant'`, `'deep_blue'`, `'raw_natural'`         | Aesthetic & wardrobe compatibility                              |
+| `style_tags`    | `text[]` | `'everyday_minimal'`, `'bold_statement'`, `'stacked_layers'`, `'raw_rugged'`              | Lifestyle & style density preference                            |
+| `wrist_fits`    | `text[]` | `'small_16cm'`, `'medium_18cm'`, `'large_20cm'`, `'adjustable'`                           | Sizing & fit compatibility                                      |
 
 ---
 
@@ -277,3 +277,16 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Customer Table**: Fixed broken table grid layout by extending `.admin-table` CSS rules to anchor rows (`.admin-table > a`), added an explicit column grid template (`.admin-customers-table`), added row hover feedback, and added a `Manage` column with `View profile →` links.
 - **Admin Pagination**: Created reusable `<AdminPagination>` component and added pagination (`10`/`15` items per page) to Products, Customers, Orders, Offers, Discovery, and Sync Queue admin listing pages.
 
+### [2026-09-25 08:01] — Location-Aware Currency Auto-Detection
+
+- **Agent**: Antigravity
+- **Edge Middleware**: Created `middleware.ts` to inspect incoming edge geolocation country headers (`x-vercel-ip-country`, `cf-ipcountry`, etc.) and automatically inject a `bwa_store_currency` cookie set to `KES` for Kenya or `USD` for international visitors.
+- **Currency Context**: Updated `CurrencyProvider` in [CurrencyContext.tsx](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/context/CurrencyContext.tsx) with a 3-tier resolution strategy: (1) explicit user `localStorage` selection, (2) edge location cookie, and (3) browser timezone fallback (`Africa/Nairobi`).
+
+### [2026-09-25 08:10] — Link Previews & OpenGraph Social Sharing Optimization
+
+- **Agent**: Antigravity
+- **SEO Helper**: Created `lib/commerce/seo.ts` with `absoluteUrl()` and `buildOgImages()` to format high-resolution 1200x630 OpenGraph images and canonical URLs across social preview platforms.
+- **Product Link Previews**: Enhanced [product/[slug]/page.tsx](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/app/product/%5Bslug%5D/page.tsx) with explicit `openGraph` (title, short descriptor/story, absolute image URL, canonical link, siteName) and `twitter:card` (`summary_large_image`) for WhatsApp, iMessage, Facebook, and Twitter link sharing.
+- **Rich Structured Data**: Expanded Schema.org `Product` JSON-LD in product pages with stone materials, color palette, absolute image gallery, and multi-currency (KES & USD) offer specifications.
+- **Hub & Landing Previews**: Added OpenGraph and Twitter card metadata to `/bracelets`, `/bracelets/[hub]`, `/find-your-bracelet`, `/bespoke`, and root layout.

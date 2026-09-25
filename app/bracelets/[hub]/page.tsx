@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import SeoProductGrid from "@/components/commerce/SeoProductGrid";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { getSeoHub, productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
+import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
 
 type Props = { params: Promise<{ hub: string }> };
 
@@ -13,10 +14,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const hub = getSeoHub((await params).hub);
   if (!hub) return {};
 
+  const title = `${hub.title} | ${SITE_NAME}`;
+  const description = hub.description;
+  const canonicalUrl = absoluteUrl(`/bracelets/${hub.slug}`);
+  const ogImages = buildOgImages(
+    "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
+    hub.title,
+  );
+
   return {
-    title: `${hub.title} | Beads World Africa`,
-    description: hub.description,
+    title,
+    description,
     alternates: { canonical: `/bracelets/${hub.slug}` },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: SITE_NAME,
+      locale: "en_US",
+      type: "website",
+      images: ogImages,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImages[0].url],
+    },
   };
 }
 
@@ -35,13 +59,13 @@ export default async function BraceletHubPage({ params }: Props) {
     "@type": "CollectionPage",
     name: hub.title,
     description: hub.description,
-    url: `https://beadsworldafrica.co.ke/bracelets/${hub.slug}`,
+    url: absoluteUrl(`/bracelets/${hub.slug}`),
     mainEntity: {
       "@type": "ItemList",
       itemListElement: products.map((product, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        url: `https://beadsworldafrica.co.ke/product/${product.slug}`,
+        url: absoluteUrl(`/product/${product.slug}`),
         name: product.title,
       })),
     },

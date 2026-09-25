@@ -3,14 +3,39 @@ import Link from "next/link";
 import SeoProductGrid from "@/components/commerce/SeoProductGrid";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
+import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
 
 export const dynamic = "force-dynamic";
 
+const title =
+  "Natural Stone Bracelets Collection in Kenya | Beads World Africa";
+const description =
+  "Discover handcrafted natural stone bracelets by Beads World Africa. Shop meaningful everyday pieces, explore natural stone guides, or find your bracelet.";
+const canonicalUrl = absoluteUrl("/bracelets");
+const ogImages = buildOgImages(
+  "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png",
+  "Beads World Africa natural stone bracelets collection",
+);
+
 export const metadata: Metadata = {
-  title: "Natural Stone Bracelets in Kenya | Beads World Africa",
-  description:
-    "Discover handcrafted natural stone bracelets by Beads World Africa. Shop meaningful everyday pieces, explore stones, or find your bracelet.",
+  title,
+  description,
   alternates: { canonical: "/bracelets" },
+  openGraph: {
+    title,
+    description,
+    url: canonicalUrl,
+    siteName: SITE_NAME,
+    locale: "en_US",
+    type: "website",
+    images: ogImages,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [ogImages[0].url],
+  },
 };
 
 export default async function BraceletsPage() {
@@ -21,15 +46,15 @@ export default async function BraceletsPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Natural Stone Bracelets in Kenya",
-    description: metadata.description,
-    url: "https://beadsworldafrica.co.ke/bracelets",
+    name: title,
+    description,
+    url: canonicalUrl,
     mainEntity: {
       "@type": "ItemList",
       itemListElement: products.map((product, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        url: `https://beadsworldafrica.co.ke/product/${product.slug}`,
+        url: absoluteUrl(`/product/${product.slug}`),
         name: product.title,
       })),
     },
