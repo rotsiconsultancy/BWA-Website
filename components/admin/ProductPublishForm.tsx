@@ -54,6 +54,7 @@ export const groups: TagGroup[] = [
       ["african_turquoise", "African Turquoise"],
       ["red_jasper", "Red Jasper"],
       ["hematite", "Hematite"],
+      ["non_stone", "Non-stone / Other material"],
     ],
   },
   {
@@ -62,7 +63,7 @@ export const groups: TagGroup[] = [
     options: [
       ["earth_tones", "Earth tones"],
       ["dark_monochrome", "Dark monochrome"],
-      ["vibrant_gold", "Vibrant gold"],
+      ["vibrant", "Vibrant"],
       ["deep_blue", "Deep blue"],
       ["raw_natural", "Raw natural"],
     ],

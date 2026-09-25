@@ -73,7 +73,7 @@ export const PRODUCTS: Product[] = [
     energy_vibe: ["vitality", "focus", "clarity"],
     intention: ["wealth_abundance", "courage"],
     stone_type: ["tiger_eye"],
-    color_palette: ["vibrant_gold", "earth_tones"],
+    color_palette: ["vibrant", "earth_tones"],
     style_tags: ["bold_statement", "stacked_layers"],
     wrist_fits: ["small_16cm", "medium_18cm", "adjustable"],
   },

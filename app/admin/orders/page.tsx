@@ -1,15 +1,32 @@
 import PageHeader from "@/components/admin/PageHeader";
+import AdminPagination from "@/components/admin/AdminPagination";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/auth";
-export default async function AdminOrders() {
+
+const PAGE_SIZE = 10;
+
+export default async function AdminOrders({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page || "1", 10));
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const { admin } = await requireAdmin();
-  const { data: orders } = await admin
+  const { data: orders, count: totalCount } = await admin
     .from("orders")
     .select(
       "order_number,status,payment_status,total_amount,currency,created_at,customers(first_name,last_name,phone)",
+      { count: "exact" },
     )
     .order("created_at", { ascending: false })
-    .limit(40);
+    .range(from, to);
+
+  const totalPages = Math.ceil((totalCount || 0) / PAGE_SIZE);
+
   return (
     <div className="admin-page">
       <PageHeader
@@ -19,10 +36,10 @@ export default async function AdminOrders() {
       />
       <div className="admin-list-toolbar">
         <p>
-          {orders?.length || 0} recent order{orders?.length === 1 ? "" : "s"}
+          {totalCount || 0} order{totalCount === 1 ? "" : "s"}
         </p>
         <span className="admin-toolbar-note">
-          Status editing is the next operational release.
+          Status editing is available in order detail.
         </span>
       </div>
       <div className="admin-table admin-orders-table">
@@ -31,6 +48,7 @@ export default async function AdminOrders() {
           <span>Customer</span>
           <span>Status</span>
           <span>Total</span>
+          <span>Manage</span>
         </div>
         {orders?.map((order: any) => (
           <Link
@@ -49,9 +67,16 @@ export default async function AdminOrders() {
             <strong>
               {order.currency} {Number(order.total_amount).toLocaleString()}
             </strong>
+            <span className="admin-table-action">View order →</span>
           </Link>
         )) || <p className="admin-table-empty">No orders yet.</p>}
       </div>
+      <AdminPagination
+        currentPage={page}
+        totalPages={totalPages}
+        totalCount={totalCount || 0}
+        pageSize={PAGE_SIZE}
+      />
     </div>
   );
 }

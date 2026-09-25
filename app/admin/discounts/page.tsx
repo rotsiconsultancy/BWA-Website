@@ -1,18 +1,36 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import PageHeader from "@/components/admin/PageHeader";
+import AdminPagination from "@/components/admin/AdminPagination";
 import { requireAdmin } from "@/lib/admin/auth";
 import { discountStatus } from "@/lib/admin/discounts";
 
-export default async function AdminDiscounts() {
+const PAGE_SIZE = 10;
+
+export default async function AdminDiscounts({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page || "1", 10));
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const { admin, profile } = await requireAdmin();
   if (!["owner", "commerce_manager"].includes(profile.role)) redirect("/admin");
-  const { data: campaigns } = await admin
+
+  const { data: campaigns, count: totalCount } = await admin
     .from("discount_codes")
     .select(
       "id,code,name,discount_type,percentage_basis_points,fixed_amount_kes,fixed_amount_usd,max_redemptions,starts_at,ends_at,active,created_at",
+      { count: "exact" },
     )
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  const totalPages = Math.ceil((totalCount || 0) / PAGE_SIZE);
+
   const ids = campaigns?.map((campaign: any) => campaign.id) || [];
   const { data: redemptions } = ids.length
     ? await admin
@@ -42,7 +60,7 @@ export default async function AdminDiscounts() {
       />
       <div className="admin-list-toolbar">
         <p>
-          {campaigns?.length || 0} campaign{campaigns?.length === 1 ? "" : "s"}
+          {totalCount || 0} campaign{totalCount === 1 ? "" : "s"}
         </p>
         <span className="admin-toolbar-note">
           Discounts apply to bracelet subtotal, never delivery.
@@ -96,6 +114,12 @@ export default async function AdminDiscounts() {
           </p>
         )}
       </div>
+      <AdminPagination
+        currentPage={page}
+        totalPages={totalPages}
+        totalCount={totalCount || 0}
+        pageSize={PAGE_SIZE}
+      />
     </div>
   );
 }

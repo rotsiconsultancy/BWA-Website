@@ -25,6 +25,7 @@ export default function ShopCatalogue({
               p.subtitle,
               p.collection,
               ...p.stone_type,
+              ...p.stone_type.map((s) => s.replaceAll("_", " ")),
               ...p.color_palette,
             ]
               .join(" ")

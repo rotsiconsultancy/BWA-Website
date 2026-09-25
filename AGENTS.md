@@ -24,7 +24,7 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 | `energy_vibe`   | `text[]` | `'grounding'`, `'protection'`, `'vitality'`, `'focus'`, `'calm'`, `'clarity'`                          | Matches user's desired mood/energy state |
 | `intention`     | `text[]` | `'inner_strength'`, `'wealth_abundance'`, `'peace_mind'`, `'courage'`, `'transformation'`              | Matches user's personal goals/intentions |
 | `stone_type`    | `text[]` | `'tiger_eye'`, `'lava_stone'`, `'matte_onyx'`, `'lapis_lazuli'`, `'african_turquoise'`, `'red_jasper'` | Stone material preference & properties   |
-| `color_palette` | `text[]` | `'earth_tones'`, `'dark_monochrome'`, `'vibrant_gold'`, `'deep_blue'`, `'raw_natural'`                 | Aesthetic & wardrobe compatibility       |
+| `color_palette` | `text[]` | `'earth_tones'`, `'dark_monochrome'`, `'vibrant'`, `'deep_blue'`, `'raw_natural'`                      | Aesthetic & wardrobe compatibility       |
 | `style_tags`    | `text[]` | `'everyday_minimal'`, `'bold_statement'`, `'stacked_layers'`, `'raw_rugged'`                           | Lifestyle & style density preference     |
 | `wrist_fits`    | `text[]` | `'small_16cm'`, `'medium_18cm'`, `'large_20cm'`, `'adjustable'`                                        | Sizing & fit compatibility               |
 
@@ -268,3 +268,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Integrity**: Live product prices are recalculated server-side for quote and final order creation. A transactional Supabase RPC locks campaign capacity, saves the order/item/discount snapshots and redemption together, and keeps idempotent retries safe.
 - **Operations**: Added the protected Offers workspace for owners and commerce managers to create, edit, pause/reactivate, inspect campaign status and redemption value, and follow linked orders. Codes become immutable after their first redemption.
 - **Fulfilment**: Cancelling an order or marking payment as failed releases its unused redemption exactly once; original order pricing remains historically intact.
+
+### [2026-09-25 07:32] — Separate Product Pages, Non-Stone Materials & Admin Table Pagination
+
+- **Agent**: Antigravity
+- **Product Admin**: Separated product creation into `/admin/products/new`, leaving `/admin/products` as a clean catalogue listing page and `/admin/products/[productId]` for editing.
+- **Product Materials**: Added `"non_stone"` ("Non-stone / Other material") option under `stone_type` tags in ProductPublishForm, ProductEditForm, Discovery matches, storefront catalogue filtering, and search endpoint.
+- **Customer Table**: Fixed broken table grid layout by extending `.admin-table` CSS rules to anchor rows (`.admin-table > a`), added an explicit column grid template (`.admin-customers-table`), added row hover feedback, and added a `Manage` column with `View profile →` links.
+- **Admin Pagination**: Created reusable `<AdminPagination>` component and added pagination (`10`/`15` items per page) to Products, Customers, Orders, Offers, Discovery, and Sync Queue admin listing pages.
+

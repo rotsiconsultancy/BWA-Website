@@ -83,7 +83,7 @@ export const catalogue: CommerceProduct[] = [
     energy_vibe: ["vitality", "protection"],
     intention: ["courage", "inner_strength"],
     stone_type: ["tiger_eye", "matte_onyx"],
-    color_palette: ["earth_tones", "vibrant_gold"],
+    color_palette: ["earth_tones", "vibrant"],
     style_tags: ["bold_statement"],
     wrist_fits: ["small_16cm", "medium_18cm", "large_20cm"],
     occasion: ["work", "evening"],

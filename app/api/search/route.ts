@@ -14,6 +14,7 @@ export async function GET(request: Request) {
         product.collection,
         product.story,
         ...product.stone_type,
+        ...product.stone_type.map((s) => s.replaceAll("_", " ")),
         ...product.energy_vibe,
         ...product.intention,
       ]

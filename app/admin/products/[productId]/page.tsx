@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/admin/PageHeader";
 import ProductEditForm from "@/components/admin/ProductEditForm";
@@ -21,11 +22,13 @@ export default async function AdminProductEdit({
 
   return (
     <div className="admin-page">
+      <Link href="/admin/products" className="admin-back-link">
+        ← All products
+      </Link>
       <PageHeader
         eyebrow="Catalogue / Edit"
         title={`Edit ${product.title}`}
         description="Update the live product record, gallery, primary variant, and discovery information."
-        action={{ href: "/admin/products", label: "Back to products" }}
       />
       <ProductEditForm product={product as any} />
     </div>

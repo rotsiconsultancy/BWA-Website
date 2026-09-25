@@ -1,16 +1,32 @@
 import Link from "next/link";
 import PageHeader from "@/components/admin/PageHeader";
+import AdminPagination from "@/components/admin/AdminPagination";
 import { requireAdmin } from "@/lib/admin/auth";
 
-export default async function CustomersPage() {
+const PAGE_SIZE = 10;
+
+export default async function CustomersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page || "1", 10));
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const { admin } = await requireAdmin();
-  const { data: customers } = await admin
+  const { data: customers, count: totalCount } = await admin
     .from("customers")
     .select(
       "id,first_name,last_name,email,phone,marketing_opt_in,created_at,orders(count)",
+      { count: "exact" },
     )
     .order("created_at", { ascending: false })
-    .limit(80);
+    .range(from, to);
+
+  const totalPages = Math.ceil((totalCount || 0) / PAGE_SIZE);
+
   return (
     <div className="admin-page">
       <PageHeader
@@ -20,8 +36,7 @@ export default async function CustomersPage() {
       />
       <div className="admin-list-toolbar">
         <p>
-          {customers?.length || 0} recent customer
-          {customers?.length === 1 ? "" : "s"}
+          {totalCount || 0} customer{totalCount === 1 ? "" : "s"}
         </p>
       </div>
       <div className="admin-table admin-customers-table">
@@ -30,6 +45,7 @@ export default async function CustomersPage() {
           <span>Contact</span>
           <span>Orders</span>
           <span>Marketing</span>
+          <span>Manage</span>
         </div>
         {customers?.map((customer: any) => (
           <Link key={customer.id} href={`/admin/customers/${customer.id}`}>
@@ -50,9 +66,16 @@ export default async function CustomersPage() {
             >
               {customer.marketing_opt_in ? "Opted in" : "Not opted in"}
             </span>
+            <span className="admin-table-action">View profile →</span>
           </Link>
         )) || <p className="admin-table-empty">No customers yet.</p>}
       </div>
+      <AdminPagination
+        currentPage={page}
+        totalPages={totalPages}
+        totalCount={totalCount || 0}
+        pageSize={PAGE_SIZE}
+      />
     </div>
   );
 }

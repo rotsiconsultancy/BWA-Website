@@ -1,17 +1,24 @@
 import Link from "next/link";
 import PageHeader from "@/components/admin/PageHeader";
+import AdminPagination from "@/components/admin/AdminPagination";
 import { requireAdmin } from "@/lib/admin/auth";
 import { createQuizVersion, createStarterQuiz } from "./actions";
+
+const PAGE_SIZE = 10;
 
 export default async function DiscoveryAdmin({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; page?: string }>;
 }) {
   const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page || "1", 10));
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const { admin } = await requireAdmin();
   const [
-    { data: versions },
+    { data: versions, count: totalCount },
     { count: completions },
     { count: bagAdds },
     { count: bespokeStarts },
@@ -19,8 +26,11 @@ export default async function DiscoveryAdmin({
   ] = await Promise.all([
     admin
       .from("quiz_versions")
-      .select("id,title,status,published_at,quiz_questions(count)")
-      .order("created_at", { ascending: false }),
+      .select("id,title,status,published_at,quiz_questions(count)", {
+        count: "exact",
+      })
+      .order("created_at", { ascending: false })
+      .range(from, to),
     admin
       .from("discovery_events")
       .select("*", { count: "exact", head: true })
@@ -38,6 +48,9 @@ export default async function DiscoveryAdmin({
       .select("*", { count: "exact", head: true })
       .eq("event_type", "order_created"),
   ]);
+
+  const totalPages = Math.ceil((totalCount || 0) / PAGE_SIZE);
+
   return (
     <div className="admin-page">
       <PageHeader
@@ -131,6 +144,12 @@ export default async function DiscoveryAdmin({
           </p>
         )}
       </div>
+      <AdminPagination
+        currentPage={page}
+        totalPages={totalPages}
+        totalCount={totalCount || 0}
+        pageSize={PAGE_SIZE}
+      />
     </div>
   );
 }

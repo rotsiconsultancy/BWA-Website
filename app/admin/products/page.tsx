@@ -1,29 +1,40 @@
 import PageHeader from "@/components/admin/PageHeader";
-import ProductPublishForm from "@/components/admin/ProductPublishForm";
+import AdminPagination from "@/components/admin/AdminPagination";
 import { updateProductPrices } from "@/app/admin/products/actions";
 import { requireAdmin } from "@/lib/admin/auth";
 import Link from "next/link";
 
+const PAGE_SIZE = 10;
+
 export default async function AdminProducts({
   searchParams,
 }: {
-  searchParams: Promise<{ created?: string; error?: string }>;
+  searchParams: Promise<{ created?: string; error?: string; page?: string }>;
 }) {
   const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page || "1", 10));
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const { admin } = await requireAdmin();
-  const { data: products } = await admin
+  const { data: products, count: totalCount } = await admin
     .from("products")
     .select(
       "id,title,sku,active,price,price_kes,price_usd,product_variants(title,stock_quantity,reserved_quantity)",
+      { count: "exact" },
     )
-    .limit(40);
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  const totalPages = Math.ceil((totalCount || 0) / PAGE_SIZE);
 
   return (
     <div className="admin-page">
       <PageHeader
         eyebrow="Catalogue"
         title="Products & stock"
-        description="Create a complete record, then publish it directly to the BWA storefront."
+        description="Manage live BWA storefront products, prices, stock, and variants."
+        action={{ href: "/admin/products/new", label: "Create product" }}
       />
       {params.created && (
         <p className="admin-form-notice is-success">
@@ -36,10 +47,9 @@ export default async function AdminProducts({
           unique SKU/slug.
         </p>
       )}
-      <ProductPublishForm reset={Boolean(params.created)} />
       <div className="admin-list-toolbar">
         <p>
-          {products?.length || 0} product{products?.length === 1 ? "" : "s"}
+          {totalCount || 0} product{totalCount === 1 ? "" : "s"}
         </p>
         <span className="admin-toolbar-note">
           Select Edit to manage product copy, imagery, tags, pricing, and stock.
@@ -108,6 +118,12 @@ export default async function AdminProducts({
           </div>
         )) || <p className="admin-table-empty">No products yet.</p>}
       </div>
+      <AdminPagination
+        currentPage={page}
+        totalPages={totalPages}
+        totalCount={totalCount || 0}
+        pageSize={PAGE_SIZE}
+      />
     </div>
   );
 }
