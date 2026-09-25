@@ -62,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" scroll-behavior="smooth" className="scroll-smooth">
       <body>
         <CurrencyProvider>
           <CartProvider>

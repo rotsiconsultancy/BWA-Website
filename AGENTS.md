@@ -32,6 +32,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-09-25 09:05] — Discovery Alternative Product Previews
+
+- **Agent**: Codex
+- **Changes**: Added linked product image previews to the Find Your Bracelet “Also considered” results. Each alternative is now a compact horizontal image-and-copy row that stays usable across viewport sizes.
+
 ### [2026-09-25 08:55] — SEO Hub Type-Safe Taxonomy Lookup
 
 - **Agent**: Codex

@@ -307,10 +307,17 @@ export default function FindYourBracelet({
         </div>
         <section className="quiz-alternatives">
           <p className="eyebrow">Also considered</p>
-          {alternatives.slice(0, 2).map(({ product }) => (
-            <Link key={product.id} href={`/product/${product.slug}`}>
-              {product.title}
-              <span>{product.descriptor}</span>
+          {alternatives.slice(0, 3).map(({ product }) => (
+            <Link
+              className="quiz-alternative"
+              key={product.id}
+              href={`/product/${product.slug}`}
+            >
+              <img src={product.images[0]} alt={product.title} />
+              <span className="quiz-alternative-copy">
+                {product.title}
+                <span>{product.descriptor}</span>
+              </span>
             </Link>
           ))}
         </section>
