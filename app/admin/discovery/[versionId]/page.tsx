@@ -30,7 +30,7 @@ const productMatches = [
   ["stone_type:ukalite", "Ukalite"],
   ["stone_type:matte_onyx", "Matte Onyx"],
   ["stone_type:lapis_lazuli", "Lapis Lazuli"],
-  ["stone_type:african_turquoise", "African Turquoise"],
+  ["stone_type:turquoise", "Turquoise"],
   ["stone_type:red_jasper", "Red Jasper"],
   ["stone_type:non_stone", "Non-stone / Other material"],
   ["color_palette:earth_tones", "Earth tones"],

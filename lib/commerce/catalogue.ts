@@ -172,12 +172,12 @@ export const catalogue: CommerceProduct[] = [
     id: "bwa-explorer",
     slug: "the-explorer",
     title: "THE EXPLORER",
-    subtitle: "African Turquoise + Lava Stone",
+    subtitle: "Turquoise + Lava Stone",
     descriptor: "Free. Organic. Always moving.",
     prices: { KES: 4800, USD: 39 },
     collection: "Raw & Natural",
     story:
-      "African Turquoise and Lava Stone bring texture, variation, and a little unpredictability to the wrist.",
+      "Turquoise and Lava Stone bring texture, variation, and a little unpredictability to the wrist.",
     images: [
       "/images/wear-sth-that-story-section.png",
       "/images/hero-find-your-vibe.png",
@@ -186,7 +186,7 @@ export const catalogue: CommerceProduct[] = [
     trending: true,
     energy_vibe: ["focus", "vitality"],
     intention: ["transformation", "courage"],
-    stone_type: ["african_turquoise", "lava_stone", "ukalite"],
+    stone_type: ["turquoise", "lava_stone", "ukalite"],
     color_palette: ["earth_tones", "raw_natural"],
     style_tags: ["raw_rugged", "stacked_layers"],
     wrist_fits: ["small_16cm", "medium_18cm", "large_20cm"],

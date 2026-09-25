@@ -72,13 +72,13 @@ export const seoHubs: SeoHub[] = [
   {
     slug: "african-turquoise-bracelets",
     field: "stone_type",
-    value: "african_turquoise",
-    title: "African Turquoise Bracelets in Kenya",
-    eyebrow: "Stone guide / African Turquoise",
+    value: "turquoise",
+    title: "Turquoise Bracelets in Kenya",
+    eyebrow: "Stone guide / Turquoise",
     description:
-      "Shop African Turquoise bracelets by Beads World Africa: natural stone, expressive colour, and handcrafted Kenyan style.",
+      "Shop Turquoise bracelets by Beads World Africa: natural stone, expressive colour, and handcrafted Kenyan style.",
     intro:
-      "African Turquoise has an expressive, earth-led character. Explore BWA bracelets that let its pattern and colour do the talking.",
+      "Turquoise has an expressive, earth-led character. Explore BWA bracelets that let its pattern and colour do the talking.",
   },
   {
     slug: "red-jasper-bracelets",

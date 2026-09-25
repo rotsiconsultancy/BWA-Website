@@ -52,7 +52,7 @@ export const groups: TagGroup[] = [
       ["ukalite", "Ukalite"],
       ["matte_onyx", "Matte Onyx"],
       ["lapis_lazuli", "Lapis Lazuli"],
-      ["african_turquoise", "African Turquoise"],
+      ["turquoise", "Turquoise"],
       ["red_jasper", "Red Jasper"],
       ["hematite", "Hematite"],
       ["non_stone", "Non-stone / Other material"],

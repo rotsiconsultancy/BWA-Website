@@ -23,7 +23,7 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 | :-------------- | :------- | :----------------------------------------------------------------------------------------------------- | :--------------------------------------- |
 | `energy_vibe`   | `text[]` | `'grounding'`, `'protection'`, `'vitality'`, `'focus'`, `'calm'`, `'clarity'`                          | Matches user's desired mood/energy state |
 | `intention`     | `text[]` | `'inner_strength'`, `'wealth_abundance'`, `'peace_mind'`, `'courage'`, `'transformation'`              | Matches user's personal goals/intentions |
-| `stone_type`    | `text[]` | `'tiger_eye'`, `'lava_stone'`, `'ukalite'` | `'matte_onyx'`, `'lapis_lazuli'`, `'african_turquoise'`, `'red_jasper'` | Stone material preference & properties   |
+| `stone_type`    | `text[]` | `'tiger_eye'`, `'lava_stone'`, `'ukalite'` | `'matte_onyx'`, `'lapis_lazuli'`, `'turquoise'`, `'red_jasper'` | Stone material preference & properties   |
 | `color_palette` | `text[]` | `'earth_tones'`, `'dark_monochrome'`, `'vibrant'`, `'deep_blue'`, `'raw_natural'`                      | Aesthetic & wardrobe compatibility       |
 | `style_tags`    | `text[]` | `'everyday_minimal'`, `'bold_statement'`, `'stacked_layers'`, `'raw_rugged'`                           | Lifestyle & style density preference     |
 | `wrist_fits`    | `text[]` | `'small_16cm'`, `'medium_18cm'`, `'large_20cm'`, `'adjustable'`                                        | Sizing & fit compatibility               |
