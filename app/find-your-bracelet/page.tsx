@@ -13,7 +13,7 @@ const description =
   "Take the interactive Beads World Africa bracelet discovery quiz. Answer 4 quick questions to find the natural stone bracelet that matches your energy, intention, style, and fit.";
 const canonicalUrl = absoluteUrl("/find-your-bracelet");
 const ogImages = buildOgImages(
-  "/images/hero-find-your-vibe.png",
+  "/images/hero-find-your-vibe.webp",
   "Find Your Bracelet interactive discovery quiz",
 );
 

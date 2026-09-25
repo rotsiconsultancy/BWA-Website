@@ -55,7 +55,7 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 ### [2026-09-11 11:42] — Story Section Layering Fix
 
 - **Agent**: Antigravity
-- **Changes**: Fixed `.story-image` background layer order in `app/globals.css` where opaque solid gradient was blocking `url(/images/wear-sth-that-story-section.png)`. Swapped layers and used semi-transparent `rgba()` overlay.
+- **Changes**: Fixed `.story-image` background layer order in `app/globals.css` where opaque solid gradient was blocking `url(/images/wear-sth-that-story-section.webp)`. Swapped layers and used semi-transparent `rgba()` overlay.
 
 ### [2026-09-11 12:19] — Proof Section & Final CTA Syntax Fix
 

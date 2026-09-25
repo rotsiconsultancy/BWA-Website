@@ -38,8 +38,8 @@ export const PRODUCTS: Product[] = [
       "Handcrafted in Nairobi, Kenya",
     ],
     images: [
-      "/images/hero-find-your-vibe.png",
-      "/images/wear-sth-that-story-section.png",
+      "/images/hero-find-your-vibe.webp",
+      "/images/wear-sth-that-story-section.webp",
     ],
     featured: true,
     in_stock: true,
@@ -93,7 +93,7 @@ export const PRODUCTS: Product[] = [
       "Includes BWA linen travel pouch",
     ],
     images: [
-      "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png",
+      "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.webp",
     ],
     featured: true,
     in_stock: true,
@@ -121,7 +121,7 @@ export const PRODUCTS: Product[] = [
       "Handmade in Nairobi",
     ],
     images: [
-      "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
+      "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
     ],
     featured: false,
     in_stock: true,

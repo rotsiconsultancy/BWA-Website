@@ -13,7 +13,7 @@ const description =
   "Discover handcrafted natural stone bracelets by Beads World Africa. Shop meaningful everyday pieces, explore natural stone guides, or find your bracelet.";
 const canonicalUrl = absoluteUrl("/bracelets");
 const ogImages = buildOgImages(
-  "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png",
+  "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.webp",
   "Beads World Africa natural stone bracelets collection",
 );
 
@@ -68,7 +68,7 @@ export default async function BraceletsPage() {
       />
       <section className="bracelet-collection-hero">
         <img
-          src="/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png"
+          src="/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.webp"
           alt="Woman wearing a Beads World Africa natural stone bracelet outdoors"
           fetchPriority="high"
         />

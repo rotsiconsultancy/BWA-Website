@@ -11,7 +11,7 @@ const HERO_IMAGES = [
   //   copy: "Contemporary bracelets designed around natural materials, personal style and the stories we choose to wear."
   // },
   {
-    url: "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png",
+    url: "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.webp",
     eyebrow: "Crafted for adventure.",
     title: (
       <>
@@ -23,7 +23,7 @@ const HERO_IMAGES = [
     copy: "Handcrafted with genuine semi-precious stones sourced across the African continent.",
   },
   {
-    url: "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
+    url: "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
     eyebrow: "Personal statement.",
     title: (
       <>

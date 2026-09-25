@@ -7,7 +7,7 @@ const description =
   "Begin with a feeling. Tell us what you want a custom natural stone bracelet to hold, and we will shape the rest with you.";
 const canonicalUrl = absoluteUrl("/bespoke");
 const ogImages = buildOgImages(
-  "/images/wear-sth-that-story-section.png",
+  "/images/wear-sth-that-story-section.webp",
   "Beads World Africa bespoke custom bracelets",
 );
 

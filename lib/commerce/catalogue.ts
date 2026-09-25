@@ -23,8 +23,8 @@ export const catalogue: CommerceProduct[] = [
     story:
       "Black Onyx meets the tactile surface of Lava Stone for a bracelet that holds its presence without asking for attention.",
     images: [
-      "/images/hero-find-your-vibe.png",
-      "/images/wear-sth-that-story-section.png",
+      "/images/hero-find-your-vibe.webp",
+      "/images/wear-sth-that-story-section.webp",
     ],
     featured: true,
     trending: true,
@@ -75,8 +75,8 @@ export const catalogue: CommerceProduct[] = [
     story:
       "Tiger's Eye brings warmth and movement into a dark, deliberate composition for moments that need conviction.",
     images: [
-      "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
-      "/images/final-cta-bracelet-on-a-mountain.png",
+      "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
+      "/images/final-cta-bracelet-on-a-mountain.webp",
     ],
     featured: true,
     trending: true,
@@ -127,8 +127,8 @@ export const catalogue: CommerceProduct[] = [
     story:
       "A softer composition of Sodalite and natural stone designed to bring clarity to an everyday uniform.",
     images: [
-      "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.png",
-      "/images/final-cta-bracelet-on-a-mountain-2.png",
+      "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.webp",
+      "/images/final-cta-bracelet-on-a-mountain-2.webp",
     ],
     featured: true,
     trending: false,
@@ -179,8 +179,8 @@ export const catalogue: CommerceProduct[] = [
     story:
       "Turquoise and Lava Stone bring texture, variation, and a little unpredictability to the wrist.",
     images: [
-      "/images/wear-sth-that-story-section.png",
-      "/images/hero-find-your-vibe.png",
+      "/images/wear-sth-that-story-section.webp",
+      "/images/hero-find-your-vibe.webp",
     ],
     featured: false,
     trending: true,

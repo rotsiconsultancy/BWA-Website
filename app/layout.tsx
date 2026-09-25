@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     siteName: "Beads World Africa",
     images: [
       {
-        url: "https://beadsworldafrica.co.ke/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
+        url: "https://beadsworldafrica.co.ke/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
         width: 1200,
         height: 630,
         alt: "Beads World Africa natural stone bracelets",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     description:
       "Contemporary bracelets designed around natural materials, personal style, and stories.",
     images: [
-      "https://beadsworldafrica.co.ke/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
+      "https://beadsworldafrica.co.ke/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
     ],
   },
   icons: { icon: "/brand/bwa-emblem.svg" },

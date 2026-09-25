@@ -566,7 +566,7 @@ h3 {
   overflow: hidden;
   border-radius: var(--radius-md);
   background: 
-  /* linear-gradient(135deg, #766957, #c9bda9 48%, #3f443c), */ url(/images/hero-find-your-vibe.png)
+  /* linear-gradient(135deg, #766957, #c9bda9 48%, #3f443c), */ url(/images/hero-find-your-vibe.webp)
     center / cover no-repeat;
   order: 2;
 }
@@ -671,7 +671,7 @@ h3 {
   min-height: 420px;
   background:
     linear-gradient(135deg, rgba(64, 61, 54, 0.45), rgba(118, 105, 87, 0.35)),
-    url(/images/wear-sth-that-story-section.png) center / cover no-repeat;
+    url(/images/wear-sth-that-story-section.webp) center / cover no-repeat;
 }
 
 .story-copy {
@@ -742,7 +742,7 @@ h3 {
 /* .proof {
   background:
     linear-gradient(90deg, rgba(18, 24, 21, 0.85), rgba(18, 24, 21, 0.60)),
-    url(/images/final-cta-bracelet-on-a-mountain-2.png) center / cover no-repeat var(--forest);
+    url(/images/final-cta-bracelet-on-a-mountain-2.webp) center / cover no-repeat var(--forest);
   color: var(--ivory);
   padding: 76px 0;
 } */
@@ -794,7 +794,7 @@ h3 {
   background:
     linear-gradient(90deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.12)),
     #5a5142,
-    url(/images/final-cta-bracelet-on-a-mountain.png) center / cover no-repeat;
+    url(/images/final-cta-bracelet-on-a-mountain.webp) center / cover no-repeat;
 }
 
 .final-cta-content {

@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = hub.description;
   const canonicalUrl = absoluteUrl(`/bracelets/${hub.slug}`);
   const ogImages = buildOgImages(
-    "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
+    "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
     hub.title,
   );
 
@@ -82,7 +82,7 @@ export default async function BraceletHubPage({ params }: Props) {
       />
       <section className="bracelet-hub-hero">
         <img
-          src="/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png"
+          src="/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp"
           alt="Man wearing a Beads World Africa natural stone bracelet outdoors"
           fetchPriority="high"
         />

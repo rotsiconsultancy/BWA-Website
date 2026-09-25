@@ -10,7 +10,7 @@ export function absoluteUrl(path: string): string {
 export function buildOgImages(imageUrl?: string, altText?: string) {
   const url = absoluteUrl(
     imageUrl ||
-      "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.png",
+      "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
   );
   return [
     {
