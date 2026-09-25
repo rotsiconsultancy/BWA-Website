@@ -290,3 +290,18 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Product Link Previews**: Enhanced [product/[slug]/page.tsx](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/app/product/%5Bslug%5D/page.tsx) with explicit `openGraph` (title, short descriptor/story, absolute image URL, canonical link, siteName) and `twitter:card` (`summary_large_image`) for WhatsApp, iMessage, Facebook, and Twitter link sharing.
 - **Rich Structured Data**: Expanded Schema.org `Product` JSON-LD in product pages with stone materials, color palette, absolute image gallery, and multi-currency (KES & USD) offer specifications.
 - **Hub & Landing Previews**: Added OpenGraph and Twitter card metadata to `/bracelets`, `/bracelets/[hub]`, `/find-your-bracelet`, `/bespoke`, and root layout.
+
+### [2026-09-25 08:25] — Centralized Taxonomy Registry & Non-Strict Fallbacks
+
+- **Agent**: Antigravity
+- **Central Taxonomy**: Created [lib/commerce/taxonomy.ts](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/lib/commerce/taxonomy.ts) as the single source of truth for all product traits (`energy_vibe`, `intention`, `stone_type`, `color_palette`, `style_tags`, `wrist_fits`, `occasion`, `recipient`).
+- **Non-Strict UI Fallback**: Added `getTaxonomyLabel(field, value)` and `formatTagFallback(value)` to gracefully title-case and render any tag value (e.g. `matte_onyx` $\rightarrow$ `Matte Onyx`) if an option is modified or removed from the registry, guaranteeing zero UI breakage.
+- **Admin Integration**: Connected Product Creation, Product Editing, Product Actions, and Discovery Quiz Admin to the centralized taxonomy registry.
+
+### [2026-09-25 08:40] — SEO Hubs Taxonomy Alignment
+
+- **Agent**: Antigravity
+- **Non-Strict Typing**: Removed strict `HubField` union type from `lib/commerce/seo-hubs.ts`; `field` and `value` are now typed as `string`. Removing or renaming a taxonomy value no longer causes a TypeScript build error — the hub simply returns no products.
+- **Turquoise Fix**: Corrected `value: "turquoise"` → `value: "turquoise"` on the African Turquoise hub to match the registered value in `taxonomy.ts`.
+- **Ukalite Addition**: Added `{ value: "ukalite", label: "Ukalite" }` to `stone_type` in `taxonomy.ts` to back the existing Ukalite SEO hub.
+- **Cross-reference Comments**: Added JSDoc comments on `SeoHub.field` and `SeoHub.value` pointing directly to `lib/commerce/taxonomy.ts TAXONOMIES` as the authoritative list of valid values.

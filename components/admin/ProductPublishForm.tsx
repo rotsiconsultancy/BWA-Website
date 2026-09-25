@@ -6,112 +6,20 @@ import { createProduct } from "@/app/admin/products/actions";
 import type { ProductActionState } from "@/app/admin/products/actions";
 import { useProductDraftStore } from "@/lib/admin/product-draft-store";
 
-export type TagGroup = {
-  name: string;
-  label: string;
-  required?: boolean;
-  options: [string, string][];
-};
+import {
+  groups,
+  getTaxonomyLabel,
+  type TagGroup,
+} from "@/lib/commerce/taxonomy";
+
+export type { TagGroup };
+export { groups };
+
 export type GalleryImage = {
   url: string;
   alt: string;
   kind: "hero" | "gallery" | "detail" | "lifestyle";
 };
-export const groups: TagGroup[] = [
-  {
-    name: "energy_vibe",
-    label: "Energy",
-    required: true,
-    options: [
-      ["grounding", "Grounding"],
-      ["protection", "Protection"],
-      ["vitality", "Vitality"],
-      ["focus", "Focus"],
-      ["calm", "Calm"],
-      ["clarity", "Clarity"],
-    ],
-  },
-  {
-    name: "intention",
-    label: "Intention",
-    options: [
-      ["inner_strength", "Inner strength"],
-      ["wealth_abundance", "Wealth & abundance"],
-      ["peace_mind", "Peace of mind"],
-      ["courage", "Courage"],
-      ["transformation", "Transformation"],
-    ],
-  },
-  {
-    name: "stone_type",
-    label: "Stones",
-    required: true,
-    options: [
-      ["tiger_eye", "Tiger Eye"],
-      ["lava_stone", "Lava Stone"],
-      ["ukalite", "Ukalite"],
-      ["matte_onyx", "Matte Onyx"],
-      ["lapis_lazuli", "Lapis Lazuli"],
-      ["turquoise", "Turquoise"],
-      ["red_jasper", "Red Jasper"],
-      ["hematite", "Hematite"],
-      ["non_stone", "Non-stone / Other material"],
-    ],
-  },
-  {
-    name: "color_palette",
-    label: "Palette",
-    options: [
-      ["earth_tones", "Earth tones"],
-      ["dark_monochrome", "Dark monochrome"],
-      ["vibrant", "Vibrant"],
-      ["deep_blue", "Deep blue"],
-      ["raw_natural", "Raw natural"],
-    ],
-  },
-  {
-    name: "style_tags",
-    label: "Style",
-    required: true,
-    options: [
-      ["everyday_minimal", "Everyday minimal"],
-      ["bold_statement", "Bold statement"],
-      ["stacked_layers", "Stacked layers"],
-      ["raw_rugged", "Raw & rugged"],
-    ],
-  },
-  {
-    name: "wrist_fits",
-    label: "Fits",
-    required: true,
-    options: [
-      ["small_16cm", "Small · 16 cm"],
-      ["medium_18cm", "Medium · 18 cm"],
-      ["large_20cm", "Large · 20 cm"],
-      ["adjustable", "Adjustable"],
-    ],
-  },
-  {
-    name: "occasion",
-    label: "Occasion",
-    options: [
-      ["everyday", "Everyday"],
-      ["work", "Work"],
-      ["weekend", "Weekend"],
-      ["evening", "Evening"],
-      ["gifting", "Gifting"],
-    ],
-  },
-  {
-    name: "recipient",
-    label: "For whom",
-    options: [
-      ["self", "For self"],
-      ["gift_for_woman", "Gift for her"],
-      ["gift_for_man", "Gift for him"],
-    ],
-  },
-];
 const initialProductActionState: ProductActionState = {};
 
 export function GalleryFields({
@@ -240,7 +148,8 @@ export function TagPicker({
               key={tag}
               onClick={() => onChange(selected.filter((item) => item !== tag))}
             >
-              {labels[tag]} <X size={13} aria-hidden="true" />
+              {getTaxonomyLabel(group.name, tag)}{" "}
+              <X size={13} aria-hidden="true" />
             </button>
           ))
         ) : (

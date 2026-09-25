@@ -13,47 +13,7 @@ import {
   updateQuizVersion,
 } from "../actions";
 
-const productMatches = [
-  ["energy_vibe:grounding", "A grounded feeling"],
-  ["energy_vibe:protection", "A protected feeling"],
-  ["energy_vibe:vitality", "Energy & vitality"],
-  ["energy_vibe:focus", "Focus"],
-  ["energy_vibe:calm", "Calm"],
-  ["energy_vibe:clarity", "Clarity"],
-  ["intention:inner_strength", "Inner strength"],
-  ["intention:wealth_abundance", "Wealth & abundance"],
-  ["intention:peace_mind", "Peace of mind"],
-  ["intention:courage", "Courage"],
-  ["intention:transformation", "Transformation"],
-  ["stone_type:tiger_eye", "Tiger Eye"],
-  ["stone_type:lava_stone", "Lava stone"],
-  ["stone_type:ukalite", "Ukalite"],
-  ["stone_type:matte_onyx", "Matte Onyx"],
-  ["stone_type:lapis_lazuli", "Lapis Lazuli"],
-  ["stone_type:turquoise", "Turquoise"],
-  ["stone_type:red_jasper", "Red Jasper"],
-  ["stone_type:non_stone", "Non-stone / Other material"],
-  ["color_palette:earth_tones", "Earth tones"],
-  ["color_palette:dark_monochrome", "Dark & monochrome"],
-  ["color_palette:vibrant", "Vibrant"],
-  ["color_palette:deep_blue", "Deep blue"],
-  ["color_palette:raw_natural", "Raw & natural"],
-  ["style_tags:everyday_minimal", "Everyday minimal style"],
-  ["style_tags:bold_statement", "Bold statement style"],
-  ["style_tags:stacked_layers", "Stacked layers style"],
-  ["style_tags:raw_rugged", "Raw & rugged style"],
-  ["occasion:everyday", "Everyday wear"],
-  ["occasion:work", "Work & business"],
-  ["occasion:weekend", "Weekend wear"],
-  ["occasion:evening", "Evening occasions"],
-  ["recipient:self", "A bracelet for self"],
-  ["recipient:gift_for_woman", "Gift for a woman"],
-  ["recipient:gift_for_man", "Gift for a man"],
-];
-
-const humanMatch = (field: string, value: string) =>
-  productMatches.find(([token]) => token === `${field}:${value}`)?.[1] ||
-  value.replaceAll("_", " ");
+import { productMatches, humanMatch } from "@/lib/commerce/taxonomy";
 
 export default async function QuizVersionPage({
   params,

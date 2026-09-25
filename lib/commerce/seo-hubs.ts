@@ -1,11 +1,16 @@
 import type { CommerceProduct } from "@/lib/commerce/types";
 
-type HubField =
-  "stone_type" | "energy_vibe" | "intention" | "style_tags" | "occasion";
-
+/**
+ * `field` must match a `name` in TAXONOMIES (lib/commerce/taxonomy.ts).
+ * `value` must match an option `value` within that taxonomy group.
+ * Using `string` instead of a strict union so removing a taxonomy option
+ * never causes a TypeScript build error — it simply yields an empty hub.
+ */
 export type SeoHub = {
   slug: string;
-  field: HubField;
+  /** Taxonomy group name — see lib/commerce/taxonomy.ts TAXONOMIES */
+  field: string;
+  /** Taxonomy option value — see lib/commerce/taxonomy.ts TAXONOMIES */
   value: string;
   title: string;
   eyebrow: string;

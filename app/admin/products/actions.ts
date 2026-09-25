@@ -3,18 +3,9 @@
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "@/lib/admin/auth";
+import { TAXONOMIES } from "@/lib/commerce/taxonomy";
 
-const taxonomies = [
-  "energy_vibe",
-  "intention",
-  "stone_type",
-  "color_palette",
-  "style_tags",
-  "wrist_fits",
-  "occasion",
-  "recipient",
-] as const;
+const taxonomies = TAXONOMIES.map((t) => t.name);
 
 const parseTags = (value: FormDataEntryValue | null) =>
   String(value || "")

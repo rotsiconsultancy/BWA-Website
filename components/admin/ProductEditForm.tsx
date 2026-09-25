@@ -4,9 +4,9 @@ import { useActionState, useState } from "react";
 import {
   GalleryFields,
   type GalleryImage,
-  groups,
   TagPicker,
 } from "@/components/admin/ProductPublishForm";
+import { groups } from "@/lib/commerce/taxonomy";
 import {
   updateProduct,
   type ProductActionState,
