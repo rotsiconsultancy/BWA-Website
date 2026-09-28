@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import Money from "@/components/commerce/Money";
+import { FaArrowRight } from "react-icons/fa";
 
 export default async function FeaturedCollections() {
   const products = await getStorefrontCatalogue();
@@ -8,7 +9,8 @@ export default async function FeaturedCollections() {
     products.some((product) => product.featured || product.trending)
       ? products.filter((product) => product.featured || product.trending)
       : products
-  ).slice(0, 4);
+  ).slice(0, 12);
+
   return (
     <section className="section" id="shop">
       <div className="container">
@@ -17,12 +19,12 @@ export default async function FeaturedCollections() {
             <p className="eyebrow">Featured collections</p>
             <h2>Popular Picks</h2>
           </div>
-          <Link className="text-link" href="/bracelets">
+          <Link className="text-link desktop-only-link" href="/bracelets">
             Shop all →
           </Link>
         </div>
 
-        <div className="product-grid">
+        <div className="product-grid product-grid-3x4">
           {featuredProducts.map((product) => (
             <Link
               key={product.id}
@@ -41,11 +43,17 @@ export default async function FeaturedCollections() {
                 <div className="product-meta">{product.subtitle}</div>
                 <div className="product-price">
                   <Money prices={product.prices} />{" "}
-                  <span className="product-arrow">→</span>
+                  <span className="product-arrow"><FaArrowRight /></span>
                 </div>
               </div>
             </Link>
           ))}
+        </div>
+
+        <div className="featured-collections-cta">
+          <Link href="/bracelets" className="btn-pill-shop-all">
+            Shop all <FaArrowRight />
+          </Link>
         </div>
       </div>
     </section>

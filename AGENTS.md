@@ -32,6 +32,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-09-28 14:48] — Featured Collections 3x4 Grid & Mobile Pill Action Button
+
+- **Agent**: Antigravity
+- **Changes**: Updated [FeaturedCollections.tsx](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/components/home/FeaturedCollections.tsx) to fetch 12 items (`slice(0, 12)`) and render a responsive 3×4 product grid across mobile and desktop. Added centered, rounded pill CTA button (`Shop all →`) visible at the bottom of the collection grid with mobile-optimized product typography and layout spacing.
+
 ### [2026-09-25 09:20] — Bracelet Hub Empty-State Experience
 
 - **Agent**: Codex

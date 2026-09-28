@@ -606,6 +606,73 @@ h3 {
   gap: 24px 12px;
 }
 
+.product-grid-3x4 {
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px 10px;
+}
+
+@media (min-width: 768px) {
+  .product-grid-3x4 {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 28px 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .product-grid-3x4 .product-name {
+    font-size: 15px;
+    line-height: 1.15;
+  }
+  .product-grid-3x4 .product-meta {
+    font-size: 10px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .product-grid-3x4 .product-price {
+    font-size: 11px;
+  }
+  .product-grid-3x4 .product-arrow {
+    font-size: 12px;
+  }
+  .desktop-only-link {
+    display: none;
+  }
+}
+
+.featured-collections-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+}
+
+.btn-pill-shop-all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 32px;
+  background: var(--charcoal);
+  color: var(--ivory);
+  border: 1px solid var(--charcoal);
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform var(--ease), background var(--ease), border-color var(--ease), box-shadow var(--ease);
+}
+
+.btn-pill-shop-all:hover {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: var(--ivory);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(23, 23, 22, 0.15);
+}
+
 .product-card {
   min-width: 0;
 }
