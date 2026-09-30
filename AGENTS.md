@@ -325,3 +325,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Turquoise Fix**: Corrected `value: "turquoise"` → `value: "turquoise"` on the African Turquoise hub to match the registered value in `taxonomy.ts`.
 - **Ukalite Addition**: Added `{ value: "ukalite", label: "Ukalite" }` to `stone_type` in `taxonomy.ts` to back the existing Ukalite SEO hub.
 - **Cross-reference Comments**: Added JSDoc comments on `SeoHub.field` and `SeoHub.value` pointing directly to `lib/commerce/taxonomy.ts TAXONOMIES` as the authoritative list of valid values.
+
+### [2026-09-30 09:38] — Supabase Storage Image Uploads & Next.js Domain Config
+
+- **Agent**: Antigravity
+- **Supabase Storage Support**: Enhanced [ProductPublishForm.tsx](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/components/admin/ProductPublishForm.tsx) (`GalleryFields`) with direct browser file upload to the Supabase Storage `product-images` bucket. Added single-file upload per row, multi-file batch upload in gallery header, automatic file sanitization, auto-generated alt descriptors, loading indicators (`Loader2`), image thumbnail previews, and error handling.
+- **Next.js Image Configuration**: Updated [next.config.ts](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/next.config.ts) `images.remotePatterns` to allow loading images hosted on Supabase Storage subdomains (`*.supabase.co`, `*.supabase.in`, `*.supabase.net`).
+- **SQL Setup Script**: Created [supabase/storage.sql](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/supabase/storage.sql) to initialize the `product-images` storage bucket (10MB limit, image MIME types) and set up Row Level Security (RLS) policies for SELECT, INSERT, UPDATE, and DELETE operations.
+- **Styling**: Added `.admin-gallery-thumbnail`, `.admin-gallery-input-group`, `.admin-gallery-row-upload`, `.admin-gallery-error-banner`, and CSS spin animation in [app/globals.css](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/app/globals.css).

@@ -51,7 +51,7 @@ export default async function FeaturedCollections() {
         </div>
 
         <div className="featured-collections-cta">
-          <Link href="/bracelets" className="btn-pill-shop-all">
+          <Link href="/shop" className="btn-pill-shop-all">
             Shop all <FaArrowRight />
           </Link>
         </div>

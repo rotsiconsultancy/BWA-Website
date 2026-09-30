@@ -1,10 +1,20 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, Plus, X } from "lucide-react";
+import {
+  AlertCircle,
+  Check,
+  ChevronDown,
+  ImageIcon,
+  Loader2,
+  Plus,
+  Upload,
+  X,
+} from "lucide-react";
 import { createProduct } from "@/app/admin/products/actions";
 import type { ProductActionState } from "@/app/admin/products/actions";
 import { useProductDraftStore } from "@/lib/admin/product-draft-store";
+import { getSupabaseBrowser } from "@/lib/supabase/browser";
 
 import {
   groups,
@@ -29,12 +39,145 @@ export function GalleryFields({
   images: GalleryImage[];
   onChange: (images: GalleryImage[]) => void;
 }) {
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
+  const [isBulkUploading, setIsBulkUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const bulkFileInputRef = useRef<HTMLInputElement>(null);
+
   const update = (index: number, patch: Partial<GalleryImage>) =>
     onChange(
       images.map((image, imageIndex) =>
         imageIndex === index ? { ...image, ...patch } : image,
       ),
     );
+
+  const uploadSingleFile = async (file: File, targetIndex: number) => {
+    setUploadError(null);
+    setUploadingIndex(targetIndex);
+    try {
+      const supabase = getSupabaseBrowser();
+      const fileExt = file.name.split(".").pop() || "png";
+      const sanitizedName = file.name
+        .replace(/\.[^/.]+$/, "")
+        .replace(/[^a-zA-Z0-9]/g, "-")
+        .toLowerCase();
+      const filePath = `products/${Date.now()}-${sanitizedName}.${fileExt}`;
+
+      const { error } = await supabase.storage
+        .from("product-images")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: true,
+          contentType: file.type,
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from("product-images")
+        .getPublicUrl(filePath);
+
+      const publicUrl = publicUrlData.publicUrl;
+      const readableName = file.name
+        .replace(/\.[^/.]+$/, "")
+        .replace(/[-_]/g, " ")
+        .trim();
+      const currentAlt = images[targetIndex]?.alt || "";
+      const autoAlt =
+        currentAlt.trim() ||
+        readableName.charAt(0).toUpperCase() + readableName.slice(1);
+
+      update(targetIndex, { url: publicUrl, alt: autoAlt });
+    } catch (err: any) {
+      console.error("Supabase Storage Upload Error:", err);
+      setUploadError(
+        err?.message ||
+          "Failed to upload image to Supabase Storage. Ensure bucket 'product-images' exists.",
+      );
+    } finally {
+      setUploadingIndex(null);
+    }
+  };
+
+  const handleBulkUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadError(null);
+    setIsBulkUploading(true);
+
+    const availableSlots = 10 - images.length;
+    const filesToUpload = Array.from(files).slice(
+      0,
+      Math.max(0, availableSlots),
+    );
+    const uploadedImages: GalleryImage[] = [];
+
+    try {
+      const supabase = getSupabaseBrowser();
+
+      for (let i = 0; i < filesToUpload.length; i++) {
+        const file = filesToUpload[i];
+        const fileExt = file.name.split(".").pop() || "png";
+        const sanitizedName = file.name
+          .replace(/\.[^/.]+$/, "")
+          .replace(/[^a-zA-Z0-9]/g, "-")
+          .toLowerCase();
+        const filePath = `products/${Date.now()}-${i}-${sanitizedName}.${fileExt}`;
+
+        const { error } = await supabase.storage
+          .from("product-images")
+          .upload(filePath, file, {
+            cacheControl: "3600",
+            upsert: true,
+            contentType: file.type,
+          });
+
+        if (error) throw error;
+
+        const { data: publicUrlData } = supabase.storage
+          .from("product-images")
+          .getPublicUrl(filePath);
+
+        const readableName = file.name
+          .replace(/\.[^/.]+$/, "")
+          .replace(/[-_]/g, " ")
+          .trim();
+        const autoAlt =
+          readableName.charAt(0).toUpperCase() + readableName.slice(1);
+
+        const isFirst = images.length === 0 && i === 0;
+        uploadedImages.push({
+          url: publicUrlData.publicUrl,
+          alt: autoAlt,
+          kind: isFirst ? "hero" : "gallery",
+        });
+      }
+
+      const initialIsBlank =
+        images.length === 1 && !images[0].url && !images[0].alt;
+
+      if (initialIsBlank) {
+        onChange(uploadedImages);
+      } else {
+        onChange([...images, ...uploadedImages]);
+      }
+    } catch (err: any) {
+      console.error("Bulk Upload Error:", err);
+      setUploadError(
+        err?.message ||
+          "Failed during image batch upload to Supabase Storage.",
+      );
+    } finally {
+      setIsBulkUploading(false);
+      if (bulkFileInputRef.current) bulkFileInputRef.current.value = "";
+    }
+  };
+
   return (
     <div className="admin-gallery-fields admin-form-wide">
       <input type="hidden" name="images" value={JSON.stringify(images)} />
@@ -42,36 +185,113 @@ export function GalleryFields({
         <div>
           <strong>Product gallery</strong>
           <p>
-            Add up to 10 image links. The first image is the cover customers see
-            first.
+            Upload image files directly to Storage or paste image URLs. (Max 10 images).
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([...images, { url: "", alt: "", kind: "gallery" }])
-          }
-          disabled={images.length >= 10}
-        >
-          <Plus size={15} aria-hidden="true" /> Add image
-        </button>
+        <div className="admin-gallery-actions">
+          <input
+            type="file"
+            ref={bulkFileInputRef}
+            onChange={handleBulkUpload}
+            accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
+            multiple
+            hidden
+          />
+          <button
+            type="button"
+            className="admin-gallery-upload-all-btn"
+            onClick={() => bulkFileInputRef.current?.click()}
+            disabled={images.length >= 10 || isBulkUploading}
+          >
+            {isBulkUploading ? (
+              <>
+                <Loader2 size={15} className="admin-spin" aria-hidden="true" />
+                Uploading...
+              </>
+            ) : (
+              <>
+                <Upload size={15} aria-hidden="true" /> Upload to Storage Center
+              </>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              onChange([...images, { url: "", alt: "", kind: "gallery" }])
+            }
+            disabled={images.length >= 10 || isBulkUploading}
+          >
+            <Plus size={15} aria-hidden="true" /> Add link
+          </button>
+        </div>
       </div>
+
+      {uploadError && (
+        <div className="admin-gallery-error-banner" role="alert">
+          <AlertCircle size={16} aria-hidden="true" />
+          <div>
+            <strong>Upload Warning:</strong> {uploadError}
+            <div className="admin-gallery-error-hint">
+              Tip: Run <code>supabase/storage.sql</code> in your Supabase SQL Editor to set up the <code>product-images</code> bucket &amp; RLS policies.
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="admin-gallery-list">
         {images.map((image, index) => (
           <div className="admin-gallery-row" key={index}>
-            <span className="admin-gallery-number">
-              {index === 0 ? "Cover" : index + 1}
-            </span>
-            <label>
-              Image URL
-              <input
-                type="url"
-                value={image.url}
-                onChange={(event) => update(index, { url: event.target.value })}
-                placeholder="https://…"
-                required={index === 0}
-              />
+            <div className="admin-gallery-preview-container">
+              <span className="admin-gallery-number">
+                {index === 0 ? "Cover" : index + 1}
+              </span>
+              <div className="admin-gallery-thumbnail">
+                {image.url ? (
+                  <img
+                    src={image.url}
+                    alt={image.alt || `Preview ${index + 1}`}
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <ImageIcon size={20} className="admin-gallery-placeholder-icon" />
+                )}
+              </div>
+            </div>
+
+            <label className="admin-gallery-url-field">
+              Image URL / Supabase Storage
+              <div className="admin-gallery-input-group">
+                <input
+                  type="url"
+                  value={image.url}
+                  onChange={(event) => update(index, { url: event.target.value })}
+                  placeholder="https://… or click Upload"
+                  required={index === 0}
+                />
+                <label className="admin-gallery-row-upload">
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) uploadSingleFile(file, index);
+                      e.target.value = "";
+                    }}
+                    hidden
+                    disabled={uploadingIndex === index || isBulkUploading}
+                  />
+                  {uploadingIndex === index ? (
+                    <Loader2 size={14} className="admin-spin" aria-hidden="true" />
+                  ) : (
+                    <Upload size={14} aria-hidden="true" />
+                  )}
+                  <span>Upload</span>
+                </label>
+              </div>
             </label>
+
             <label>
               Describe the image
               <input
@@ -81,6 +301,7 @@ export function GalleryFields({
                 required={index === 0}
               />
             </label>
+
             {index > 0 && (
               <label>
                 Image role
@@ -98,6 +319,7 @@ export function GalleryFields({
                 </select>
               </label>
             )}
+
             {images.length > 1 && (
               <button
                 type="button"

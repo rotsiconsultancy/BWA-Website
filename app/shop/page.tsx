@@ -5,7 +5,7 @@ import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Shop Bracelets | Beads World Africa",
-  alternates: { canonical: "/bracelets" },
+  alternates: { canonical: "/shop" },
   robots: { index: false, follow: true },
 };
 
