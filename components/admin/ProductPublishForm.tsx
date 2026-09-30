@@ -8,6 +8,7 @@ import {
   ImageIcon,
   Loader2,
   Plus,
+  Sparkles,
   Upload,
   X,
 } from "lucide-react";
@@ -15,6 +16,11 @@ import { createProduct } from "@/app/admin/products/actions";
 import type { ProductActionState } from "@/app/admin/products/actions";
 import { useProductDraftStore } from "@/lib/admin/product-draft-store";
 import { getSupabaseBrowser } from "@/lib/supabase/browser";
+import {
+  generateSlug,
+  generateProductSku,
+  generateVariantSku,
+} from "@/lib/admin/slug-sku-utils";
 
 import {
   groups,
@@ -85,11 +91,10 @@ export function GalleryFields({
         .replace(/[-_]/g, " ")
         .trim();
       const currentAlt = images[targetIndex]?.alt || "";
-      const autoAlt =
-        currentAlt.trim() ||
-        readableName.charAt(0).toUpperCase() + readableName.slice(1);
+      const autoAlt = currentAlt.trim() || readableName.charAt(0).toUpperCase() + readableName.slice(1);
+      const nameAlt = `Detail of ${autoAlt} bracelet`;
 
-      update(targetIndex, { url: publicUrl, alt: autoAlt });
+      update(targetIndex, { url: publicUrl, alt: nameAlt });
     } catch (err: any) {
       console.error("Supabase Storage Upload Error:", err);
       setUploadError(
@@ -149,11 +154,11 @@ export function GalleryFields({
           .trim();
         const autoAlt =
           readableName.charAt(0).toUpperCase() + readableName.slice(1);
-
+        const nameAlt = `Detail of ${autoAlt} bracelet`;
         const isFirst = images.length === 0 && i === 0;
         uploadedImages.push({
           url: publicUrlData.publicUrl,
-          alt: autoAlt,
+          alt: nameAlt,
           kind: isFirst ? "hero" : "gallery",
         });
       }
@@ -435,6 +440,127 @@ export default function ProductPublishForm({
   const [images, setImages] = useState<GalleryImage[]>([
     { url: "", alt: "", kind: "hero" },
   ]);
+  const [isSlugAuto, setIsSlugAuto] = useState(true);
+  const [isSkuAuto, setIsSkuAuto] = useState(true);
+  const [isVariantSkuAuto, setIsVariantSkuAuto] = useState(true);
+
+  const handleTitleInput = (newTitle: string) => {
+    setValue("title", newTitle);
+
+    let currentSlug = values.slug || "";
+    if (isSlugAuto) {
+      currentSlug = generateSlug(newTitle);
+      setValue("slug", currentSlug);
+      const slugEl = formRef.current?.elements.namedItem("slug");
+      if (slugEl instanceof HTMLInputElement) slugEl.value = currentSlug;
+    }
+
+    let currentSku = values.sku || "";
+    if (isSkuAuto) {
+      currentSku = generateProductSku(newTitle);
+      setValue("sku", currentSku);
+      const skuEl = formRef.current?.elements.namedItem("sku");
+      if (skuEl instanceof HTMLInputElement) skuEl.value = currentSku;
+    }
+
+    if (isVariantSkuAuto) {
+      const varTitleEl = formRef.current?.elements.namedItem("variant_title");
+      const varTitle =
+        (varTitleEl instanceof HTMLInputElement ? varTitleEl.value : "") ||
+        values.variant_title ||
+        "";
+      const currentVarSku = generateVariantSku(
+        currentSku || generateProductSku(newTitle),
+        varTitle,
+      );
+      setValue("variant_sku", currentVarSku);
+      const varSkuEl = formRef.current?.elements.namedItem("variant_sku");
+      if (varSkuEl instanceof HTMLInputElement) varSkuEl.value = currentVarSku;
+    }
+  };
+
+  const handleVariantTitleInput = (newVarTitle: string) => {
+    setValue("variant_title", newVarTitle);
+
+    if (isVariantSkuAuto) {
+      const titleEl = formRef.current?.elements.namedItem("title");
+      const currentTitle =
+        (titleEl instanceof HTMLInputElement ? titleEl.value : "") ||
+        values.title ||
+        "";
+      const skuEl = formRef.current?.elements.namedItem("sku");
+      const baseSku =
+        (skuEl instanceof HTMLInputElement ? skuEl.value : "") ||
+        values.sku ||
+        generateProductSku(currentTitle);
+      const newVarSku = generateVariantSku(baseSku, newVarTitle);
+      setValue("variant_sku", newVarSku);
+      const varSkuEl = formRef.current?.elements.namedItem("variant_sku");
+      if (varSkuEl instanceof HTMLInputElement) varSkuEl.value = newVarSku;
+    }
+  };
+
+  const handleRegenerateSlug = () => {
+    const titleEl = formRef.current?.elements.namedItem("title");
+    const currentTitle =
+      (titleEl instanceof HTMLInputElement ? titleEl.value : "") ||
+      values.title ||
+      "";
+    const newSlug = generateSlug(currentTitle);
+    setIsSlugAuto(true);
+    setValue("slug", newSlug);
+    const slugEl = formRef.current?.elements.namedItem("slug");
+    if (slugEl instanceof HTMLInputElement) slugEl.value = newSlug;
+  };
+
+  const handleRegenerateSku = () => {
+    const titleEl = formRef.current?.elements.namedItem("title");
+    const currentTitle =
+      (titleEl instanceof HTMLInputElement ? titleEl.value : "") ||
+      values.title ||
+      "";
+    const newSku = generateProductSku(currentTitle);
+    setIsSkuAuto(true);
+    setValue("sku", newSku);
+    const skuEl = formRef.current?.elements.namedItem("sku");
+    if (skuEl instanceof HTMLInputElement) skuEl.value = newSku;
+
+    if (isVariantSkuAuto) {
+      const varTitleEl = formRef.current?.elements.namedItem("variant_title");
+      const varTitle =
+        (varTitleEl instanceof HTMLInputElement ? varTitleEl.value : "") ||
+        values.variant_title ||
+        "";
+      const newVarSku = generateVariantSku(newSku, varTitle);
+      setValue("variant_sku", newVarSku);
+      const varSkuEl = formRef.current?.elements.namedItem("variant_sku");
+      if (varSkuEl instanceof HTMLInputElement) varSkuEl.value = newVarSku;
+    }
+  };
+
+  const handleRegenerateVariantSku = () => {
+    const titleEl = formRef.current?.elements.namedItem("title");
+    const currentTitle =
+      (titleEl instanceof HTMLInputElement ? titleEl.value : "") ||
+      values.title ||
+      "";
+    const skuEl = formRef.current?.elements.namedItem("sku");
+    const baseSku =
+      (skuEl instanceof HTMLInputElement ? skuEl.value : "") ||
+      values.sku ||
+      generateProductSku(currentTitle);
+    const varTitleEl = formRef.current?.elements.namedItem("variant_title");
+    const varTitle =
+      (varTitleEl instanceof HTMLInputElement ? varTitleEl.value : "") ||
+      values.variant_title ||
+      "";
+    const newVarSku = generateVariantSku(baseSku, varTitle);
+    setIsVariantSkuAuto(true);
+    setValue("variant_sku", newVarSku);
+    const varSkuEl = formRef.current?.elements.namedItem("variant_sku");
+    if (varSkuEl instanceof HTMLInputElement) varSkuEl.value = newVarSku;
+  };
+
   useEffect(() => {
     if (!formRef.current) return;
     Object.entries(values).forEach(([name, value]) => {
@@ -538,7 +664,12 @@ export default function ProductPublishForm({
         <div className="admin-form-grid">
           <label>
             Product name
-            <input name="title" required placeholder="e.g. The Grounded" />
+            <input
+              name="title"
+              required
+              placeholder="e.g. The Grounded"
+              onChange={(e) => handleTitleInput(e.target.value)}
+            />
           </label>
           <label>
             Base price (KES)
@@ -563,25 +694,81 @@ export default function ProductPublishForm({
             />
           </label>
           <label>
-            Public URL
+            <div className="admin-field-header">
+              <span>Public URL</span>
+              <button
+                type="button"
+                className="admin-field-auto-btn"
+                onClick={handleRegenerateSlug}
+                title="Auto-generate URL slug from Product name"
+              >
+                <Sparkles size={11} aria-hidden="true" />
+                {isSlugAuto ? "Auto-synced" : "Auto-fill"}
+              </button>
+            </div>
             <input
               name="slug"
               required
               pattern="[a-z0-9]+(-[a-z0-9]+)*"
               placeholder="e.g. the-grounded"
+              onChange={(e) => {
+                setIsSlugAuto(false);
+                setValue("slug", e.target.value);
+              }}
             />
           </label>
           <label>
-            Product SKU
-            <input name="sku" required placeholder="e.g. BWA-GRD" />
+            <div className="admin-field-header">
+              <span>Product SKU</span>
+              <button
+                type="button"
+                className="admin-field-auto-btn"
+                onClick={handleRegenerateSku}
+                title="Auto-generate BWA Product SKU code"
+              >
+                <Sparkles size={11} aria-hidden="true" />
+                {isSkuAuto ? "Auto-synced" : "Auto-fill"}
+              </button>
+            </div>
+            <input
+              name="sku"
+              required
+              placeholder="e.g. BWA-GRD"
+              onChange={(e) => {
+                setIsSkuAuto(false);
+                setValue("sku", e.target.value);
+              }}
+            />
           </label>
           <label>
             Size / variant
-            <input name="variant_title" placeholder="e.g. M / 18 cm" />
+            <input
+              name="variant_title"
+              placeholder="e.g. M / 18 cm"
+              onChange={(e) => handleVariantTitleInput(e.target.value)}
+            />
           </label>
           <label>
-            Variant SKU
-            <input name="variant_sku" placeholder="e.g. BWA-GRD-M" />
+            <div className="admin-field-header">
+              <span>Variant SKU</span>
+              <button
+                type="button"
+                className="admin-field-auto-btn"
+                onClick={handleRegenerateVariantSku}
+                title="Auto-generate Variant SKU from Product SKU + Size"
+              >
+                <Sparkles size={11} aria-hidden="true" />
+                {isVariantSkuAuto ? "Auto-synced" : "Auto-fill"}
+              </button>
+            </div>
+            <input
+              name="variant_sku"
+              placeholder="e.g. BWA-GRD-M"
+              onChange={(e) => {
+                setIsVariantSkuAuto(false);
+                setValue("variant_sku", e.target.value);
+              }}
+            />
           </label>
           <label>
             Variant adjustment (KES)

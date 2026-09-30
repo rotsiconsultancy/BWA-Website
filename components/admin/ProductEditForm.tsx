@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
+import { Sparkles } from "lucide-react";
 import {
   GalleryFields,
   type GalleryImage,
@@ -11,6 +12,11 @@ import {
   updateProduct,
   type ProductActionState,
 } from "@/app/admin/products/actions";
+import {
+  generateSlug,
+  generateProductSku,
+  generateVariantSku,
+} from "@/lib/admin/slug-sku-utils";
 
 type EditableProduct = Record<string, any> & {
   id: string;
@@ -38,6 +44,7 @@ export default function ProductEditForm({
   product: EditableProduct;
 }) {
   const primaryVariant = product.product_variants[0];
+  const formRef = useRef<HTMLFormElement>(null);
   const [tags, setTags] = useState<Record<string, string[]>>(
     Object.fromEntries(
       groups.map((group) => [group.name, product[group.name] || []]),
@@ -60,8 +67,42 @@ export default function ProductEditForm({
     initialState,
   );
 
+  const handleRegenerateSlug = () => {
+    if (!formRef.current) return;
+    const titleEl = formRef.current.elements.namedItem("title") as HTMLInputElement;
+    const slugEl = formRef.current.elements.namedItem("slug") as HTMLInputElement;
+    if (titleEl && slugEl) {
+      slugEl.value = generateSlug(titleEl.value);
+    }
+  };
+
+  const handleRegenerateSku = () => {
+    if (!formRef.current) return;
+    const titleEl = formRef.current.elements.namedItem("title") as HTMLInputElement;
+    const skuEl = formRef.current.elements.namedItem("sku") as HTMLInputElement;
+    if (titleEl && skuEl) {
+      const newSku = generateProductSku(titleEl.value);
+      skuEl.value = newSku;
+      const varTitleEl = formRef.current.elements.namedItem("variant_title") as HTMLInputElement;
+      const varSkuEl = formRef.current.elements.namedItem("variant_sku") as HTMLInputElement;
+      if (varTitleEl && varSkuEl) {
+        varSkuEl.value = generateVariantSku(newSku, varTitleEl.value);
+      }
+    }
+  };
+
+  const handleRegenerateVariantSku = () => {
+    if (!formRef.current) return;
+    const skuEl = formRef.current.elements.namedItem("sku") as HTMLInputElement;
+    const varTitleEl = formRef.current.elements.namedItem("variant_title") as HTMLInputElement;
+    const varSkuEl = formRef.current.elements.namedItem("variant_sku") as HTMLInputElement;
+    if (skuEl && varTitleEl && varSkuEl) {
+      varSkuEl.value = generateVariantSku(skuEl.value, varTitleEl.value);
+    }
+  };
+
   return (
-    <form action={formAction} className="admin-product-form">
+    <form ref={formRef} action={formAction} className="admin-product-form">
       <input type="hidden" name="product_id" value={product.id} />
       <input type="hidden" name="variant_id" value={primaryVariant.id} />
       {state.error && (
@@ -87,7 +128,18 @@ export default function ProductEditForm({
             <input name="title" required defaultValue={product.title} />
           </label>
           <label>
-            Public URL
+            <div className="admin-field-header">
+              <span>Public URL</span>
+              <button
+                type="button"
+                className="admin-field-auto-btn"
+                onClick={handleRegenerateSlug}
+                title="Auto-generate URL slug from Product name"
+              >
+                <Sparkles size={11} aria-hidden="true" />
+                Auto-generate
+              </button>
+            </div>
             <input
               name="slug"
               required
@@ -96,7 +148,18 @@ export default function ProductEditForm({
             />
           </label>
           <label>
-            Product SKU
+            <div className="admin-field-header">
+              <span>Product SKU</span>
+              <button
+                type="button"
+                className="admin-field-auto-btn"
+                onClick={handleRegenerateSku}
+                title="Auto-generate BWA Product SKU code"
+              >
+                <Sparkles size={11} aria-hidden="true" />
+                Auto-generate
+              </button>
+            </div>
             <input name="sku" required defaultValue={product.sku} />
           </label>
           <label>
@@ -130,7 +193,18 @@ export default function ProductEditForm({
             <input name="variant_title" defaultValue={primaryVariant.title} />
           </label>
           <label>
-            Variant SKU
+            <div className="admin-field-header">
+              <span>Variant SKU</span>
+              <button
+                type="button"
+                className="admin-field-auto-btn"
+                onClick={handleRegenerateVariantSku}
+                title="Auto-generate Variant SKU from Product SKU + Size"
+              >
+                <Sparkles size={11} aria-hidden="true" />
+                Auto-generate
+              </button>
+            </div>
             <input name="variant_sku" defaultValue={primaryVariant.sku} />
           </label>
           <label>
