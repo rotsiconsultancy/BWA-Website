@@ -27,6 +27,11 @@ export default function Header() {
   const { cartCount, openDrawer } = useCart();
   const { currency, setCurrency, detectedCountry } = useCurrency();
 
+  // Map the active currency to its flag country code so the flag
+  // updates immediately when the user manually switches currency.
+  const CURRENCY_FLAG: Record<string, string> = { KES: "ke", USD: "us" };
+  const flagCountry = CURRENCY_FLAG[currency] ?? detectedCountry?.toLowerCase() ?? null;
+
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (open) {
@@ -112,22 +117,27 @@ export default function Header() {
           </nav>
 
           <div className="nav-actions">
-            <label className="currency-switcher">
-              <span className="sr-only">Display currency</span>
-              {detectedCountry && (
+            <div className="currency-pill">
+              {flagCountry && (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
-                  src={`https://flagcdn.com/20x15/${detectedCountry.toLowerCase()}.png`}
-                  srcSet={`https://flagcdn.com/40x30/${detectedCountry.toLowerCase()}.png 2x`}
-                  width={20}
-                  height={15}
-                  alt={detectedCountry}
-                  className="currency-flag"
+                  src={`https://flagcdn.com/32x24/${flagCountry}.png`}
+                  srcSet={`https://flagcdn.com/64x48/${flagCountry}.png 2x`}
+                  width={16}
+                  height={12}
+                  alt=""
                   aria-hidden="true"
+                  className="currency-pill__flag"
                 />
               )}
+              <span className="currency-pill__code">{currency}</span>
+              <svg className="currency-pill__chevron" width="8" height="5" viewBox="0 0 8 5" fill="none" aria-hidden="true">
+                <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
               <select
+                className="currency-pill__select"
                 value={currency}
+                aria-label="Display currency"
                 onChange={(event) =>
                   setCurrency(event.target.value as "KES" | "USD")
                 }
@@ -135,7 +145,7 @@ export default function Header() {
                 <option value="KES">KES</option>
                 <option value="USD">USD</option>
               </select>
-            </label>
+            </div>
             <button
               className="icon-btn"
               aria-label="Search"
@@ -251,32 +261,38 @@ export default function Header() {
           </button>
         </div>
         <nav className="mobile-links">
-          <label className="currency-switcher currency-switcher--mobile">
-            <span className="currency-switcher-label">
-              {detectedCountry && (
+          <div className="mobile-currency-row">
+            <span className="mobile-currency-label">Currency</span>
+            <div className="currency-pill currency-pill--mobile">
+              {flagCountry && (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
-                  src={`https://flagcdn.com/20x15/${detectedCountry.toLowerCase()}.png`}
-                  srcSet={`https://flagcdn.com/40x30/${detectedCountry.toLowerCase()}.png 2x`}
-                  width={20}
-                  height={15}
-                  alt={detectedCountry}
-                  className="currency-flag"
+                  src={`https://flagcdn.com/32x24/${flagCountry}.png`}
+                  srcSet={`https://flagcdn.com/64x48/${flagCountry}.png 2x`}
+                  width={16}
+                  height={12}
+                  alt=""
                   aria-hidden="true"
+                  className="currency-pill__flag"
                 />
               )}
-              Display currency
-            </span>
-            <select
-              value={currency}
-              onChange={(event) =>
-                setCurrency(event.target.value as "KES" | "USD")
-              }
-            >
-              <option value="KES">KES</option>
-              <option value="USD">USD</option>
-            </select>
-          </label>
+              <span className="currency-pill__code">{currency}</span>
+              <svg className="currency-pill__chevron" width="8" height="5" viewBox="0 0 8 5" fill="none" aria-hidden="true">
+                <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <select
+                className="currency-pill__select"
+                value={currency}
+                aria-label="Display currency"
+                onChange={(event) =>
+                  setCurrency(event.target.value as "KES" | "USD")
+                }
+              >
+                <option value="KES">KES</option>
+                <option value="USD">USD</option>
+              </select>
+            </div>
+          </div>
           <Link href="/shop" onClick={() => setOpen(false)}>
             Shop
           </Link>

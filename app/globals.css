@@ -5134,44 +5134,100 @@ body {
   }
 }
 /* Store currency and optional Meta marketing consent */
-.currency-switcher {
-  display: flex;
+/* ─── Currency pill (desktop header & mobile drawer) ───────────────────── */
+.currency-pill {
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-}
-.currency-switcher select {
-  appearance: none;
-  border: 1px solid rgba(245, 241, 232, 0.32);
+  gap: 5px;
+  padding: 4px 8px 4px 6px;
+  border: 1px solid rgba(245, 241, 232, 0.28);
   border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  padding: 6px 24px 6px 9px;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+  /* prevent the pill from jumping when flag loads */
+  min-width: 60px;
+}
+.currency-pill:hover {
+  border-color: rgba(245, 241, 232, 0.6);
+  background: rgba(245, 241, 232, 0.06);
+}
+/* On sticky/light header, invert colours */
+.site-header.sticky-header .currency-pill {
+  border-color: rgba(29, 28, 26, 0.2);
+  color: var(--ink);
+}
+.site-header.sticky-header .currency-pill:hover {
+  border-color: rgba(29, 28, 26, 0.5);
+  background: rgba(29, 28, 26, 0.04);
 }
 
-.currency-switcher select option {
-  color: #1d1c1a;
-}
-.currency-flag {
-  display: inline-block;
+/* Flag — fixed 16×12, rounded corners, no overflow */
+.currency-pill__flag {
+  display: block;
+  width: 16px;
+  height: 12px;
   border-radius: 2px;
-  vertical-align: middle;
   object-fit: cover;
   flex-shrink: 0;
+  overflow: hidden;
 }
-.currency-switcher-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  letter-spacing: 0.06em;
+
+/* Currency code text */
+.currency-pill__code {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+  flex-shrink: 0;
 }
-.currency-switcher--mobile {
+
+/* Tiny chevron */
+.currency-pill__chevron {
+  display: block;
+  flex-shrink: 0;
+  opacity: 0.6;
+  margin-left: 1px;
+}
+
+/* The native <select> is stretched over the whole pill invisibly —
+   gives us the real OS dropdown while the pill is the visual. */
+.currency-pill__select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 14px; /* prevents iOS auto-zoom */
+}
+.currency-pill__select option {
+  color: #1d1c1a;
+}
+
+/* Mobile drawer row */
+.mobile-currency-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(29, 28, 26, 0.08);
+  margin-bottom: 4px;
+}
+.mobile-currency-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.currency-pill--mobile {
+  border-color: rgba(29, 28, 26, 0.2);
+  color: var(--ink);
+}
+.currency-pill--mobile:hover {
+  border-color: rgba(29, 28, 26, 0.5);
+  background: rgba(29, 28, 26, 0.04);
 }
 .marketing-consent {
   position: fixed;
