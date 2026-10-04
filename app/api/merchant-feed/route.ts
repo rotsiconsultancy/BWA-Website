@@ -50,7 +50,7 @@ export async function GET() {
               : null;
 
           return buildItem({
-            id: `${product.id}-${variant.id}`,
+            id: variant.id,           // 36 chars — within Google's 50-char limit
             itemGroupId: product.id,
             title: `${product.title} — ${variant.name}`,
             description: product.descriptor,
