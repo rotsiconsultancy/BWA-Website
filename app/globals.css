@@ -948,9 +948,25 @@ footer,
   padding-top: 18px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 15px;
   font-size: 10px;
   color: rgba(245, 241, 232, 0.5);
+}
+.footer-legal-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.footer-legal-links a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+.footer-legal-links a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* Tablet / Desktop Responsive Media Queries */
@@ -5118,6 +5134,11 @@ body {
   }
 }
 /* Store currency and optional Meta marketing consent */
+.currency-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 .currency-switcher select {
   appearance: none;
   border: 1px solid rgba(245, 241, 232, 0.32);
@@ -5132,6 +5153,20 @@ body {
 
 .currency-switcher select option {
   color: #1d1c1a;
+}
+.currency-flag {
+  display: inline-block;
+  border-radius: 2px;
+  vertical-align: middle;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.currency-switcher-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
 }
 .currency-switcher--mobile {
   display: flex;
@@ -5197,4 +5232,88 @@ body {
   padding: 7px 9px;
   font: inherit;
   font-size: 11px;
+}
+
+/* ─── Legal pages (Return Policy / Terms & Conditions) ─────────────────── */
+.legal-page {
+  background: var(--ivory);
+  color: var(--ink);
+  min-height: 60vh;
+  padding: 80px 0 120px;
+}
+.legal-container {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.legal-header {
+  margin-bottom: 56px;
+  border-bottom: 1px solid rgba(29, 28, 26, 0.1);
+  padding-bottom: 32px;
+}
+.legal-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted, #7a7672);
+  margin: 0 0 12px;
+}
+.legal-header h1 {
+  font-family: var(--font-display, "Cormorant Garamond", serif);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 0 0 10px;
+}
+.legal-updated {
+  font-size: 12px;
+  color: var(--ink-muted, #7a7672);
+  margin: 0;
+}
+.legal-lead {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--ink);
+  margin: 0;
+}
+.legal-section {
+  margin-bottom: 40px;
+}
+.legal-section h2 {
+  font-family: var(--font-display, "Cormorant Garamond", serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+.legal-section p {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+.legal-section ul,
+.legal-section ol {
+  padding-left: 1.4em;
+  margin: 0 0 12px;
+}
+.legal-section li {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+.legal-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.15s ease;
+}
+.legal-link:hover {
+  opacity: 0.6;
+}
+@media (max-width: 48rem) {
+  .legal-page {
+    padding: 48px 0 80px;
+  }
 }

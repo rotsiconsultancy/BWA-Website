@@ -32,6 +32,14 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-04 07:57] — GA4 Tracking, ipapi Currency Detection & FlagCDN Flag Picker
+
+- **Agent**: Antigravity
+- **Changes**:
+  1. **GA4**: Added Google Analytics 4 tag (`G-4HNRWEMRVY`) in `app/layout.tsx` via `next/script` with `strategy="afterInteractive"` — non-blocking, fires after page hydration.
+  2. **CurrencyContext**: Replaced timezone-based detection with `ipapi.co/json` geolocation API (4s timeout, graceful fallback to KES). Exposes new `detectedCountry` (ISO 3166-1 alpha-2) to consumers. localStorage and middleware cookie priority is preserved.
+  3. **Header flag**: Both desktop and mobile currency pickers now display the visitor's country flag via `flagcdn.com` (20×15px PNG + 2× srcSet). Flag appears only after the ipapi response resolves. Added `.currency-flag`, `.currency-switcher-label`, and updated `.currency-switcher` base flex rules in `globals.css`.
+
 ### [2026-09-28 14:48] — Featured Collections 3x4 Grid & Mobile Pill Action Button
 
 - **Agent**: Antigravity

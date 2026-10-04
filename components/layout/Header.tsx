@@ -25,7 +25,7 @@ export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const { cartCount, openDrawer } = useCart();
-  const { currency, setCurrency } = useCurrency();
+  const { currency, setCurrency, detectedCountry } = useCurrency();
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -114,6 +114,18 @@ export default function Header() {
           <div className="nav-actions">
             <label className="currency-switcher">
               <span className="sr-only">Display currency</span>
+              {detectedCountry && (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={`https://flagcdn.com/20x15/${detectedCountry.toLowerCase()}.png`}
+                  srcSet={`https://flagcdn.com/40x30/${detectedCountry.toLowerCase()}.png 2x`}
+                  width={20}
+                  height={15}
+                  alt={detectedCountry}
+                  className="currency-flag"
+                  aria-hidden="true"
+                />
+              )}
               <select
                 value={currency}
                 onChange={(event) =>
@@ -240,7 +252,21 @@ export default function Header() {
         </div>
         <nav className="mobile-links">
           <label className="currency-switcher currency-switcher--mobile">
-            Display currency
+            <span className="currency-switcher-label">
+              {detectedCountry && (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={`https://flagcdn.com/20x15/${detectedCountry.toLowerCase()}.png`}
+                  srcSet={`https://flagcdn.com/40x30/${detectedCountry.toLowerCase()}.png 2x`}
+                  width={20}
+                  height={15}
+                  alt={detectedCountry}
+                  className="currency-flag"
+                  aria-hidden="true"
+                />
+              )}
+              Display currency
+            </span>
             <select
               value={currency}
               onChange={(event) =>
