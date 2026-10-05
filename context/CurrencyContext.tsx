@@ -5,13 +5,16 @@ import type { StoreCurrency } from "@/lib/commerce/money";
 import { formatMoney } from "@/lib/commerce/money";
 
 const STORAGE_KEY = "bwa_store_currency";
+const MANUAL_KEY = "bwa_store_currency_manual";
 
 type CurrencyContextValue = {
   currency: StoreCurrency;
   setCurrency: (currency: StoreCurrency) => void;
   format: (amount: number) => string;
-  /** ISO 3166-1 alpha-2 country code detected via ipapi, e.g. "KE", "US" */
+  /** ISO 3166-1 alpha-2 country code detected via ipapi, e.g. "KE", "US", "CA" */
   detectedCountry: string | null;
+  /** Whether the current currency was explicitly selected by the user */
+  isManual: boolean;
 };
 
 const CurrencyContext = createContext<CurrencyContextValue | undefined>(
@@ -24,19 +27,23 @@ function getCookie(name: string): string | null {
   return match ? match[2] : null;
 }
 
-/** Resolve currency from ipapi.co/json — returns null on network/parse error */
+/** Resolve currency & country from ipapi.co/json — returns null on network/parse error */
 async function detectCurrencyViaIpApi(): Promise<{
   currency: StoreCurrency;
   country: string;
 } | null> {
   try {
     const res = await fetch("https://ipapi.co/json/", {
-      // Use a short timeout — we don't want to block the UX
       signal: AbortSignal.timeout(4000),
     });
     if (!res.ok) return null;
     const data = await res.json();
-    const countryCode: string = data.country_code ?? "";
+    const countryCode: string = (
+      data.country_code ||
+      data.country ||
+      ""
+    ).toUpperCase();
+    if (!countryCode) return null;
     const currency: StoreCurrency = countryCode === "KE" ? "KES" : "USD";
     return { currency, country: countryCode };
   } catch {
@@ -47,36 +54,46 @@ async function detectCurrencyViaIpApi(): Promise<{
 export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrencyState] = useState<StoreCurrency>("KES");
   const [detectedCountry, setDetectedCountry] = useState<string | null>(null);
+  const [isManual, setIsManual] = useState<boolean>(false);
 
   useEffect(() => {
-    // 1. Explicit user preference saved in localStorage takes top priority
+    // 1. Only respect saved local currency if the user EXPLICITLY selected it manually
+    const isManualSelection = localStorage.getItem(MANUAL_KEY) === "true";
     const savedLocal = localStorage.getItem(STORAGE_KEY);
-    if (savedLocal === "KES" || savedLocal === "USD") {
+
+    if (isManualSelection && (savedLocal === "KES" || savedLocal === "USD")) {
+      setIsManual(true);
       setCurrencyState(savedLocal);
-      // Still try to get country code for the flag display, but don't override currency
       detectCurrencyViaIpApi().then((result) => {
         if (result) setDetectedCountry(result.country);
       });
       return;
     }
 
-    // 2. Middleware-injected geo cookie from edge location headers
-    const cookieCurrency = getCookie(STORAGE_KEY);
-    if (cookieCurrency === "KES" || cookieCurrency === "USD") {
-      setCurrencyState(cookieCurrency);
-      detectCurrencyViaIpApi().then((result) => {
-        if (result) setDetectedCountry(result.country);
-      });
-      return;
-    }
-
-    // 3. ipapi.co geolocation — most reliable client-side detection
+    // 2. If not explicitly chosen manually by user, perform IP geolocation auto-detection
     detectCurrencyViaIpApi().then((result) => {
       if (result) {
         setCurrencyState(result.currency);
         setDetectedCountry(result.country);
+      } else {
+        // Fallback 1: check middleware cookie
+        const cookieCurrency = getCookie(STORAGE_KEY);
+        if (cookieCurrency === "KES" || cookieCurrency === "USD") {
+          setCurrencyState(cookieCurrency);
+        } else {
+          // Fallback 2: browser timezone
+          try {
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+            if (tz.includes("Nairobi") || tz.includes("Africa/Nairobi")) {
+              setCurrencyState("KES");
+            } else {
+              setCurrencyState("USD");
+            }
+          } catch {
+            setCurrencyState("KES");
+          }
+        }
       }
-      // Fallback: if ipapi fails completely, stay on "KES" (our home market)
     });
   }, []);
 
@@ -84,14 +101,17 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     () => ({
       currency,
       detectedCountry,
+      isManual,
       setCurrency: (next: StoreCurrency) => {
+        setIsManual(true);
         setCurrencyState(next);
         localStorage.setItem(STORAGE_KEY, next);
+        localStorage.setItem(MANUAL_KEY, "true");
         document.cookie = `${STORAGE_KEY}=${next}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
       },
       format: (amount: number) => formatMoney(amount, currency),
     }),
-    [currency, detectedCountry],
+    [currency, detectedCountry, isManual],
   );
 
   return (

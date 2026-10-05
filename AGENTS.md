@@ -32,6 +32,13 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-05 11:45] — Currency Auto-Detection & Flag Resolution Fix
+
+- **Agent**: Antigravity
+- **Changes**:
+  1. **CurrencyContext**: Separated automatic IP-geolocation detection from explicit user manual selections using `bwa_store_currency_manual` key. Auto-detection now always executes on initial load unless the user previously explicitly chose a currency manually.
+  2. **Header flag resolution**: Visitors without a manual currency preference now see their actual detected country flag (e.g., 🇨🇦 `CA` for Canada VPN, 🇰🇪 `KE` for Kenya). Switching currency manually updates the flag to the chosen currency's primary flag (`KES` -> 🇰🇪 `KE`, `USD` -> 🇺🇸 `US`).
+
 ### [2026-10-04 07:57] — GA4 Tracking, ipapi Currency Detection & FlagCDN Flag Picker
 
 - **Agent**: Antigravity

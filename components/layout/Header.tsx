@@ -25,12 +25,14 @@ export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const { cartCount, openDrawer } = useCart();
-  const { currency, setCurrency, detectedCountry } = useCurrency();
+  const { currency, setCurrency, detectedCountry, isManual } = useCurrency();
 
-  // Map the active currency to its flag country code so the flag
-  // updates immediately when the user manually switches currency.
-  const CURRENCY_FLAG: Record<string, string> = { KES: "ke", USD: "us" };
-  const flagCountry = CURRENCY_FLAG[currency] ?? detectedCountry?.toLowerCase() ?? null;
+  // Flag resolution:
+  // If user explicitly switched currency, map KES -> "ke", USD -> "us"
+  // Otherwise show visitor's actual detected country flag (e.g. "ca", "ke", "us")
+  const flagCountry = isManual
+    ? (currency === "KES" ? "ke" : "us")
+    : (detectedCountry?.toLowerCase() ?? (currency === "KES" ? "ke" : "us"));
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
