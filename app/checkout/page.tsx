@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { ArrowLeft, MessageCircle } from "lucide-react";
+import { ArrowLeft,} from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
@@ -21,6 +21,8 @@ type AppliedDiscount = {
   discountAmount: number;
   discountedSubtotal: number;
 };
+
+const whatsappNumber = process.env.WHATSAPP_NUMBER || "254745474586";
 
 export default function CheckoutPage() {
   const {
@@ -204,7 +206,7 @@ export default function CheckoutPage() {
         " Please confirm payment and delivery details.";
       window.open(
         "https://wa.me/" +
-          (process.env.WHATSAPP_NUMBER || "254712345678") +
+          whatsappNumber +
           "?text=" +
           encodeURIComponent(message),
         "_blank",
@@ -248,6 +250,18 @@ export default function CheckoutPage() {
         >
           Track your order
         </Link>
+        <Link
+          href={`https://wa.me/${whatsappNumber}`+
+          `?text=${encodeURIComponent(`Hello BWA, I have placed website order ${confirmation.orderNumber} for ${format(confirmation.total)}${confirmation.discountCode ? ` after ${confirmation.discountCode} saved ${format(confirmation.discountAmount)}.` : "."} Please confirm payment and delivery details.`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-whatsapp"
+        >
+          <FaWhatsapp size={16} /> Message BWA on WhatsApp
+        </Link>
+        <p className="order-confirmation-note">
+          Our team will confirm payment and delivery with you on WhatsApp.
+        </p>
         <Link href="/bracelets">Continue exploring</Link>
       </main>
     );

@@ -181,6 +181,12 @@ h3 {
   background: var(--stone);
 }
 
+.btn-whatsapp {
+  background: var(--charcoal);
+  color: #25d366;
+  border: 1px solid var(--charcoal);
+}
+
 .text-link {
   display: inline-flex;
   align-items: center;

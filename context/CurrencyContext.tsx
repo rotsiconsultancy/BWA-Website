@@ -6,6 +6,7 @@ import { formatMoney } from "@/lib/commerce/money";
 
 const STORAGE_KEY = "bwa_store_currency";
 const MANUAL_KEY = "bwa_store_currency_manual";
+type Detected = { currency: StoreCurrency; country: string };
 
 type CurrencyContextValue = {
   currency: StoreCurrency;
@@ -27,6 +28,12 @@ function getCookie(name: string): string | null {
   return match ? match[2] : null;
 }
 
+function toDetected(code: string): Detected | null {
+  const country = code.trim().toUpperCase();
+  if (!country) return null;
+  return { currency: country === "KE" ? "KES" : "USD", country };
+}
+
 /** Resolve currency & country from ipapi.co/json — returns null on network/parse error */
 async function detectCurrencyViaIpApi(): Promise<{
   currency: StoreCurrency;
@@ -46,6 +53,21 @@ async function detectCurrencyViaIpApi(): Promise<{
     if (!countryCode) return null;
     const currency: StoreCurrency = countryCode === "KE" ? "KES" : "USD";
     return { currency, country: countryCode };
+  } catch {
+    return null;
+  }
+}
+
+/** Provider 2: ipwho.is — HTTPS, no key required */
+async function detectViaIpWho(): Promise<Detected | null> {
+  try {
+    const res = await fetch("https://ipwho.is/?fields=success,country_code", {
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.success === false) return null;
+    return toDetected(data.country_code ?? "");
   } catch {
     return null;
   }
