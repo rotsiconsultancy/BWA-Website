@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ArrowUpRight,
+  Calculator,
   LayoutDashboard,
   Package,
   Sparkles,
@@ -18,6 +19,7 @@ const navigation = [
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/products", label: "Catalogue", icon: Package },
+  { href: "/admin/pricing", label: "Pricing", icon: Calculator },
   { href: "/admin/discounts", label: "Offers", icon: TicketPercent },
   { href: "/admin/discovery", label: "Discovery", icon: Sparkles },
   { href: "/admin/sync", label: "CRM sync", icon: RefreshCw },

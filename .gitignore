@@ -8,3 +8,6 @@ non-website
 .next
 # next-env.d.ts
 .txt
+.impeccable
+*.xlsx
+graphify-out

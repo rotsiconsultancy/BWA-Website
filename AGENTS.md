@@ -32,6 +32,13 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-22 03:30] — Pricing Calculator Workspace (KES)
+
+- **Agent**: Claude Code
+- **Logic**: Added `lib/commerce/cost-pricing.ts` (pure, tested). Making cost = pack/strand ÷ yield + string roll ÷ yield + charms + extras + wastage % + packaging + labour. Full cost adds a display-stand charge that stops once `stand_payback_units` bracelets have sold since `stand_bought_on`. Monthly ads + other costs are applied as a % of every sale (budget ÷ expected monthly sales), not a flat per-bracelet amount, so cheap bracelets are not overloaded. Break-even = full cost ÷ (1 − shared % − commission %); good price = break-even ÷ (1 − target profit %), rounded up. Positive profit splits into better products / savings / owner pay.
+- **Admin**: New `/admin/pricing` (owner and commerce manager only) with status per product (Too cheap / OK / Good price), plus monthly settings. `/admin/pricing/[productId]` has a live cost-recipe calculator for direct and consignment sales, and can apply a price to `products.price_kes`. Saving a recipe also writes `products.cost_price`.
+- **Schema**: Added `product_cost_recipes` (staff-only, RLS on with no public policies). Settings are stored in `site_settings` under key `pricing`; RLS is now enabled on `site_settings`. Apply the updated `supabase/schema.sql` before use.
+
 ### [2026-10-05 11:45] — Currency Auto-Detection & Flag Resolution Fix
 
 - **Agent**: Antigravity
@@ -348,3 +355,19 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Next.js Image Configuration**: Updated [next.config.ts](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/next.config.ts) `images.remotePatterns` to allow loading images hosted on Supabase Storage subdomains (`*.supabase.co`, `*.supabase.in`, `*.supabase.net`).
 - **SQL Setup Script**: Created [supabase/storage.sql](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/supabase/storage.sql) to initialize the `product-images` storage bucket (10MB limit, image MIME types) and set up Row Level Security (RLS) policies for SELECT, INSERT, UPDATE, and DELETE operations.
 - **Styling**: Added `.admin-gallery-thumbnail`, `.admin-gallery-input-group`, `.admin-gallery-row-upload`, `.admin-gallery-error-banner`, and CSS spin animation in [app/globals.css](file:///home/alvin/Desktop/Projects/BeadsWorldAfrica-Ecommerce/app/globals.css).
+
+### [2026-10-09] — Impeccable Product Context Initialization
+
+- **Agent**: Codex
+- **Context**: Added `PRODUCT.md` with owner-confirmed audience priorities (Kenyan men, women gifting men, then women buying for themselves), brand commitments, verified existing proof assets, and current commerce constraints. International expansion remains secondary pending logistics.
+- **Workflow**: Selected comp-first for future new surfaces under the owner's delegated choice and recorded it in `.impeccable/config.json`. Configured the Next.js App Router entry for future live mode after the CSP detector found no policy; no storefront UI or CSP changes were made.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -5379,3 +5379,234 @@ body {
     padding: 48px 0 80px;
   }
 }
+
+/* Pricing calculator */
+.admin-pricing-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.admin-pricing-summary > div {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-5);
+  border: var(--rule) solid var(--color-line);
+  background: var(--color-paper);
+}
+.admin-pricing-summary span,
+.admin-pricing-prices span {
+  color: var(--color-muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.admin-pricing-summary strong {
+  font-size: 18px;
+}
+.admin-pricing-summary small,
+.admin-pricing-prices small {
+  color: var(--color-muted);
+  font-size: 11px;
+}
+.admin-pricing-table > div {
+  grid-template-columns:
+    minmax(140px, 1.2fr) minmax(90px, 0.6fr) minmax(130px, 0.9fr)
+    minmax(100px, 0.7fr) minmax(90px, 0.6fr) max-content;
+}
+.admin-pricing-table small {
+  display: block;
+  color: var(--color-muted);
+  font-size: 10px;
+  font-weight: 400;
+}
+.admin-pricing-muted {
+  color: var(--color-muted);
+}
+.admin-pricing-status-good {
+  background: color-mix(in oklch, var(--success) 15%, var(--color-paper));
+  color: var(--success);
+}
+.admin-pricing-status-below_target {
+  background: color-mix(in oklch, var(--color-brass) 22%, var(--color-paper));
+  color: var(--color-ink);
+}
+.admin-pricing-status-loss {
+  background: color-mix(in oklch, var(--error) 13%, var(--color-paper));
+  color: var(--error);
+}
+.admin-pricing-settings {
+  margin-top: var(--space-10);
+}
+.admin-pricing-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+.admin-pricing-result {
+  display: grid;
+  gap: var(--space-4);
+}
+.admin-pricing-result h2 {
+  margin-bottom: var(--space-4);
+}
+.admin-pricing-lines,
+.admin-pricing-split {
+  display: grid;
+  margin: 0;
+}
+.admin-pricing-lines > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+  border-bottom: var(--rule) solid var(--color-line);
+  font-size: 12px;
+}
+.admin-pricing-lines dt {
+  color: var(--color-muted);
+}
+.admin-pricing-lines dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.admin-pricing-lines > .is-total {
+  border-bottom-color: var(--color-ink);
+  font-weight: 700;
+}
+.admin-pricing-lines > .is-total dt {
+  color: var(--color-ink);
+}
+.admin-pricing-split {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.admin-pricing-split > div {
+  padding: var(--space-3);
+  background: var(--color-paper-deep);
+}
+.admin-pricing-split dt {
+  color: var(--color-muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+.admin-pricing-split dd {
+  margin: var(--space-1) 0 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.admin-pricing-channels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.admin-pricing-channels button {
+  min-height: 38px;
+  padding: 0 var(--space-3);
+  border: var(--rule) solid var(--color-line);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.admin-pricing-channels button.is-active {
+  border-color: var(--color-forest);
+  background: var(--color-forest);
+  color: var(--color-paper);
+}
+.admin-pricing-prices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+.admin-pricing-prices > div {
+  display: grid;
+  gap: var(--space-1);
+  align-content: start;
+  padding: var(--space-4);
+  border: var(--rule) solid var(--color-line);
+}
+.admin-pricing-prices > .is-good {
+  border-color: var(--color-forest);
+}
+.admin-pricing-prices strong {
+  font-size: 22px;
+}
+.admin-pricing-prices button {
+  justify-self: start;
+  margin-top: var(--space-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-forest);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.admin-pricing-hint {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 12px;
+}
+.admin-pricing-try {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  font-size: 11px;
+  font-weight: 700;
+}
+.admin-pricing-try input {
+  min-height: 44px;
+  padding: var(--space-3);
+  border: var(--rule) solid var(--color-line);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 16px;
+}
+.admin-pricing-result .admin-status {
+  margin: 0 0 var(--space-3);
+}
+.admin-pricing-apply {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: var(--rule) solid var(--color-line);
+}
+.admin-pricing-apply p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 11px;
+}
+.admin-pricing-apply button {
+  justify-self: start;
+  cursor: pointer;
+}
+@media (max-width: 60rem) {
+  .admin-pricing-workspace,
+  .admin-pricing-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 40rem) {
+  .admin-pricing-prices,
+  .admin-pricing-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-pricing-table > div {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .admin-pricing-table > div span:nth-child(5),
+  .admin-pricing-table > div a {
+    display: inline-flex;
+  }
+}

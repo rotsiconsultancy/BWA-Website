@@ -252,6 +252,24 @@ create index if not exists discount_redemptions_order_idx on public.discount_red
 alter table public.orders add column if not exists courier_name text;
 alter table public.orders add column if not exists tracking_reference text;
 
+-- Pricing: one cost recipe per product. Shared monthly settings live in
+-- site_settings under the 'pricing' key. Staff-only; no public policies.
+create table if not exists public.product_cost_recipes (
+  product_id uuid primary key references public.products(id) on delete cascade,
+  material_cost numeric(10,2) not null default 0 check (material_cost >= 0),
+  material_yield numeric(10,2) not null default 1 check (material_yield > 0),
+  charm_cost numeric(10,2) not null default 0 check (charm_cost >= 0),
+  charm_count integer not null default 0 check (charm_count >= 0),
+  extra_cost numeric(10,2) not null default 0 check (extra_cost >= 0),
+  packaging text not null default 'pouch' check (packaging in ('none','pouch','box','pouch_and_box')),
+  labour_kes numeric(10,2) not null default 0 check (labour_kes >= 0),
+  notes text,
+  updated_by uuid,
+  updated_at timestamptz not null default now()
+);
+alter table public.product_cost_recipes enable row level security;
+alter table public.site_settings enable row level security;
+
 -- Public browsing is read-only. Customer/order/admin/CRM writes occur only through server routes using the service role.
 alter table public.products enable row level security;
 alter table public.product_images enable row level security;
