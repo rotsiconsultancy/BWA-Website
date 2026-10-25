@@ -7,7 +7,7 @@ import CartDrawer from "@/components/commerce/CartDrawer";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import MetaPixel from "@/components/marketing/MetaPixel";
 import type { Metadata } from "next";
-import Script from "next/script";
+import GoogleAnalytics from "@/components/marketing/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "Beads World Africa — Natural Stone Bracelets Handmade in Africa",
@@ -64,18 +64,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" scroll-behavior="smooth" className="scroll-smooth">
-      {/* Google Analytics GA4 */}
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-4HNRWEMRVY"
-        strategy="afterInteractive"
-      />
-      <Script id="ga4-init" strategy="afterInteractive">{`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-4HNRWEMRVY');
-      `}</Script>
       <body>
+        <GoogleAnalytics />
         <CurrencyProvider>
           <CartProvider>
             <Header />

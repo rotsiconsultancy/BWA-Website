@@ -7,6 +7,7 @@ import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import Money from "@/components/commerce/Money";
+import { trackGa4Event } from "@/lib/marketing/ga4";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -31,7 +32,9 @@ export default function Header() {
   // If user explicitly switched currency, map KES -> "ke", USD -> "us"
   // Otherwise show visitor's actual detected country flag (e.g. "ca", "ke", "us")
   const flagCountry = isManual
-    ? (currency === "KES" ? "ke" : "us")
+    ? currency === "KES"
+      ? "ke"
+      : "us"
     : (detectedCountry?.toLowerCase() ?? (currency === "KES" ? "ke" : "us"));
 
   // Lock body scroll when mobile menu is open
@@ -79,7 +82,15 @@ export default function Header() {
       const data = await response.json();
       setResults(data.products || []);
     }, 160);
-    return () => window.clearTimeout(timer);
+    // Report the settled term, not every keystroke.
+    const searchTimer = window.setTimeout(
+      () => trackGa4Event("search", { search_term: term }),
+      1200,
+    );
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(searchTimer);
+    };
   }, [query]);
 
   return (
@@ -133,8 +144,21 @@ export default function Header() {
                 />
               )}
               <span className="currency-pill__code">{currency}</span>
-              <svg className="currency-pill__chevron" width="8" height="5" viewBox="0 0 8 5" fill="none" aria-hidden="true">
-                <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+              <svg
+                className="currency-pill__chevron"
+                width="8"
+                height="5"
+                viewBox="0 0 8 5"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M1 1l3 3 3-3"
+                  stroke="currentColor"
+                  strokeWidth="1.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
               <select
                 className="currency-pill__select"
@@ -279,8 +303,21 @@ export default function Header() {
                 />
               )}
               <span className="currency-pill__code">{currency}</span>
-              <svg className="currency-pill__chevron" width="8" height="5" viewBox="0 0 8 5" fill="none" aria-hidden="true">
-                <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+              <svg
+                className="currency-pill__chevron"
+                width="8"
+                height="5"
+                viewBox="0 0 8 5"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M1 1l3 3 3-3"
+                  stroke="currentColor"
+                  strokeWidth="1.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
               <select
                 className="currency-pill__select"

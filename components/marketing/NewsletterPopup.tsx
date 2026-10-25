@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X, Mail, Sparkles, Check } from "lucide-react";
+import { trackGa4Event } from "@/lib/marketing/ga4";
 
 const STORAGE_KEY = "bwa_newsletter_dismissed_until";
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
@@ -84,6 +85,7 @@ export default function NewsletterPopup() {
 
       if (res.ok) {
         setStatus("success");
+        trackGa4Event("sign_up", { method: "newsletter_popup" });
         saveDismissal();
         setTimeout(() => setVisible(false), 4000);
       } else {

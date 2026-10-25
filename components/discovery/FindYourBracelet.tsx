@@ -11,6 +11,7 @@ import type { CommerceProduct } from "@/lib/commerce/types";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import Money from "@/components/commerce/Money";
+import { trackGa4Event } from "@/lib/marketing/ga4";
 
 export const fallbackQuestions: DiscoveryQuestion[] = [
   {
@@ -164,6 +165,11 @@ export default function FindYourBracelet({
     const token = crypto.randomUUID();
     setSessionToken(token);
     setDiscoverySessionToken(token);
+    trackGa4Event("quiz_complete", {
+      quiz_version: quizVersionId,
+      recommended_item_id: primaryMatch.product.id,
+      recommended_item_name: primaryMatch.product.title,
+    });
     void fetch("/api/discovery/session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -8,7 +8,8 @@ import { hubsForProduct } from "@/lib/commerce/seo-hubs";
 import Money from "@/components/commerce/Money";
 import { useCurrency } from "@/context/CurrencyContext";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
-import { useEffect } from "react";
+import { productToGa4Item, trackGa4Event } from "@/lib/marketing/ga4";
+import { useEffect, useRef } from "react";
 
 export default function ProductDetail({
   product,
@@ -44,6 +45,25 @@ export default function ProductDetail({
         contents: [{ id: product.id, item_price: price }],
       });
   }, [currency, product.id, prices.KES, prices.USD]);
+  const viewedProduct = useRef<string | null>(null);
+  useEffect(() => {
+    // Once per product; a currency auto-switch or size change is not a new view.
+    if (viewedProduct.current === product.id) return;
+    viewedProduct.current = product.id;
+    const price = prices[currency];
+    trackGa4Event("view_item", {
+      currency,
+      value: price ?? undefined,
+      items: [
+        productToGa4Item(product, currency, {
+          item_id: variant?.id ?? product.id,
+          item_variant: variant?.name,
+          price: price ?? undefined,
+        }),
+      ],
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
   return (
     <main className="product-page">
       <div className="container product-breadcrumb">

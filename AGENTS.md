@@ -32,6 +32,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-25 22:30] — GA4 Ecommerce Funnel & WhatsApp Send Step
+
+- **Agent**: Claude Code
+- **Analytics**: Added `lib/marketing/ga4.ts` (typed `trackGa4Event`, item mappers, self-bootstrapping `gtag` so early events queue behind `config`) and `components/marketing/GoogleAnalytics.tsx`, replacing the inline layout snippet. Events: `view_item`, `add_to_cart`, `remove_from_cart` (incl. quantity changes), `view_cart` (bag page + drawer open), `begin_checkout`, `add_shipping_info`, `purchase` (transaction_id = order number, on order creation), custom `whatsapp_order_open` (auto/button), `search`, `quiz_complete`, `generate_lead` (bespoke), `sign_up` (newsletter footer/popup). `item_id` is the variant id, matching the Merchant feed.
+- **Checkout**: Confirmation screen now states the order is not confirmed until the customer sends the WhatsApp message, with one primary send button (auto-open is often blocked on mobile after the async request). The prefilled message now lists items, sizes, total, delivery and name. A hint above the submit button explains the Send step. Compare `purchase` vs `whatsapp_order_open` in GA4 to see orders that were never sent.
+
 ### [2026-10-22 03:30] — Pricing Calculator Workspace (KES)
 
 - **Agent**: Claude Code

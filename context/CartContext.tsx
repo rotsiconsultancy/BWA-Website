@@ -10,6 +10,7 @@ import React, {
 import type { CartLine } from "@/lib/commerce/types";
 import { useCurrency } from "@/context/CurrencyContext";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
+import { cartLineToGa4Item, trackGa4Event } from "@/lib/marketing/ga4";
 
 type Toast = {
   id: number;
@@ -144,6 +145,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setDrawerOpen(true);
     showToast(newLine.title + " added to your bag.");
     const price = newLine.unitPrices[currency];
+    trackQuantityChange({ ...newLine, quantity }, quantity);
     if (price !== null)
       trackMetaEvent("AddToCart", {
         value: price * quantity,
@@ -152,11 +154,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         contents: [{ id: newLine.variantId, quantity, item_price: price }],
       });
   };
+  const trackQuantityChange = (line: CartLine, change: number) => {
+    if (!change) return;
+    const price = line.unitPrices[currency];
+    trackGa4Event(change > 0 ? "add_to_cart" : "remove_from_cart", {
+      currency,
+      value: price === null ? undefined : price * Math.abs(change),
+      items: [
+        { ...cartLineToGa4Item(line, currency), quantity: Math.abs(change) },
+      ],
+    });
+  };
+  const findLine = (productId: string, variantId: string) =>
+    items.find(
+      (line) => line.productId === productId && line.variantId === variantId,
+    );
   const updateQuantity = (
     productId: string,
     variantId: string,
     quantity: number,
   ) => {
+    const line = findLine(productId, variantId);
+    if (line) trackQuantityChange(line, Math.max(quantity, 0) - line.quantity);
     if (quantity <= 0)
       return setItems((current) =>
         current.filter(
@@ -173,6 +192,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
   const removeFromCart = (productId: string, variantId: string) => {
+    const line = findLine(productId, variantId);
+    if (line) trackQuantityChange(line, -line.quantity);
     setItems((current) =>
       current.filter(
         (line) =>

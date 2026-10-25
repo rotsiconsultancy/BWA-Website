@@ -5,6 +5,11 @@ import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
+import {
+  cartLineToGa4Item,
+  cartValue,
+  trackGa4Event,
+} from "@/lib/marketing/ga4";
 
 export default function CartDrawer() {
   const {
@@ -17,6 +22,16 @@ export default function CartDrawer() {
   } = useCart();
   const { currency, format } = useCurrency();
   const closeButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!drawerOpen || !items.length) return;
+    trackGa4Event("view_cart", {
+      currency,
+      value: cartValue(items, currency),
+      items: items.map((line) => cartLineToGa4Item(line, currency)),
+    });
+    // Once per opening, not on every quantity change inside the drawer.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drawerOpen]);
   useEffect(() => {
     if (!drawerOpen) return;
     closeButton.current?.focus();

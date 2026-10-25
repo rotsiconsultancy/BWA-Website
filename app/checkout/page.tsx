@@ -1,19 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
-import { ArrowLeft,} from "lucide-react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
 import { deliveryFeeFor } from "@/lib/commerce/money";
+import {
+  cartLineToGa4Item,
+  cartValue,
+  trackGa4Event,
+} from "@/lib/marketing/ga4";
 
 type Confirmation = {
   orderNumber: string;
   total: number;
   discountAmount: number;
   discountCode: string | null;
+  whatsappUrl: string;
 } | null;
 
 type AppliedDiscount = {
@@ -59,6 +65,17 @@ export default function CheckoutPage() {
   const deliveryFee =
     deliveryMethod === "pickup" ? 0 : deliveryFeeFor(currency);
   const discountAmount = appliedDiscount?.discountAmount || 0;
+  const checkoutTracked = useRef(false);
+  const [whatsappOpened, setWhatsappOpened] = useState(false);
+  useEffect(() => {
+    if (checkoutTracked.current || !items.length) return;
+    checkoutTracked.current = true;
+    trackGa4Event("begin_checkout", {
+      currency,
+      value: cartValue(items, currency),
+      items: items.map((line) => cartLineToGa4Item(line, currency)),
+    });
+  }, [currency, items]);
   useEffect(() => {
     if (!items.length || hasUnavailableCurrencyPrice) return;
     trackMetaEvent("InitiateCheckout", {
@@ -154,6 +171,19 @@ export default function CheckoutPage() {
     setLoading(true);
     setError("");
     const idempotencyKey = crypto.randomUUID();
+    const orderedLines = items;
+    const ga4Items = orderedLines.map((line) => ({
+      ...cartLineToGa4Item(line, currency),
+      coupon: appliedDiscount?.code,
+    }));
+    trackGa4Event("add_shipping_info", {
+      currency,
+      value: cartValue(orderedLines, currency) - discountAmount,
+      coupon: appliedDiscount?.code,
+      shipping_tier:
+        deliveryMethod === "pickup" ? "Collect with BWA" : "Doorstep delivery",
+      items: ga4Items,
+    });
     try {
       const response = await fetch("/api/orders", {
         method: "POST",
@@ -187,31 +217,58 @@ export default function CheckoutPage() {
           item_price: line.unitPrices[currency] ?? 0,
         })),
       });
+      trackGa4Event("purchase", {
+        transaction_id: data.orderNumber,
+        currency,
+        value: Number(data.total),
+        shipping: deliveryFee,
+        coupon: data.discountCode || undefined,
+        items: ga4Items,
+      });
+      // The full order travels in the message so staff can act without
+      // opening the dashboard, and the customer sees exactly what they sent.
+      const message = [
+        `Hello BWA, I have placed website order ${data.orderNumber}.`,
+        "",
+        ...orderedLines.map(
+          (line) => `• ${line.title} (${line.variantName}) × ${line.quantity}`,
+        ),
+        "",
+        data.discountCode
+          ? `Code ${data.discountCode} saved ${format(Number(data.discountAmount || 0))}.`
+          : "",
+        `Total: ${format(Number(data.total))}`,
+        deliveryMethod === "pickup"
+          ? "Delivery: Collect with BWA"
+          : `Delivery: ${[form.address, form.city, form.county].filter(Boolean).join(", ")}`,
+        `Name: ${[form.firstName, form.lastName].filter(Boolean).join(" ")}`,
+        "",
+        "Please confirm payment and delivery details.",
+      ]
+        .filter((part, index, parts) => part || parts[index - 1])
+        .join("\n");
+      const whatsappUrl =
+        "https://wa.me/" +
+        whatsappNumber +
+        "?text=" +
+        encodeURIComponent(message);
       setConfirmation({
         orderNumber: data.orderNumber,
         total: Number(data.total),
         discountAmount: Number(data.discountAmount || 0),
         discountCode: data.discountCode || null,
+        whatsappUrl,
       });
       clearCart();
       setDiscoverySessionToken(null);
-      const message =
-        "Hello BWA, I have placed website order " +
-        data.orderNumber +
-        " for " +
-        format(Number(data.total)) +
-        (data.discountCode
-          ? ` after ${data.discountCode} saved ${format(Number(data.discountAmount || 0))}.`
-          : ".") +
-        " Please confirm payment and delivery details.";
-      window.open(
-        "https://wa.me/" +
-          whatsappNumber +
-          "?text=" +
-          encodeURIComponent(message),
-        "_blank",
-        "noopener,noreferrer",
-      );
+      // Often blocked on mobile after an async request; the confirmation
+      // screen below is the reliable path and asks the customer to send.
+      const opened = window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      if (opened)
+        trackGa4Event("whatsapp_order_open", {
+          transaction_id: data.orderNumber,
+          method: "auto",
+        });
     } catch (reason) {
       setError(
         reason instanceof Error
@@ -225,14 +282,40 @@ export default function CheckoutPage() {
   if (confirmation)
     return (
       <main className="order-confirmation">
-        <p className="eyebrow">Order received</p>
-        <h1>Thank you. We have your piece.</h1>
-        <p>
-          Your BWA order reference is{" "}
-          <strong>{confirmation.orderNumber}</strong>. WhatsApp should have
-          opened with your order summary; if it did not, share this reference
-          with our concierge.
-        </p>
+        <p className="eyebrow">Order {confirmation.orderNumber} saved</p>
+        <h1>One last step: send us your order on WhatsApp.</h1>
+        <section className="order-send-callout" role="status">
+          <p>
+            <strong>
+              Your order is not confirmed until we receive your WhatsApp
+              message.
+            </strong>{" "}
+            Tap the button below, then press <strong>Send</strong> in WhatsApp.
+            The message is already written for you.
+          </p>
+        </section>
+        <a
+          href={confirmation.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-whatsapp order-send-button"
+          onClick={() => {
+            setWhatsappOpened(true);
+            trackGa4Event("whatsapp_order_open", {
+              transaction_id: confirmation.orderNumber,
+              method: "button",
+            });
+          }}
+        >
+          <FaWhatsapp size={18} />
+          {whatsappOpened ? "Open WhatsApp again" : "Send order on WhatsApp"}
+        </a>
+        {whatsappOpened && (
+          <p className="order-send-done">
+            <CheckCircle2 size={16} /> Once you have pressed Send, we will reply
+            to confirm payment and delivery.
+          </p>
+        )}
         <div>
           <span>Total</span>
           <strong>{format(confirmation.total)}</strong>
@@ -240,28 +323,17 @@ export default function CheckoutPage() {
         {confirmation.discountCode && (
           <p>
             {confirmation.discountCode} saved{" "}
-            {format(confirmation.discountAmount)}
-            on this order.
+            {format(confirmation.discountAmount)} on this order.
           </p>
         )}
-        <Link
-          href={"/order/" + confirmation.orderNumber}
-          className="btn btn-primary"
-        >
+        <p className="order-confirmation-note">
+          No WhatsApp? Call or text{" "}
+          <a href={`tel:+${whatsappNumber}`}>+{whatsappNumber}</a> and quote{" "}
+          <strong>{confirmation.orderNumber}</strong>.
+        </p>
+        <Link href={"/order/" + confirmation.orderNumber}>
           Track your order
         </Link>
-        <Link
-          href={`https://wa.me/${whatsappNumber}`+
-          `?text=${encodeURIComponent(`Hello BWA, I have placed website order ${confirmation.orderNumber} for ${format(confirmation.total)}${confirmation.discountCode ? ` after ${confirmation.discountCode} saved ${format(confirmation.discountAmount)}.` : "."} Please confirm payment and delivery details.`)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-whatsapp"
-        >
-          <FaWhatsapp size={16} /> Message BWA on WhatsApp
-        </Link>
-        <p className="order-confirmation-note">
-          Our team will confirm payment and delivery with you on WhatsApp.
-        </p>
         <Link href="/bracelets">Continue exploring</Link>
       </main>
     );
@@ -398,6 +470,11 @@ export default function CheckoutPage() {
             Send me occasional BWA stories and new drop news and discount
             announcements. I can unsubscribe at any time.
           </label>
+          <p className="checkout-send-hint">
+            Next, WhatsApp opens with your order already written. Press{" "}
+            <strong>Send</strong> so we receive it. That is what confirms your
+            order.
+          </p>
           {error && (
             <p className="checkout-error" role="alert">
               {error}

@@ -5,6 +5,12 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { deliveryFeeFor } from "@/lib/commerce/money";
+import { useEffect, useRef } from "react";
+import {
+  cartLineToGa4Item,
+  cartValue,
+  trackGa4Event,
+} from "@/lib/marketing/ga4";
 
 export default function CartPage() {
   const {
@@ -16,6 +22,16 @@ export default function CartPage() {
   } = useCart();
   const { currency, format } = useCurrency();
   const deliveryFee = deliveryFeeFor(currency);
+  const viewTracked = useRef(false);
+  useEffect(() => {
+    if (viewTracked.current || !items.length) return;
+    viewTracked.current = true;
+    trackGa4Event("view_cart", {
+      currency,
+      value: cartValue(items, currency),
+      items: items.map((line) => cartLineToGa4Item(line, currency)),
+    });
+  }, [currency, items]);
   if (!items.length)
     return (
       <main className="empty-state">

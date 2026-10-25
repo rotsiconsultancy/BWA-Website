@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
+import { trackGa4Event } from "@/lib/marketing/ga4";
 
 export default function BespokeForm() {
   const [discoveryContext, setDiscoveryContext] = useState({
@@ -45,7 +46,10 @@ export default function BespokeForm() {
       }),
     });
     const data = await response.json();
-    if (response.ok) trackMetaEvent("Lead");
+    if (response.ok) {
+      trackMetaEvent("Lead");
+      trackGa4Event("generate_lead", { lead_source: "bespoke" });
+    }
     setMessage(
       response.ok
         ? "Your request " +
