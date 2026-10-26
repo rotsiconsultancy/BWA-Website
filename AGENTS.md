@@ -32,6 +32,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-26 16:30] — Stockists: Display at Mwanzi, On Request Elsewhere
+
+- **Agent**: Claude Code
+- **Changes**: Owner confirmed the BWA display is only at ManCave Mwanzi Market; customers can get BWA through the NSK and Kitengela branches on request. `Stockist.onDisplay` added in `lib/commerce/stockists.ts` (Mwanzi listed first); `/stockists` shows "BWA display · try them on" vs "Available on request · ask the team" badges and new intro copy; the product-page line, site FAQ, two Journal FAQs and `/llms.txt` say the same. Naming ManCave on the site is approved by the owner; Collabs, tags and logo use need ManCave's written approval (see the root `Partnerships/partners/mancave/profile.md`).
+
 ### [2026-10-26 10:15] — No Fixed Delivery Fee at Checkout
 
 - **Agent**: Claude Code

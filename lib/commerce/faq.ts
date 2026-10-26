@@ -41,7 +41,7 @@ export const shoppingFaqs: FaqItem[] = [
   {
     question: "Can I buy BWA bracelets in a shop?",
     answer:
-      "Yes. BWA bracelets are available at ManCave at Nairobi Street Kitchen, Mwanzi Market (1st floor) and Danka Plaza in Kitengela (2nd floor).",
+      "Yes. Our display is at ManCave, Mwanzi Market (1st floor), where you can try the bracelets on. ManCave's Nairobi Street Kitchen and Kitengela (Danka Plaza, 2nd floor) branches can also get them for you.",
     link: { href: "/stockists", label: "Get directions" },
   },
   {

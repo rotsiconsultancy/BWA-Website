@@ -12,7 +12,7 @@ faq:
   - q: "Can I get a bracelet in his university colours?"
     a: "Yes. Start a bespoke request, tell us the colours and his wrist size, and we will design a piece with you."
   - q: "Can I pick it up before the ceremony?"
-    a: "Yes. Choose Collect with BWA at checkout, or find BWA bracelets at ManCave at Nairobi Street Kitchen, Mwanzi Market and Danka Plaza in Kitengela."
+    a: "Yes. Choose Collect with BWA at checkout, or try them on at the BWA display at ManCave, Mwanzi Market. ManCave's Nairobi Street Kitchen and Kitengela branches can also get them for you."
 ---
 
 The gown is a size too big. The cap will not sit straight. Somewhere behind you, an aunt is ululating, a cousin is shouting his name, and the photographer at the gate is waving the next family forward.

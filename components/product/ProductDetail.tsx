@@ -183,7 +183,7 @@ export default function ProductDetail({
             </span>
             <span>
               <MapPin size={17} />{" "}
-              <Link href="/stockists">Try it on at ManCave</Link>
+              <Link href="/stockists">Try it on at ManCave, Mwanzi Market</Link>
             </span>
           </div>
         </aside>

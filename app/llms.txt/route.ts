@@ -23,7 +23,15 @@ export async function GET() {
 
 - Online: choose a bracelet and size at ${SITE_URL}/bracelets, add it to the bag, and place the order. The order is then confirmed with BWA on WhatsApp, where payment (M-Pesa or bank transfer) and delivery are arranged.
 - Delivery: within Nairobi, doorstep delivery costs the same as an Uber or Bolt ride to the customer. Outside Nairobi, the cost is confirmed on WhatsApp after the order, based on the location given. Collection from BWA is free.
-- In store: BWA bracelets are sold at ${stockists.map((s) => `${s.partner} (${s.location}, ${s.area})`).join("; ")}. Directions: ${SITE_URL}/stockists
+- In store: the BWA display is at ${stockists
+    .filter((s) => s.onDisplay)
+    .map((s) => `${s.partner} (${s.location}, ${s.area})`)
+    .join(
+      "; ",
+    )}, where customers can try bracelets on. They can also get BWA bracelets through ${stockists
+    .filter((s) => !s.onDisplay)
+    .map((s) => `${s.partner} ${s.branch} (${s.location}, ${s.area})`)
+    .join(" and ")}. Directions: ${SITE_URL}/stockists
 - Not sure which bracelet? The Find Your Bracelet quiz recommends one: ${SITE_URL}/find-your-bracelet
 - Custom pieces: ${SITE_URL}/bespoke
 - Returns and exchanges within 7 days of delivery: ${SITE_URL}/returns

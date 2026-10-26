@@ -10,7 +10,7 @@ faq:
   - q: "What if the size is wrong?"
     a: "Contact us within 7 days of delivery and we will help you exchange an unworn bracelet for the right size."
   - q: "Can I see the bracelet before I buy it?"
-    a: "Yes. BWA bracelets are available at ManCave at Nairobi Street Kitchen, Mwanzi Market and Danka Plaza in Kitengela."
+    a: "Yes. Try them on at the BWA display at ManCave, Mwanzi Market. ManCave's Nairobi Street Kitchen and Kitengela branches can also get them for you."
   - q: "Can you make one just for him?"
     a: "Yes. Tell us his style, the colours he wears and his wrist size, and we will design a bespoke piece with you."
 ---

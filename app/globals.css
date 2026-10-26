@@ -5755,6 +5755,20 @@ body {
   flex: none;
   margin-top: 3px;
 }
+.stockist-badge {
+  justify-self: start;
+  padding: var(--space-1) var(--space-3);
+  border: var(--rule) solid var(--color-line);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+.stockist-badge.is-display {
+  background: var(--color-forest);
+  border-color: var(--color-forest);
+  color: var(--color-paper);
+}
 .stockist-card a {
   margin-top: var(--space-3);
   font-weight: 700;

@@ -12,7 +12,7 @@ import {
 
 const title = "Where to Buy BWA Bracelets in Kenya | Beads World Africa";
 const description =
-  "See and try on Beads World Africa bracelets in person at ManCave in Nairobi Street Kitchen, Mwanzi Market and Kitengela, or order online for delivery.";
+  "Try on Beads World Africa bracelets at ManCave, Mwanzi Market, and get them through ManCave at Nairobi Street Kitchen and Kitengela, or order online.";
 
 export const metadata: Metadata = {
   title,
@@ -61,8 +61,9 @@ export default function StockistsPage() {
           <p className="eyebrow">Where to buy</p>
           <h1>Try it on before you take it home.</h1>
           <p>
-            BWA bracelets are available at ManCave in {stockists.length}{" "}
-            locations. Drop in, see the stones up close and find your fit.
+            The BWA display is at ManCave, Mwanzi Market: drop in, see the
+            stones up close and find your fit. You can also get BWA bracelets
+            through ManCave&apos;s other branches; just ask the team.
           </p>
         </div>
       </header>
@@ -71,6 +72,13 @@ export default function StockistsPage() {
           <article key={stockist.branch} className="stockist-card">
             <p className="eyebrow">{stockist.partner}</p>
             <h2>{stockist.branch}</h2>
+            <span
+              className={`stockist-badge${stockist.onDisplay ? " is-display" : ""}`}
+            >
+              {stockist.onDisplay
+                ? "BWA display · try them on"
+                : "Available on request · ask the team"}
+            </span>
             <p>
               <MapPin size={16} aria-hidden="true" /> {stockist.location},{" "}
               {stockist.area}
