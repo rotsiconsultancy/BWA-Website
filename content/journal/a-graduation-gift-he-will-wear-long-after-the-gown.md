@@ -3,8 +3,8 @@ title: "A Graduation Gift He Will Wear Long After the Gown Is Returned"
 description: "For the girlfriend, the wife and the mother of a graduate: how to choose a bracelet that marks the day and goes with him into what comes next."
 date: 2026-10-26
 category: Gift guides
-cover: /images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.webp
-coverAlt: "A woman at sunset with her hand at her neck, wearing a stack of beaded bracelets"
+cover: /journal/a-graduation-gift-he-will-wear-long-after-the-gown/cover.webp
+coverAlt: "A laughing graduate in a gown surrounded by family under jacaranda trees"
 featuredProduct: forest-forge-bracelet
 faq:
   - q: "What if I can't measure his wrist?"
@@ -37,6 +37,8 @@ You have seen the side of his degree nobody else saw. The 2 a.m. calls before an
 
 Your gift can be personal without being heavy. Something with a bit of fun in it, that suits the man he is now, not the one in the formal photos.
 
+![A young woman handing a small gift box to a graduate in his gown](/journal/a-graduation-gift-he-will-wear-long-after-the-gown/girlfriend.webp "Something with a bit of fun in it, for the man he is now.")
+
 Look at the **Spotted Contrast**. Its bright rounded beads are covered in irregular black spotting, broken up by two polished dark accents. No two beads are marked the same way. It is playful, it is different, and it says "I know you" without needing a speech.
 
 {{product: spotted-contrast-bracelet}}
@@ -45,19 +47,21 @@ Look at the **Spotted Contrast**. Its bright rounded beads are covered in irregu
 
 He did this the hard way. A master's or a diploma squeezed around a full-time job, evenings at the library, weekends with his laptop open at the dining table. You held the house together while he finished.
 
+![A woman fastening a bracelet on her husband's wrist as he gets ready for his graduation](/journal/a-graduation-gift-he-will-wear-long-after-the-gown/wife.webp "He did it the hard way. He should look the part.")
+
 He is walking back into the office with a new title, and he should look the part. Choose something he can wear every day, with a shirt and a watch.
 
 The **Midnight Rhythm** is glossy black with white geometric markings on every bead. It looks simple from across the room and detailed up close. It works at a board meeting and at Sunday lunch, which is exactly the life he is going back to.
 
 {{product: midnight-rhythm-bracelet}}
 
-![A woman resting her hands near her collar, wearing stacked beaded bracelets](/images/wear-sth-that-story-section.webp "Some gifts are chosen with one person in mind for years.")
-
 ## If you are his mother
 
 You remember the first day of school. The oversized uniform, the bag that was bigger than he was, the way he let go of your hand at the classroom door.
 
 And now this. Another gown that is too big, another doorway he is about to walk through without you.
+
+![A mother straightening her son's graduation gown sleeve, her hand on his wrist](/journal/a-graduation-gift-he-will-wear-long-after-the-gown/mother.webp "Another doorway he will walk through without you.")
 
 Give him something that feels grounded, something to keep him steady wherever he goes next. The **Forest Forge** brings together a clean line of polished dark cylinders and a softer run of rounded beads in deep green, charcoal and brown. It is calm and strong at the same time. It is the kind of piece a man keeps for years.
 
@@ -75,7 +79,7 @@ Give him something that feels grounded, something to keep him steady wherever he
 - From a wife: *"You did this while carrying everything else. I'm so proud of you."*
 - From a mother: *"You let go of my hand at the classroom door. Look how far you walked."*
 
-![A beaded bracelet resting on a rock above a valley at sunset](/images/final-cta-bracelet-on-a-mountain.webp "The day ends. The bracelet stays.")
+![An open gift box with a beaded bracelet and a handwritten card beside it](/journal/a-graduation-gift-he-will-wear-long-after-the-gown/the-note.webp "Don't skip the note. He will keep it.")
 
 ## Back at the gate
 

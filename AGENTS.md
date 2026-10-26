@@ -408,3 +408,10 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+### [2026-10-26] — Journal Photography
+
+- **Agent**: Codex
+- **Assets**: Added 13 generated editorial WebP photos in `public/journal/<slug>/`, using the prompts in `docs/journal-image-brief.md` and the supplied product photos as references for Forest Forge, Midnight Rhythm and Spotted Contrast. Covers are 1600×900; inline images are 1600×1067; all files are below 180 KB.
+- **Posts**: Updated only the three posts' cover paths/alt text and requested inline photos/captions, preserving body copy, headings and product embeds. Every new asset has exactly one source reference, with paragraph separation from product cards.
+- **Validation**: 22 tests pass; TypeScript and production build pass. Reviewed the journal listing and all three article layouts at desktop and 375px phone width. Named-product scenes retain the reference designs; real product photography remains the catalogue source of truth.

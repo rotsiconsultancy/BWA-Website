@@ -3,8 +3,8 @@ title: "What to Get Him When He Says He Wants Nothing"
 description: "He says he doesn't need anything. Here is how to choose a bracelet he will actually wear, and how to get his size right without asking."
 date: 2026-10-26
 category: Gift guides
-cover: /images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp
-coverAlt: "Man at sunset with his hand under his chin, wearing a stack of beaded bracelets"
+cover: /journal/what-to-get-him-when-he-says-he-wants-nothing/cover.webp
+coverAlt: "A man relaxing on a sofa while a woman hides a small gift box behind her back"
 featuredProduct: forest-forge-bracelet
 faq:
   - q: "What if the size is wrong?"
@@ -27,7 +27,7 @@ Men who say they want nothing usually mean something specific. They don't want c
 
 A bracelet is the opposite of clutter. It is small, it goes everywhere he goes, and it says something about him without him having to say it. He will notice it when he reaches for his phone, when he shakes a hand, when he rests his chin on his fist in a meeting.
 
-![A bracelet of dark and metallic beads resting on a rock at sunset](/images/final-cta-bracelet-on-a-mountain.webp "A good bracelet should look at home anywhere he goes.")
+![A man's wrist with a dark beaded bracelet reaching for his phone on a café table](/journal/what-to-get-him-when-he-says-he-wants-nothing/everyday.webp "It goes everywhere he goes: the phone, the handshake, the meeting.")
 
 The trick is choosing one that matches who he already is, not who you wish he would dress like. So start with him.
 
@@ -67,12 +67,14 @@ Asking "what is your wrist size?" ruins the surprise. Here is how to find it qui
 
 Then match it to our sizes: Small (16 cm), Medium (18 cm) or Large (20 cm). Still not sure? Send us a WhatsApp message with your best guess and we will help you choose.
 
-![A woman resting her hands near her collar, wearing two stacked beaded bracelets](/images/wear-sth-that-story-section.webp "Stacking is easy once you know his size: start with one, add more over time.")
+![A woman measuring the strap of a man's watch with a tape measure](/journal/what-to-get-him-when-he-says-he-wants-nothing/measure.webp "His watch strap already knows his size.")
 
 ## On the day
 
 You hand it to him. He opens it, turns it over in his fingers, and says what he always says: "You didn't have to."
 
 Then he puts it on. Not tomorrow, not "for a special occasion". Right there.
+
+![A man smiling as he puts on a beaded bracelet beside an open gift box](/journal/what-to-get-him-when-he-says-he-wants-nothing/putting-it-on.webp "Not tomorrow. Not for a special occasion. Right there.")
 
 That is how you know you got it right. The man who wanted nothing just found something he will wear every day.

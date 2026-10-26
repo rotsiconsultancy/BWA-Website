@@ -3,8 +3,8 @@ title: "How to Wear a Bracelet With a Watch"
 description: "Which wrist, how much space, and which bracelet suits your watch. Three simple rules for wearing both without the clatter."
 date: 2026-10-26
 category: Style
-cover: /images/final-cta-bracelet-on-a-mountain-2.webp
-coverAlt: "A beaded bracelet with gold accents resting on a rock above a valley at sunset"
+cover: /journal/how-to-wear-a-bracelet-with-a-watch/cover.webp
+coverAlt: "A man's forearms on a meeting table, with a watch on one wrist and a beaded bracelet on the other"
 featuredProduct: midnight-rhythm-bracelet
 faq:
   - q: "Which wrist should my watch go on?"
@@ -29,6 +29,8 @@ There are two good ways to do this.
 
 **Same wrist.** This looks more deliberate and works well when you want to keep your other hand free. The trick is space. Leave about a finger's width between the bracelet and the watch so they sit side by side instead of grinding against each other.
 
+![A watch and a beaded bracelet on the same wrist with a small gap between them](/journal/how-to-wear-a-bracelet-with-a-watch/same-wrist.webp "Same wrist? Leave about a finger's width so they sit side by side.")
+
 Not sure which to choose? Start with opposite wrists for a week. If you find yourself wanting more, try them together on the weekend.
 
 ## Rule two: match the mood, not the metal
@@ -51,6 +53,8 @@ A metal watch already brings shine, so pick a bracelet that echoes it without co
 
 Leather is warm and relaxed. Pair it with earthy, natural-looking beads in browns and greens rather than anything glossy. The rounded side of the Forest Forge works here too.
 
+![A brown leather watch strap worn with an earthy beaded bracelet](/journal/how-to-wear-a-bracelet-with-a-watch/leather-strap.webp "Leather is warm. Earthy beads keep it that way.")
+
 ## Rule three: let one of them lead
 
 A big, bold watch and a big, bold bracelet will fight for attention. Let one lead and the other follow.
@@ -58,7 +62,7 @@ A big, bold watch and a big, bold bracelet will fight for attention. Let one lea
 - **Statement watch?** Choose a quieter bracelet in one or two colours.
 - **Simple watch?** This is your chance to wear something with more pattern or contrast.
 
-![A man resting his chin on his hand, wearing a stack of beaded bracelets](/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp "Let one piece lead. Here the bracelets do the talking.")
+![A bold watch worn with a slim, single-colour beaded bracelet](/journal/how-to-wear-a-bracelet-with-a-watch/one-leads.webp "A bold watch, a quiet bracelet: let one of them lead.")
 
 ## Get the fit right
 
