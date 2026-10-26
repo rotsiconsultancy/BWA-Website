@@ -184,7 +184,9 @@ export default async function AdminOrderDetail({
               <strong>
                 {Number(order.delivery_fee) > 0
                   ? `${order.currency} ${Number(order.delivery_fee).toLocaleString()}`
-                  : "Free"}
+                  : order.delivery_method === "pickup"
+                    ? "Collection (free)"
+                    : "Arranged on WhatsApp"}
               </strong>
             </span>
             <span>

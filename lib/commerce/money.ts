@@ -15,5 +15,7 @@ export const formatMoney = (amount: number, currency: StoreCurrency) =>
 export const priceFor = (prices: Prices, currency: StoreCurrency) =>
   prices[currency];
 
-export const deliveryFeeFor = (currency: StoreCurrency) =>
-  currency === "KES" ? 250 : Number(process.env.STANDARD_DELIVERY_USD || "3");
+// Delivery is never added to the website total. Within Nairobi the customer
+// pays the Uber/Bolt fare; outside Nairobi BWA confirms the cost on WhatsApp.
+export const DELIVERY_NOTE =
+  "Within Nairobi, delivery costs the Uber or Bolt fare to your door. Outside Nairobi, we confirm the cost with you on WhatsApp.";

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
-import { deliveryFeeFor } from "@/lib/commerce/money";
 import { useEffect, useRef } from "react";
 import {
   cartLineToGa4Item,
@@ -21,7 +20,6 @@ export default function CartPage() {
     hasUnavailableCurrencyPrice,
   } = useCart();
   const { currency, format } = useCurrency();
-  const deliveryFee = deliveryFeeFor(currency);
   const viewTracked = useRef(false);
   useEffect(() => {
     if (viewTracked.current || !items.length) return;
@@ -111,11 +109,11 @@ export default function CartPage() {
         </div>
         <div>
           <span>Delivery</span>
-          <span>Confirmed at checkout</span>
+          <span>Confirmed on WhatsApp</span>
         </div>
         <div className="bag-total">
-          <span>Estimated total</span>
-          <strong>{format(subtotal + deliveryFee)}</strong>
+          <span>Total before delivery</span>
+          <strong>{format(subtotal)}</strong>
         </div>
         {hasUnavailableCurrencyPrice && (
           <p>One or more pieces do not yet have a {currency} price.</p>

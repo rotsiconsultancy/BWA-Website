@@ -108,6 +108,8 @@ ${items}
 }
 
 // ─── Item builder ────────────────────────────────────────────────────────────
+// No <g:shipping>: delivery has no fixed price (Uber/Bolt fare in Nairobi,
+// quoted elsewhere), so shipping is set in Merchant Center account settings.
 
 interface ItemArgs {
   id: string;
@@ -175,10 +177,5 @@ ${usdTag ? usdTag + "\n" : ""}    <g:availability>${availability}</g:availabilit
     <g:product_type>Jewellery &gt; Bracelets &gt; Natural Stone</g:product_type>
     <g:material>${x(material)}</g:material>
     <g:identifier_exists>no</g:identifier_exists>
-    <g:shipping>
-      <g:country>KE</g:country>
-      <g:service>Standard</g:service>
-      <g:price>250 KES</g:price>
-    </g:shipping>
   </item>`;
 }

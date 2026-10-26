@@ -16,6 +16,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⏭️ skipped
 | A2 | Submit the sitemap to Google Search Console and Bing Webmaster Tools (Bing feeds ChatGPT search) | ⬜ |
 | A3 | Check Cloudflare/Vercel bot settings are not blocking AI crawlers | ⬜ |
 | A4 | Google Business Profile, with ManCave branches listed as places to buy | ⬜ |
+| A5 | Merchant Center: set shipping in account settings (the feed no longer sends a fixed KES 250), e.g. a delivery cost range or "Collect" option | ⬜ |
 
 ---
 

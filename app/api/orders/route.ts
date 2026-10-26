@@ -70,12 +70,9 @@ export async function POST(request: Request) {
     const checkout = await calculateCheckout(supabase, currency, body.lines);
     if (!checkout.ok)
       return NextResponse.json({ error: checkout.error }, { status: 409 });
-    const deliveryFee =
-      body.deliveryMethod === "pickup"
-        ? 0
-        : currency === "USD"
-          ? Number(process.env.STANDARD_DELIVERY_USD || "3")
-          : 250;
+    // Delivery is arranged on WhatsApp (Uber/Bolt fare in Nairobi, quoted
+    // elsewhere), so it is never part of the website total.
+    const deliveryFee = 0;
     const { data: savedCustomer, error: customerError } = await supabase
       .from("customers")
       .upsert(

@@ -7,7 +7,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
-import { deliveryFeeFor } from "@/lib/commerce/money";
+import { DELIVERY_NOTE } from "@/lib/commerce/money";
 import {
   cartLineToGa4Item,
   cartValue,
@@ -20,6 +20,7 @@ type Confirmation = {
   discountAmount: number;
   discountCode: string | null;
   whatsappUrl: string;
+  doorstep: boolean;
 } | null;
 
 type AppliedDiscount = {
@@ -62,8 +63,6 @@ export default function CheckoutPage() {
     note: "",
     marketingOptIn: false,
   });
-  const deliveryFee =
-    deliveryMethod === "pickup" ? 0 : deliveryFeeFor(currency);
   const discountAmount = appliedDiscount?.discountAmount || 0;
   const checkoutTracked = useRef(false);
   const [whatsappOpened, setWhatsappOpened] = useState(false);
@@ -79,7 +78,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (!items.length || hasUnavailableCurrencyPrice) return;
     trackMetaEvent("InitiateCheckout", {
-      value: subtotal + deliveryFee,
+      value: subtotal,
       currency,
       content_ids: items.map((line) => line.variantId),
       contents: items.map((line) => ({
@@ -88,7 +87,7 @@ export default function CheckoutPage() {
         item_price: line.unitPrices[currency] ?? 0,
       })),
     });
-  }, [currency, deliveryFee, hasUnavailableCurrencyPrice, items, subtotal]);
+  }, [currency, hasUnavailableCurrencyPrice, items, subtotal]);
   useEffect(() => {
     if (!appliedDiscount) return;
     setAppliedDiscount(null);
@@ -221,7 +220,6 @@ export default function CheckoutPage() {
         transaction_id: data.orderNumber,
         currency,
         value: Number(data.total),
-        shipping: deliveryFee,
         coupon: data.discountCode || undefined,
         items: ga4Items,
       });
@@ -237,13 +235,17 @@ export default function CheckoutPage() {
         data.discountCode
           ? `Code ${data.discountCode} saved ${format(Number(data.discountAmount || 0))}.`
           : "",
-        `Total: ${format(Number(data.total))}`,
+        deliveryMethod === "pickup"
+          ? `Total: ${format(Number(data.total))}`
+          : `Total: ${format(Number(data.total))} (before delivery)`,
         deliveryMethod === "pickup"
           ? "Delivery: Collect with BWA"
-          : `Delivery: ${[form.address, form.city, form.county].filter(Boolean).join(", ")}`,
+          : `Deliver to: ${[form.address, form.city, form.county].filter(Boolean).join(", ")}`,
         `Name: ${[form.firstName, form.lastName].filter(Boolean).join(" ")}`,
         "",
-        "Please confirm payment and delivery details.",
+        deliveryMethod === "pickup"
+          ? "Please confirm payment and where I can collect."
+          : "Please confirm payment and the delivery cost.",
       ]
         .filter((part, index, parts) => part || parts[index - 1])
         .join("\n");
@@ -258,6 +260,7 @@ export default function CheckoutPage() {
         discountAmount: Number(data.discountAmount || 0),
         discountCode: data.discountCode || null,
         whatsappUrl,
+        doorstep: deliveryMethod === "standard",
       });
       clearCart();
       setDiscoverySessionToken(null);
@@ -317,9 +320,12 @@ export default function CheckoutPage() {
           </p>
         )}
         <div>
-          <span>Total</span>
+          <span>
+            {confirmation.doorstep ? "Total before delivery" : "Total"}
+          </span>
           <strong>{format(confirmation.total)}</strong>
         </div>
+        {confirmation.doorstep && <p>{DELIVERY_NOTE}</p>}
         {confirmation.discountCode && (
           <p>
             {confirmation.discountCode} saved{" "}
@@ -413,10 +419,7 @@ export default function CheckoutPage() {
               >
                 <strong>Doorstep delivery</strong>
                 <span>
-                  Kenya delivery ·{" "}
-                  {currency === "KES"
-                    ? "KES 250"
-                    : "USD price confirmed with BWA"}
+                  Nairobi: Uber or Bolt fare · Elsewhere: confirmed on WhatsApp
                 </span>
               </button>
             </div>
@@ -450,6 +453,9 @@ export default function CheckoutPage() {
                   />
                 </label>
               </div>
+            )}
+            {deliveryMethod === "standard" && (
+              <p className="checkout-delivery-note">{DELIVERY_NOTE}</p>
             )}
             <label className="checkout-field-full">
               Delivery note{" "}
@@ -550,11 +556,15 @@ export default function CheckoutPage() {
           )}
           <div>
             <span>Delivery</span>
-            <strong>{deliveryFee ? format(deliveryFee) : "Free"}</strong>
+            <strong>
+              {deliveryMethod === "pickup" ? "Free" : "Confirmed on WhatsApp"}
+            </strong>
           </div>
           <div className="checkout-total">
-            <span>Total</span>
-            <strong>{format(subtotal - discountAmount + deliveryFee)}</strong>
+            <span>
+              {deliveryMethod === "pickup" ? "Total" : "Total before delivery"}
+            </span>
+            <strong>{format(subtotal - discountAmount)}</strong>
           </div>
         </aside>
       </div>

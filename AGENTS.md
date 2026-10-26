@@ -32,6 +32,13 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-26 10:15] — No Fixed Delivery Fee at Checkout
+
+- **Agent**: Claude Code
+- **Pricing**: `deliveryFeeFor` is removed; `/api/orders` always saves `delivery_fee = 0`, so website totals are merchandise minus discount. Delivery is arranged on WhatsApp: the Uber/Bolt fare within Nairobi, a quoted cost elsewhere (`DELIVERY_NOTE` in `lib/commerce/money.ts`).
+- **UI**: Checkout doorstep option, summary ("Confirmed on WhatsApp", "Total before delivery"), confirmation screen and the bag page reflect this; the WhatsApp message says the total is before delivery and asks to confirm the delivery cost. Admin order view shows "Arranged on WhatsApp" or "Collection (free)" when no fee is stored.
+- **Feed**: removed the fixed `<g:shipping>` (250 KES) from `/api/merchant-feed`; shipping must be configured in Merchant Center.
+
 ### [2026-10-26 09:30] — The BWA Journal (Markdown Blog) & Delivery Wording
 
 - **Agent**: Claude Code
