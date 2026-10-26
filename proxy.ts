@@ -3,25 +3,39 @@ import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
   const response = NextResponse.next();
-  const existingCurrency = request.cookies.get("bwa_store_currency")?.value;
-
-  // Only auto-detect if the user has not explicitly set a preference cookie
-  if (!existingCurrency) {
-    const country = (
-      request.headers.get("x-vercel-ip-country") ||
+  const country =
+    // Cloudflare sits in front of Vercel, so its header describes the
+    // visitor; Vercel's would describe the Cloudflare edge.
+    (
       request.headers.get("cf-ipcountry") ||
+      request.headers.get("x-vercel-ip-country") ||
       request.headers.get("cloudfront-viewer-country") ||
       request.headers.get("x-country-code") ||
       ""
     ).toUpperCase();
+  // Cloudflare uses XX/T1 for unknown and Tor; treat those as no answer.
+  const knownCountry = /^[A-Z]{2}$/.test(country) && country !== "XX";
 
-    const detectedCurrency = country === "KE" ? "KES" : "USD";
+  if (knownCountry) {
+    // Read by CurrencyContext so the browser never needs a geolocation API.
+    if (request.cookies.get("bwa_country")?.value !== country)
+      response.cookies.set("bwa_country", country, {
+        path: "/",
+        maxAge: 60 * 60 * 24,
+        sameSite: "lax",
+      });
 
-    response.cookies.set("bwa_store_currency", detectedCurrency, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-      sameSite: "lax",
-    });
+    // Only auto-detect if the user has not explicitly set a preference cookie
+    if (!request.cookies.get("bwa_store_currency")?.value)
+      response.cookies.set(
+        "bwa_store_currency",
+        country === "KE" ? "KES" : "USD",
+        {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 30, // 30 days
+          sameSite: "lax",
+        },
+      );
   }
 
   return response;

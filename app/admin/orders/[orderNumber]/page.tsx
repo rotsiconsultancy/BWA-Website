@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import OrderFulfilmentForm from "@/components/admin/OrderFulfilmentForm";
 import { requireAdmin } from "@/lib/admin/auth";
+import { toWhatsAppNumber, whatsAppLink } from "@/lib/commerce/whatsapp";
 
 export default async function AdminOrderDetail({
   params,
@@ -22,6 +23,19 @@ export default async function AdminOrderDetail({
     .maybeSingle();
   if (!order) notFound();
   const customer: any = order.customers;
+  const customerWhatsApp = toWhatsAppNumber(customer?.phone);
+  // For orders the customer created but never sent on WhatsApp.
+  const followUpMessage = [
+    `Hello ${customer?.first_name || "there"}, this is Beads World Africa.`,
+    `Thank you for your website order ${order.order_number}:`,
+    ...(order.order_items || []).map(
+      (item: any) =>
+        `• ${item.product_title_snapshot} (${item.variant_title_snapshot}) × ${item.quantity}`,
+    ),
+    `Total: ${order.currency} ${Number(order.total_amount).toLocaleString()}`,
+    "",
+    "Shall we go ahead and confirm payment and delivery?",
+  ].join("\n");
   const history = [...(order.order_status_history || [])].sort(
     (a: any, b: any) =>
       new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
@@ -89,6 +103,20 @@ export default async function AdminOrderDetail({
               </strong>
             </span>
           </div>
+          {customerWhatsApp ? (
+            <a
+              className="admin-primary-action admin-whatsapp-action"
+              href={whatsAppLink(customerWhatsApp, followUpMessage)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Message customer on WhatsApp
+            </a>
+          ) : (
+            <p className="admin-field-help admin-whatsapp-action">
+              No usable phone number on this order.
+            </p>
+          )}
         </aside>
         <section className="admin-panel">
           <p className="admin-kicker">Delivery</p>

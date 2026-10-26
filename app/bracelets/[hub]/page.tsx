@@ -1,3 +1,6 @@
+import StoreImage from "@/components/commerce/StoreImage";
+import FaqSection from "@/components/commerce/FaqSection";
+import { shoppingFaqs } from "@/lib/commerce/faq";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -81,10 +84,13 @@ export default async function BraceletHubPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <section className="bracelet-hub-hero">
-        <img
+        <StoreImage
           src="/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp"
           alt="Man wearing a Beads World Africa natural stone bracelet outdoors"
-          fetchPriority="high"
+          sizes="100vw"
+          width={1920}
+          height={1080}
+          eager
         />
         <div className="bracelet-hub-hero-shade" aria-hidden="true" />
         <div className="bracelet-hub-hero-copy">
@@ -148,6 +154,7 @@ export default async function BraceletHubPage({ params }: Props) {
           </div>
         </section>
       )}
+      <FaqSection items={shoppingFaqs} />
     </main>
   );
 }

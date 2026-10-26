@@ -125,7 +125,7 @@ export default function Header() {
               Bespoke
             </Link>
             <Link href="/#story">Our Story</Link>
-            <Link href="/#journal">Journal</Link>
+            {/* Journal link returns with /journal (roadmap step 13). */}
             <Link href="/#contact">Contact</Link>
           </nav>
 
@@ -346,9 +346,6 @@ export default function Header() {
           </Link>
           <Link href="/#story" onClick={() => setOpen(false)}>
             Our Story
-          </Link>
-          <Link href="/#journal" onClick={() => setOpen(false)}>
-            Journal
           </Link>
           <Link href="/#contact" onClick={() => setOpen(false)}>
             Contact

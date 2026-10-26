@@ -1,3 +1,4 @@
+import StoreImage from "@/components/commerce/StoreImage";
 import Link from "next/link";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import Money from "@/components/commerce/Money";
@@ -32,10 +33,10 @@ export default async function FeaturedCollections() {
               className="product-card"
             >
               <div className="product-image">
-                <img
+                <StoreImage
                   src={product.images[0]}
                   alt={product.title}
-                  loading="lazy"
+                  sizes="(max-width: 760px) 33vw, 30vw"
                 />
               </div>
               <div className="product-info">
@@ -43,7 +44,9 @@ export default async function FeaturedCollections() {
                 <div className="product-meta">{product.subtitle}</div>
                 <div className="product-price">
                   <Money prices={product.prices} />{" "}
-                  <span className="product-arrow"><FaArrowRight /></span>
+                  <span className="product-arrow">
+                    <FaArrowRight />
+                  </span>
                 </div>
               </div>
             </Link>

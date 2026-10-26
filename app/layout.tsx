@@ -7,6 +7,39 @@ import CartDrawer from "@/components/commerce/CartDrawer";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import MetaPixel from "@/components/marketing/MetaPixel";
 import type { Metadata } from "next";
+import { SITE_NAME, SITE_URL } from "@/lib/commerce/seo";
+
+// Who BWA is, for Google and AI assistants. Stockist branches join this once
+// their addresses are confirmed (roadmap step 5).
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "OnlineStore",
+  "@id": `${SITE_URL}/#organization`,
+  name: SITE_NAME,
+  alternateName: "BWA",
+  url: SITE_URL,
+  logo: `${SITE_URL}/brand/bwa-emblem.svg`,
+  description:
+    "Handmade bracelets from Kenya, made from natural stones and other materials and designed around personal style and intention.",
+  areaServed: { "@type": "Country", name: "Kenya" },
+  sameAs: [
+    "https://instagram.com/beadsworldafrica",
+    "https://facebook.com/beadsworldafrica",
+    "https://tiktok.com/@beadsworldafrica",
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer service",
+    telephone: "+254745474586",
+  },
+  hasMerchantReturnPolicy: {
+    "@type": "MerchantReturnPolicy",
+    applicableCountry: "KE",
+    returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+    merchantReturnDays: 7,
+    merchantReturnLink: `${SITE_URL}/returns`,
+  },
+};
 import GoogleAnalytics from "@/components/marketing/GoogleAnalytics";
 
 export const metadata: Metadata = {
@@ -65,6 +98,12 @@ export default function RootLayout({
   return (
     <html lang="en" scroll-behavior="smooth" className="scroll-smooth">
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
         <GoogleAnalytics />
         <CurrencyProvider>
           <CartProvider>

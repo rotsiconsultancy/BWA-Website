@@ -1,4 +1,5 @@
 "use client";
+import StoreImage from "@/components/commerce/StoreImage";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
@@ -113,7 +114,11 @@ export default function ShopCatalogue({
               className="catalogue-product-card"
             >
               <div className="catalogue-product-media">
-                <img src={p.images[0]} alt={`${p.title} bracelet`} />
+                <StoreImage
+                  src={p.images[0]}
+                  alt={`${p.title} bracelet`}
+                  sizes="(max-width: 760px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                />
                 {p.trending && <span>In focus</span>}
               </div>
               <div className="catalogue-product-copy">

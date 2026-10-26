@@ -3,19 +3,25 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
+import { updateGa4Consent } from "@/lib/marketing/ga4";
+import {
+  CONSENT_KEY,
+  readMarketingConsent,
+  type MarketingConsent,
+} from "@/lib/marketing/consent";
 
-const CONSENT_KEY = "bwa_marketing_consent";
 const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 export default function MetaPixel() {
   const pathname = usePathname();
   const trackedPath = useRef<string | null>(null);
   const isAdmin = pathname.startsWith("/admin");
-  const [consent, setConsent] = useState<"accepted" | "declined" | null>(null);
+  const [consent, setConsent] = useState<MarketingConsent | null>(null);
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem(CONSENT_KEY);
-    if (saved === "accepted" || saved === "declined") setConsent(saved);
+    setConsent(readMarketingConsent());
+    setChecked(true);
   }, []);
   useEffect(() => {
     if (
@@ -60,10 +66,15 @@ export default function MetaPixel() {
     }
   }, [pathname, consent, isAdmin]);
 
-  if (isAdmin || !pixelId || consent) return null;
-  const choose = (value: "accepted" | "declined") => {
-    localStorage.setItem(CONSENT_KEY, value);
+  // GA4 always loads (in cookieless mode until accepted), so the prompt is
+  // needed even when no Meta Pixel is configured.
+  if (isAdmin || !checked || consent) return null;
+  const choose = (value: MarketingConsent) => {
+    try {
+      localStorage.setItem(CONSENT_KEY, value);
+    } catch {}
     setConsent(value);
+    updateGa4Consent(value);
   };
   return (
     <aside
@@ -72,8 +83,8 @@ export default function MetaPixel() {
       aria-label="Marketing cookies"
     >
       <p>
-        We use optional Meta marketing cookies to understand which BWA stories
-        lead to visits and enquiries.
+        We use optional analytics and marketing cookies (Google and Meta) to
+        understand which BWA stories lead to visits and orders.
       </p>
       <div>
         <button type="button" onClick={() => choose("declined")}>

@@ -1,5 +1,6 @@
 "use client";
 
+import StoreImage from "@/components/commerce/StoreImage";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -244,7 +245,11 @@ export default function FindYourBracelet({
       <main className="quiz-result-page">
         <p className="eyebrow">Your strongest match</p>
         <div className="quiz-result-layout">
-          <img src={match.product.images[0]} alt={match.product.title} />
+          <StoreImage
+            src={match.product.images[0]}
+            alt={match.product.title}
+            sizes="(max-width: 760px) 100vw, 45vw"
+          />
           <div>
             <h1>{match.product.title}</h1>
             <p className="product-descriptor">{match.product.descriptor}</p>
@@ -319,7 +324,11 @@ export default function FindYourBracelet({
               key={product.id}
               href={`/product/${product.slug}`}
             >
-              <img src={product.images[0]} alt={product.title} />
+              <StoreImage
+                src={product.images[0]}
+                alt={product.title}
+                sizes="120px"
+              />
               <span className="quiz-alternative-copy">
                 {product.title}
                 <span>{product.descriptor}</span>

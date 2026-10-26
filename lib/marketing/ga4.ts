@@ -2,6 +2,10 @@
 
 import type { StoreCurrency } from "@/lib/commerce/money";
 import type { CartLine, CommerceProduct } from "@/lib/commerce/types";
+import {
+  googleConsentState,
+  readMarketingConsent,
+} from "@/lib/marketing/consent";
 
 declare global {
   interface Window {
@@ -30,6 +34,7 @@ export const GA4_MEASUREMENT_ID = "G-4HNRWEMRVY";
 
 // Standard gtag bootstrap, run on first use so events fired by page effects
 // before the GA component mounts still queue behind the config call.
+// Consent Mode: until the visitor accepts, GA sends cookieless pings only.
 export function ensureGtag() {
   if (typeof window === "undefined" || window.gtag) return;
   window.dataLayer = window.dataLayer || [];
@@ -38,8 +43,16 @@ export function ensureGtag() {
     // eslint-disable-next-line prefer-rest-params
     window.dataLayer!.push(arguments);
   };
+  window.gtag("consent", "default", googleConsentState(readMarketingConsent()));
   window.gtag("js", new Date());
   window.gtag("config", GA4_MEASUREMENT_ID);
+}
+
+export function updateGa4Consent(
+  consent: Parameters<typeof googleConsentState>[0],
+) {
+  ensureGtag();
+  window.gtag!("consent", "update", googleConsentState(consent));
 }
 
 export function trackGa4Event(event: string, parameters?: object) {

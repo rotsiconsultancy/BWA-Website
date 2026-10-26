@@ -32,6 +32,16 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-26 06:45] — Roadmap Batch: AI/SEO Basics, Images, Consent, Order Follow-up
+
+- **Agent**: Claude Code
+- **AI & SEO**: `/llms.txt` route (live catalogue + hubs, hourly). `OnlineStore` JSON-LD in the root layout (socials, WhatsApp contact, 7-day return policy). Shared `FaqSection` (+ `FAQPage` JSON-LD) on product pages, `/bracelets` and every hub; answers live in `lib/commerce/faq.ts` and only restate existing site promises.
+- **Currency**: `proxy.ts` now sets a `bwa_country` cookie from the edge header (Cloudflare `cf-ipcountry` first, since Cloudflare fronts Vercel) and no longer writes a USD cookie when the country is unknown. `CurrencyContext` reads that cookie; ipapi.co (rate-limited) is removed, ipwho.is is the fallback only when no header exists.
+- **Images**: `components/commerce/StoreImage.tsx` wraps `next/image` for local and Supabase Storage images (other hosts fall back to `<img>`). Used for hero banners, product grids, gallery and quiz results. `images.dangerouslyAllowLocalIP` is enabled in development only, for NAT64 networks.
+- **Consent**: one choice (`lib/marketing/consent.ts`) now drives Meta Pixel and Google Consent Mode v2. GA4 defaults to denied (cookieless pings) until Accept; the prompt shows even without a Meta Pixel ID.
+- **Admin**: order detail has a "Message customer on WhatsApp" button with a prefilled follow-up (`lib/commerce/whatsapp.ts`, tested phone normalisation).
+- **Nav**: header Journal link removed until `/journal` ships (docs/ROADMAP.md step 13).
+
 ### [2026-10-25 22:30] — GA4 Ecommerce Funnel & WhatsApp Send Step
 
 - **Agent**: Claude Code

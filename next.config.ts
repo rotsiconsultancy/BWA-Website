@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
     useTypeScriptCli: false,
   },
   images: {
+    // Some local networks (NAT64 DNS) resolve Supabase to 64:ff9b:: addresses,
+    // which Next treats as private. Production optimises images on Vercel.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
     remotePatterns: [
       {
         protocol: "https",

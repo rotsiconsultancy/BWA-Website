@@ -1,3 +1,6 @@
+import StoreImage from "@/components/commerce/StoreImage";
+import FaqSection from "@/components/commerce/FaqSection";
+import { shoppingFaqs } from "@/lib/commerce/faq";
 import type { Metadata } from "next";
 import Link from "next/link";
 import SeoProductGrid from "@/components/commerce/SeoProductGrid";
@@ -67,10 +70,13 @@ export default async function BraceletsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <section className="bracelet-collection-hero">
-        <img
+        <StoreImage
           src="/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.webp"
           alt="Woman wearing a Beads World Africa natural stone bracelet outdoors"
-          fetchPriority="high"
+          sizes="100vw"
+          width={1920}
+          height={1080}
+          eager
         />
         <div className="bracelet-collection-hero-shade" aria-hidden="true" />
         <div className="bracelet-collection-hero-copy">
@@ -127,6 +133,7 @@ export default async function BraceletsPage() {
         </div>
         <SeoProductGrid products={products} />
       </section>
+      <FaqSection items={shoppingFaqs} />
     </main>
   );
 }

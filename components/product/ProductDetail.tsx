@@ -7,6 +7,9 @@ import { useCart } from "@/context/CartContext";
 import { hubsForProduct } from "@/lib/commerce/seo-hubs";
 import Money from "@/components/commerce/Money";
 import { useCurrency } from "@/context/CurrencyContext";
+import StoreImage from "@/components/commerce/StoreImage";
+import FaqSection from "@/components/commerce/FaqSection";
+import { shoppingFaqs } from "@/lib/commerce/faq";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
 import { productToGa4Item, trackGa4Event } from "@/lib/marketing/ga4";
 import { useEffect, useRef } from "react";
@@ -80,17 +83,24 @@ export default function ProductDetail({
                 onClick={() => setImageIndex(index)}
                 className={imageIndex === index ? "is-active" : ""}
               >
-                <img
+                <StoreImage
                   src={image}
                   alt={`View ${index + 1} of ${product.title}`}
+                  sizes="96px"
+                  width={192}
+                  height={192}
                 />
               </button>
             ))}
           </div>
           <div className="product-main-image">
-            <img
+            <StoreImage
               src={product.images[imageIndex]}
               alt={`${product.title} natural stone bracelet`}
+              sizes="(max-width: 900px) 100vw, 50vw"
+              width={1200}
+              height={1440}
+              eager
             />
             <span>Zoom to inspect the stone</span>
           </div>
@@ -202,6 +212,7 @@ export default function ProductDetail({
           </div>
         </section>
       )}
+      <FaqSection items={shoppingFaqs} />
       <section className="container product-related">
         <div className="product-related-head">
           <div>
@@ -218,7 +229,11 @@ export default function ProductDetail({
               className="catalogue-product-card"
             >
               <div className="catalogue-product-media">
-                <img src={item.images[0]} alt={item.title} />
+                <StoreImage
+                  src={item.images[0]}
+                  alt={item.title}
+                  sizes="(max-width: 760px) 50vw, 33vw"
+                />
               </div>
               <div className="catalogue-product-copy">
                 <p>{item.collection}</p>

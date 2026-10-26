@@ -6,13 +6,14 @@ import { formatMoney } from "@/lib/commerce/money";
 
 const STORAGE_KEY = "bwa_store_currency";
 const MANUAL_KEY = "bwa_store_currency_manual";
+const COUNTRY_KEY = "bwa_country";
 type Detected = { currency: StoreCurrency; country: string };
 
 type CurrencyContextValue = {
   currency: StoreCurrency;
   setCurrency: (currency: StoreCurrency) => void;
   format: (amount: number) => string;
-  /** ISO 3166-1 alpha-2 country code detected via ipapi, e.g. "KE", "US", "CA" */
+  /** ISO 3166-1 alpha-2 country code from the edge header, e.g. "KE", "US", "CA" */
   detectedCountry: string | null;
   /** Whether the current currency was explicitly selected by the user */
   isManual: boolean;
@@ -34,31 +35,7 @@ function toDetected(code: string): Detected | null {
   return { currency: country === "KE" ? "KES" : "USD", country };
 }
 
-/** Resolve currency & country from ipapi.co/json — returns null on network/parse error */
-async function detectCurrencyViaIpApi(): Promise<{
-  currency: StoreCurrency;
-  country: string;
-} | null> {
-  try {
-    const res = await fetch("https://ipapi.co/json/", {
-      signal: AbortSignal.timeout(4000),
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    const countryCode: string = (
-      data.country_code ||
-      data.country ||
-      ""
-    ).toUpperCase();
-    if (!countryCode) return null;
-    const currency: StoreCurrency = countryCode === "KE" ? "KES" : "USD";
-    return { currency, country: countryCode };
-  } catch {
-    return null;
-  }
-}
-
-/** Provider 2: ipwho.is — HTTPS, no key required */
+/** Fallback only when the host sends no country header (e.g. local dev). */
 async function detectViaIpWho(): Promise<Detected | null> {
   try {
     const res = await fetch("https://ipwho.is/?fields=success,country_code", {
@@ -79,42 +56,39 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   const [isManual, setIsManual] = useState<boolean>(false);
 
   useEffect(() => {
-    // 1. Only respect saved local currency if the user EXPLICITLY selected it manually
+    // 1. An explicit manual choice always wins.
     const isManualSelection = localStorage.getItem(MANUAL_KEY) === "true";
     const savedLocal = localStorage.getItem(STORAGE_KEY);
-
-    if (isManualSelection && (savedLocal === "KES" || savedLocal === "USD")) {
+    const manual =
+      isManualSelection && (savedLocal === "KES" || savedLocal === "USD")
+        ? savedLocal
+        : null;
+    if (manual) {
       setIsManual(true);
-      setCurrencyState(savedLocal);
-      detectCurrencyViaIpApi().then((result) => {
-        if (result) setDetectedCountry(result.country);
-      });
+      setCurrencyState(manual);
+    }
+
+    // 2. Country set by proxy.ts from the hosting edge's geolocation header.
+    const edge = toDetected(getCookie(COUNTRY_KEY) ?? "");
+    if (edge) {
+      setDetectedCountry(edge.country);
+      if (!manual) setCurrencyState(edge.currency);
       return;
     }
 
-    // 2. If not explicitly chosen manually by user, perform IP geolocation auto-detection
-    detectCurrencyViaIpApi().then((result) => {
+    // 3. No edge header: one external lookup, then the browser timezone.
+    detectViaIpWho().then((result) => {
       if (result) {
-        setCurrencyState(result.currency);
         setDetectedCountry(result.country);
-      } else {
-        // Fallback 1: check middleware cookie
-        const cookieCurrency = getCookie(STORAGE_KEY);
-        if (cookieCurrency === "KES" || cookieCurrency === "USD") {
-          setCurrencyState(cookieCurrency);
-        } else {
-          // Fallback 2: browser timezone
-          try {
-            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-            if (tz.includes("Nairobi") || tz.includes("Africa/Nairobi")) {
-              setCurrencyState("KES");
-            } else {
-              setCurrencyState("USD");
-            }
-          } catch {
-            setCurrencyState("KES");
-          }
-        }
+        if (!manual) setCurrencyState(result.currency);
+        return;
+      }
+      if (manual) return;
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+        setCurrencyState(tz.includes("Nairobi") ? "KES" : "USD");
+      } catch {
+        setCurrencyState("KES");
       }
     });
   }, []);
