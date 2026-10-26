@@ -32,6 +32,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-26 07:30] — Stockists Page (ManCave)
+
+- **Agent**: Claude Code
+- **Changes**: Added `/stockists` with the three owner-confirmed ManCave branches (Nairobi Street Kitchen; Mwanzi Market 1st floor; Danka Plaza 2nd floor, Kitengela), Google Maps direction links, `Store` ItemList JSON-LD, a delivery CTA and a WhatsApp "stock BWA" CTA. Branch data lives in `lib/commerce/stockists.ts`; opening hours and per-branch products are not confirmed, so they are not shown. Linked from the product assurances ("Try it on at ManCave"), footer, FAQ, `llms.txt` and the sitemap.
+
 ### [2026-10-26 06:45] — Roadmap Batch: AI/SEO Basics, Images, Consent, Order Follow-up
 
 - **Agent**: Claude Code

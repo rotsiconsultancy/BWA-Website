@@ -20,7 +20,7 @@ export const shoppingFaqs: FaqItem[] = [
   {
     question: "How much is delivery in Kenya?",
     answer:
-      "Doorstep delivery in Kenya is KES 250. You can also collect your order from BWA for free; we confirm the location and timing with you on WhatsApp.",
+      "Doorstep delivery in Nairobi area is equivalent to an Uber or Bolt ride cost. You can also collect your order from BWA for free; we confirm the location and timing with you on WhatsApp.",
   },
   {
     question: "Which size should I choose?",
@@ -41,7 +41,8 @@ export const shoppingFaqs: FaqItem[] = [
   {
     question: "Can I buy BWA bracelets in a shop?",
     answer:
-      "Yes. Alongside ordering online, BWA bracelets are available at ManCave stores in Kenya.",
+      "Yes. BWA bracelets are available at ManCave at Nairobi Street Kitchen, Mwanzi Market (1st floor) and Danka Plaza in Kitengela (2nd floor).",
+    link: { href: "/stockists", label: "Get directions" },
   },
   {
     question: "Can you make a custom bracelet?",

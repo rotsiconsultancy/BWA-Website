@@ -34,7 +34,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done
 | # | Step | What "done" looks like | Needs from you | Status |
 |---|------|------------------------|----------------|--------|
 | 4 | Business details for search engines | Organization + Store structured data with socials, WhatsApp, and stockists | Business address (if any), opening hours | ✅ |
-| 5 | `/stockists` page | ManCave's 3 branches with map, hours, directions; "Also at ManCave" badge on stocked products | Branch names, addresses, Google Maps links, hours, which products they carry | ⬜ |
+| 5 | `/stockists` page | ManCave's 3 branches with map, hours, directions; "Also at ManCave" badge on stocked products | Branch names, addresses, Google Maps links, hours, which products they carry | ✅ |
 | 6 | "Message customer" in admin orders | One tap opens WhatsApp to the customer with a prefilled message, for orders never sent | — | ✅ |
 | 7 | Partner codes + QR | One discount code per partner branch, printable QR card linking to the site with the code and tracking applied | Commission % / discount per partner | ⬜ |
 

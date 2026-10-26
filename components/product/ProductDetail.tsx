@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Minus, Plus, ShieldCheck, Truck } from "lucide-react";
+import { MapPin, Minus, Plus, ShieldCheck, Truck } from "lucide-react";
 import { useState } from "react";
 import type { CommerceProduct } from "@/lib/commerce/types";
 import { useCart } from "@/context/CartContext";
@@ -180,6 +180,10 @@ export default function ProductDetail({
             </span>
             <span>
               <Truck size={17} /> Delivery confirmed with you
+            </span>
+            <span>
+              <MapPin size={17} />{" "}
+              <Link href="/stockists">Try it on at ManCave</Link>
             </span>
           </div>
         </aside>
