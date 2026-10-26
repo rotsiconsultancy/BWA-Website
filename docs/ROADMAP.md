@@ -4,7 +4,7 @@ Work moves from smallest to largest, **one step at a time**: build → check in 
 
 Not in scope for now: Instagram API feed, stock per partner location.
 
-Status: ⬜ not started · 🟡 in progress · ✅ done
+Status: ⬜ not started · 🟡 in progress · ✅ done · ⏭️ skipped
 
 ---
 
@@ -36,7 +36,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done
 | 4 | Business details for search engines | Organization + Store structured data with socials, WhatsApp, and stockists | Business address (if any), opening hours | ✅ |
 | 5 | `/stockists` page | ManCave's 3 branches with map, hours, directions; "Also at ManCave" badge on stocked products | Branch names, addresses, Google Maps links, hours, which products they carry | ✅ |
 | 6 | "Message customer" in admin orders | One tap opens WhatsApp to the customer with a prefilled message, for orders never sent | — | ✅ |
-| 7 | Partner codes + QR | One discount code per partner branch, printable QR card linking to the site with the code and tracking applied | Commission % / discount per partner | ⬜ |
+| 7 | Partner codes + QR | One discount code per partner branch, printable QR card linking to the site with the code and tracking applied | Commission % / discount per partner | ⏭️ skipped |
 
 ### Medium
 
@@ -52,11 +52,11 @@ Status: ⬜ not started · 🟡 in progress · ✅ done
 
 | # | Step | What "done" looks like | Needs from you | Status |
 |---|------|------------------------|----------------|--------|
-| 13 | Journal (blog) | `/journal` listing + post pages built from Markdown files I write; product CTAs inside the story; in sitemap and search markup; first 3 posts live | Agree the format below; photos for each post | ⬜ |
+| 13 | Journal (blog) | `/journal` listing + post pages built from Markdown files I write; product CTAs inside the story; in sitemap and search markup; first 3 posts live | Agree the format below; photos for each post | 🟡 |
 
 ---
 
-## Journal format (to agree before step 13)
+## Journal format (as built)
 
 ### Where posts live
 
@@ -66,7 +66,7 @@ public/journal/<slug>/cover.webp   cover image (1600×900)
 public/journal/<slug>/1.webp …     images inside the story
 ```
 
-No admin editor: I write each post as a Markdown file and it ships with a commit.
+No admin editor: I write each post as a Markdown file and it ships with a commit. Existing site photos in `/images/` can be reused. A file whose name starts with `_` is a draft and is not published. A post with a missing field or an unknown category stops the build with a message saying what to fix.
 
 ### Post file
 
@@ -81,7 +81,6 @@ category: Stone guides        # Stone guides · Gift guides · Style · Care & s
 cover: /journal/the-bracelet-he-never-takes-off/cover.webp
 coverAlt: "Man in a Nairobi café wearing a tiger eye bracelet"
 featuredProduct: tiger-eye-bracelet          # product slug: the main CTA
-relatedProducts: [black-lava-stone-bracelet] # optional, shown at the end
 faq:
   - q: "Can tiger eye get wet?"
     a: "Short splashes are fine; take it off to swim or shower."
@@ -117,7 +116,7 @@ Length: 700–1,200 words, 3–5 images.
 
 - Top: the newest post as a large feature (cover, category, title, one-line description).
 - Below: a grid of post cards (cover, category, title, read time), with category chips to filter.
-- Bottom: newsletter sign-up.
+- Bottom: "Not sure where to start?" link to the quiz (the footer newsletter sign-up sits right below).
 
 ### Post page (`/journal/<slug>`)
 
@@ -125,12 +124,21 @@ Length: 700–1,200 words, 3–5 images.
 - Single readable text column with full-width images and captions.
 - Inline product cards where the post places them.
 - On phones, a slim bar appears after the first product card: "Shop the {product}" → product page.
-- End: featured product CTA, quiz link, 3 related posts.
+- End: featured product CTA, quiz and stockists links, the post's FAQ, then 3 more posts (same category first).
 - Search: BlogPosting + FAQ structured data, social share image from the cover, listed in the sitemap.
 - Tracking: `journal_product_click` (which post, which product) so we know which stories sell.
 
 ### First three posts (proposed)
 
-1. **Stone guide:** "The Bracelet He Never Takes Off": tiger eye, for men.
-2. **Gift guide:** "What to Get Him When He Says He Wants Nothing": gifting, under KES 2,000.
+1. **Stone guide:** "The Bracelet He Never Takes Off": tiger eye, for men. Blocked until the tiger eye product data is fixed (see below).
+2. **Gift guide:** "What to Get Him When He Says He Wants Nothing" ✅ written (sample post)
 3. **Behind the craft / partner story:** "Now at ManCave": why grooming and bracelets belong together, with the branches.
+
+### Catalogue data to fix before stone guides
+
+Several live products have copied descriptions or wrong stone tags, which also affects the stone collection pages and the quiz:
+
+- Black Lava Stone, Matrix Jasper, White Howlite, Cracked Quartz, Snowflake Obsidian: descriptions start with another stone's "spiritual meaning" text.
+- Red Tiger Eye and Mahogany Obsidian: both use the Mahogany Jasper description and are tagged Red Jasper.
+- Malachite: tagged Red Jasper.
+- Black Lava Stone, Cracked Quartz, White Howlite, Snowflake Obsidian, Clear Quartz: tagged "non stone".

@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
+import { getAllPosts } from "@/lib/journal/posts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://beadsworldafrica.co.ke";
@@ -25,6 +26,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/journal`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    ...getAllPosts().map((post) => ({
+      url: `${baseUrl}/journal/${post.slug}`,
+      lastModified: new Date(post.updated ?? post.date),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
     {
       url: `${baseUrl}/stockists`,
       lastModified: new Date(),

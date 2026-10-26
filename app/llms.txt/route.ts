@@ -2,6 +2,7 @@ import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
 import { SITE_URL } from "@/lib/commerce/seo";
 import { stockists } from "@/lib/commerce/stockists";
+import { getAllPosts } from "@/lib/journal/posts";
 
 // Regenerated hourly so the product list follows the live catalogue.
 export const revalidate = 3600;
@@ -21,7 +22,7 @@ export async function GET() {
 ## How to buy
 
 - Online: choose a bracelet and size at ${SITE_URL}/bracelets, add it to the bag, and place the order. The order is then confirmed with BWA on WhatsApp, where payment (M-Pesa or bank transfer) and delivery are arranged.
-- Delivery in Kenya: doorstep delivery costs KES 250, or collect free from BWA.
+- Delivery: within Nairobi, doorstep delivery costs the same as an Uber or Bolt ride to the customer. Outside Nairobi, the cost is confirmed on WhatsApp after the order, based on the location given. Collection from BWA is free.
 - In store: BWA bracelets are sold at ${stockists.map((s) => `${s.partner} (${s.location}, ${s.area})`).join("; ")}. Directions: ${SITE_URL}/stockists
 - Not sure which bracelet? The Find Your Bracelet quiz recommends one: ${SITE_URL}/find-your-bracelet
 - Custom pieces: ${SITE_URL}/bespoke
@@ -38,6 +39,15 @@ ${products
   .map(
     (product) =>
       `- [${product.title}](${SITE_URL}/product/${product.slug}): ${product.subtitle}. From ${price(product.prices.KES)}.`,
+  )
+  .join("\n")}
+
+## Journal
+
+${getAllPosts()
+  .map(
+    (post) =>
+      `- [${post.title}](${SITE_URL}/journal/${post.slug}): ${post.description}`,
   )
   .join("\n")}
 

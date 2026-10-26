@@ -20,7 +20,7 @@ export const shoppingFaqs: FaqItem[] = [
   {
     question: "How much is delivery in Kenya?",
     answer:
-      "Doorstep delivery in Nairobi area is equivalent to an Uber or Bolt ride cost. You can also collect your order from BWA for free; we confirm the location and timing with you on WhatsApp.",
+      "Doorstep delivery within Nairobi costs the same as an Uber or Bolt ride to your location. Outside Nairobi, include your location when you order and we confirm the delivery cost with you on WhatsApp. You can also collect your order from BWA for free.",
   },
   {
     question: "Which size should I choose?",

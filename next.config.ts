@@ -8,6 +8,13 @@ const nextConfig: NextConfig = {
     // checks without that process-wrapper incompatibility.
     useTypeScriptCli: false,
   },
+  // Journal posts are Markdown files read at request time on revalidation.
+  outputFileTracingIncludes: {
+    "/journal": ["./content/journal/**"],
+    "/journal/*": ["./content/journal/**"],
+    "/sitemap.xml": ["./content/journal/**"],
+    "/llms.txt": ["./content/journal/**"],
+  },
   images: {
     // Some local networks (NAT64 DNS) resolve Supabase to 64:ff9b:: addresses,
     // which Next treats as private. Production optimises images on Vercel.

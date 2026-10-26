@@ -89,8 +89,8 @@ export default function StockistsPage() {
         <div>
           <h2>Prefer it delivered?</h2>
           <p>
-            Order online and we confirm delivery with you on WhatsApp. Doorstep
-            delivery in Kenya is KES 250.
+            Order online and we confirm delivery with you on WhatsApp. Within
+            Nairobi it costs the same as an Uber or Bolt ride to your door.
           </p>
           <Link href="/bracelets" className="btn btn-primary">
             Shop the collection

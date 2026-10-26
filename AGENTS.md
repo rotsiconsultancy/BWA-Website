@@ -32,6 +32,15 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-26 09:30] — The BWA Journal (Markdown Blog) & Delivery Wording
+
+- **Agent**: Claude Code
+- **Journal**: Posts are Markdown files in `content/journal/<slug>.md` with YAML frontmatter (title, description, date, category, cover, coverAlt, featuredProduct, faq). `lib/journal/posts.ts` validates them (bad fields fail the build), `lib/journal/markdown.ts` renders with `marked` (captioned figures, external links in new tabs) and splits out `{{product: slug}}` lines into live product cards. Files prefixed `_` are drafts. Categories are fixed in `lib/journal/categories.ts`.
+- **Pages**: `/journal` (featured post, category filter via `?category=`, quiz CTA) and `/journal/[slug]` (cover, prose column with full-bleed images, inline `JournalProductCard`s with Add to bag, closing product CTA, post FAQ with FAQPage markup, more posts, phone-only "Shop this bracelet" bar). BlogPosting JSON-LD; sitemap, `llms.txt` and the header nav include the Journal. `outputFileTracingIncludes` ships `content/journal` with the routes that read it. GA4: `journal_product_click` (post_slug, placement inline/closing/shop_bar, action).
+- **First post**: "What to Get Him When He Says He Wants Nothing" (gift guide) featuring Forest Forge, Midnight Rhythm and Spotted Contrast, chosen because their catalogue descriptions are accurate.
+- **Dependencies**: added `marked` and `yaml`; pinned `next`, `react`, `react-dom` and their types to the versions already in the lockfile, because the `latest` specifiers made any install upgrade the framework.
+- **Delivery copy**: FAQ, `llms.txt` and `/stockists` now say Nairobi doorstep delivery costs the Uber/Bolt fare and outside Nairobi is confirmed on WhatsApp after ordering. Checkout and the order total still use the fixed KES 250 fee in `lib/commerce/money.ts`.
+
 ### [2026-10-26 07:30] — Stockists Page (ManCave)
 
 - **Agent**: Claude Code
