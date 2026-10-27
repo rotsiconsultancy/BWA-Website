@@ -32,6 +32,14 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-27 21:30] — Product Catalogue Copy Rewritten in Supabase
+
+- **Agent**: Claude Code
+- **Data (live Supabase, owner approved)**: All 26 products now have a subtitle, a one-line descriptor under 160 characters (used as the meta description and in the Merchant feed), a story that describes the product photo, a clean details list (the old lists had been split at every comma), corrected `stone_type` tags, fixed `seo_title`/`seo_description` and image `alt_text`. The old copy had other products' descriptions on at least 13 pieces and health/spiritual claims as fact ("past life recall", chakras, "clear you of toxicities"); stone meanings are now "traditionally associated with" only. Title fixes only: Plain Diagonal Hematite Bracelet, Forest Forge Bracelet, Black Onyx Chipped Bracelet, Snowflake Obsidian Chipped Bracelet. Prices, stock, sizes, slugs and quiz tags untouched.
+- **Code**: `lib/commerce/taxonomy.ts` gained stone options `obsidian`, `howlite`, `jasper`, `quartz`, `malachite`, `goldstone` (commit 53f82a1). Push it so the admin product form keeps these tags when a product is edited.
+- **Effect**: the tiger-eye and lava-stone hubs now list Red Tiger Eye and Black Lava Stone; Product JSON-LD `material` is correct.
+- **Audit files** (outside git): `../Website-data/catalogue-audit-2026-10-27/`: `review.md` (before/after), `backup-before.json`, `payload.json`, `apply.mjs` (`apply` or `revert`, run from `BWA-Website/`).
+
 ### [2026-10-27 15:00] — Men's Stone Bracelets Landing Page
 
 - **Agent**: Claude Code
