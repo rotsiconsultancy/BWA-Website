@@ -32,6 +32,13 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-27 15:00] — Men's Stone Bracelets Landing Page
+
+- **Agent**: Claude Code
+- **Page**: `/bracelets/mens-stone-bracelets` (static route beside `/bracelets/[hub]`) targets "men's stone bracelets Kenya", "men's bracelets Nairobi", "tiger eye / lava stone bracelet Kenya". Hero, "Choose by stone" cards (Tiger Eye, Lava Stone, Black Onyx, Hematite, Snowflake Obsidian, Howlite; each links to its product and hides if the product leaves the catalogue), product grid of everything tagged `recipient: gift_for_man`, an ordering/delivery block (facts from `faq.ts`), Journal links and an FAQ. Data and copy in `lib/commerce/mens-stone-bracelets.ts`.
+- **SEO**: CollectionPage + ItemList and FAQPage JSON-LD; listed in the sitemap (priority 0.85), `/llms.txt` collections, and as the first card on `/bracelets`. FAQ reuses `shoppingFaqs` minus the stockist question (no ManCave on this page) plus a tiger eye / lava / onyx comparison. Stone meanings are "traditionally associated with" only.
+- **Data note**: Supabase `stone_type` tags are unreliable (Black Lava Stone is `non_stone`, Red Tiger Eye is `red_jasper`, howlite/jasper pieces are `tiger_eye`), so the existing tiger-eye hub shows the wrong pieces and the lava-stone hub is empty. This page filters by `recipient` and links stones to products by slug instead.
+
 ### [2026-10-26 16:30] — Stockists: Display at Mwanzi, On Request Elsewhere
 
 - **Agent**: Claude Code

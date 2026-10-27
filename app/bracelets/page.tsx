@@ -5,6 +5,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SeoProductGrid from "@/components/commerce/SeoProductGrid";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
+import {
+  MENS_PAGE_PATH,
+  MENS_PAGE_TITLE,
+} from "@/lib/commerce/mens-stone-bracelets";
 import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
 import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
 
@@ -106,6 +110,11 @@ export default async function BraceletsPage() {
           </p>
         </div>
         <div className="seo-hub-links">
+          <Link href={MENS_PAGE_PATH}>
+            <span>Discover by wearer / For him</span>
+            <strong>{MENS_PAGE_TITLE.replace(" in Kenya", "")}</strong>
+            <i>Explore →</i>
+          </Link>
           {liveHubs.map((hub) => (
             <Link key={hub.slug} href={`/bracelets/${hub.slug}`}>
               <span>{hub.eyebrow.replace("Discover by ", "")}</span>

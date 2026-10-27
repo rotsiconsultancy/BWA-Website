@@ -5139,6 +5139,15 @@ body {
 .seo-hub-products {
   padding-top: clamp(4.5rem, 9vw, 8rem);
 }
+.mens-stone-guide .seo-hub-links p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.mens-stone-how .seo-hub-heading > p a {
+  color: var(--color-forest);
+}
 .seo-hub-related,
 .product-discovery-links {
   margin-top: clamp(4rem, 8vw, 7rem);

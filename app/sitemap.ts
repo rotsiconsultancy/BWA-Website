@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
+import { MENS_PAGE_PATH } from "@/lib/commerce/mens-stone-bracelets";
 import { getAllPosts } from "@/lib/journal/posts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -25,6 +26,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}${MENS_PAGE_PATH}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.85,
     },
     {
       url: `${baseUrl}/journal`,

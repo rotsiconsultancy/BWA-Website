@@ -1,4 +1,9 @@
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
+import {
+  MENS_PAGE_DESCRIPTION,
+  MENS_PAGE_PATH,
+  MENS_PAGE_TITLE,
+} from "@/lib/commerce/mens-stone-bracelets";
 import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
 import { SITE_URL } from "@/lib/commerce/seo";
 import { stockists } from "@/lib/commerce/stockists";
@@ -39,6 +44,7 @@ export async function GET() {
 ## Collections
 
 - [All bracelets](${SITE_URL}/bracelets)
+- [${MENS_PAGE_TITLE}](${SITE_URL}${MENS_PAGE_PATH}): ${MENS_PAGE_DESCRIPTION}
 ${hubs.map((hub) => `- [${hub.title}](${SITE_URL}/bracelets/${hub.slug}): ${hub.description}`).join("\n")}
 
 ## Bracelets
