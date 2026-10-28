@@ -32,6 +32,13 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-28 11:00] — 28 Stone Bracelets Added; Product Pages Use seo_title
+
+- **Agent**: Claude Code
+- **Data (live Supabase, owner approved)**: 28 new products from the owner's stone library (`../Assets/stones/`), slug `<bracelet-name>-<stone>-bracelet`, SKU `BWA-<NAME>`. Each has one hero image in Storage `product-images/products/` (1600 px WebP, AI-made product render with the BWA mark), one variant `M / 18 cm` with stock 200 (owner: always available), `wrist_fits` medium only, KES 1,500 / USD 13 (Watamu Deep lapis KES 1,800 / USD 16), `featured` and `is_trending` false, plus an `inventory_movements` initial row and a `crm_sync_outbox` create row, as the admin form does. Files: `../Website-data/stone-listings-2026-10-28/` (`listings.py` → `payload.json`, `review.md`, `upload.mjs create|remove`, `live-before.json`).
+- **Code**: `lib/commerce/taxonomy.ts` gained stone options `sodalite`, `rhodonite`, `agate`, `bloodstone`, `unakite`, `opal`, `mother_of_pearl` (be45ae7). Product pages now use `products.seo_title` for `<title>` when set, falling back to "name — subtitle" (0ccc7e9); before this, `seo_title` was stored but never used. Both commits await the owner's push.
+- **Image note**: the gallery and shop cards show photos in a ~5:6 frame with `object-fit: cover`, which crops about 8% off each side of a square photo. Keep logos and text inside the centre 84% of the width (`../Assets/stones/_product-photo-kit/add-mark.py` does this).
+
 ### [2026-10-28 10:00] — Ahrefs Web Analytics Added
 
 - **Agent**: Claude Code
