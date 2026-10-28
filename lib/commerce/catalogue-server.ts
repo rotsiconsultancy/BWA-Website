@@ -10,6 +10,7 @@ type ProductRow = {
   title: string;
   subtitle: string | null;
   descriptor: string | null;
+  seo_title: string | null;
   price: number | string;
   price_kes: number | string;
   price_usd: number | string | null;
@@ -73,6 +74,7 @@ function mapProduct(product: ProductRow): CommerceProduct {
     title: product.title,
     subtitle: product.subtitle || "Hand-finished natural stone bracelet",
     descriptor: product.descriptor || "Made in considered small batches.",
+    seoTitle: product.seo_title || null,
     prices: {
       KES: Number(product.price_kes ?? product.price),
       USD: product.price_usd === null ? null : Number(product.price_usd),
@@ -108,7 +110,7 @@ async function loadProducts(slug?: string): Promise<CommerceProduct[] | null> {
   let query = admin
     .from("products")
     .select(
-      "id,slug,title,subtitle,descriptor,price,price_kes,price_usd,category,story,details,featured,is_trending,active,energy_vibe,intention,stone_type,color_palette,style_tags,wrist_fits,occasion,recipient,collections(title),product_images(url,alt_text,sort_order),product_variants(id,title,sku,price_adjustment,price_adjustment_kes,price_adjustment_usd,stock_quantity,reserved_quantity,active)",
+      "id,slug,title,subtitle,descriptor,seo_title,price,price_kes,price_usd,category,story,details,featured,is_trending,active,energy_vibe,intention,stone_type,color_palette,style_tags,wrist_fits,occasion,recipient,collections(title),product_images(url,alt_text,sort_order),product_variants(id,title,sku,price_adjustment,price_adjustment_kes,price_adjustment_usd,stock_quantity,reserved_quantity,active)",
     )
     .eq("active", true)
     .order("featured", { ascending: false })

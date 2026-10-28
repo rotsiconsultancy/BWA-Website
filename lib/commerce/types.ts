@@ -24,6 +24,8 @@ export type CommerceProduct = ProductTaxonomy & {
   title: string;
   subtitle: string;
   descriptor: string;
+  /** Search-engine title from the catalogue; the page builds one when empty. */
+  seoTitle?: string | null;
   prices: import("@/lib/commerce/money").Prices;
   category: string;
   collection: string;

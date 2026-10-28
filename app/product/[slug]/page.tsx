@@ -14,7 +14,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = await getStorefrontProduct((await params).slug);
   if (!product) return {};
 
-  const title = `${product.title} — ${product.subtitle} | ${SITE_NAME}`;
+  const title =
+    product.seoTitle || `${product.title} — ${product.subtitle} | ${SITE_NAME}`;
   const description =
     product.descriptor ||
     product.story ||
