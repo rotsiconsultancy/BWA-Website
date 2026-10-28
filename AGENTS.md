@@ -32,6 +32,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-28 10:00] — Ahrefs Web Analytics Added
+
+- **Agent**: Claude Code
+- **Code**: `app/layout.tsx` loads `https://analytics.ahrefs.com/analytics.js` (owner's site key) on every page via `next/script`, `afterInteractive`, next to GA4. It is not gated by the cookie consent banner, unlike GA4 consent mode; Ahrefs says its analytics is cookieless.
+
 ### [2026-10-27 21:30] — Product Catalogue Copy Rewritten in Supabase
 
 - **Agent**: Claude Code

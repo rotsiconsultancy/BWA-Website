@@ -41,6 +41,7 @@ const organizationJsonLd = {
   },
 };
 import GoogleAnalytics from "@/components/marketing/GoogleAnalytics";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Beads World Africa — Natural Stone Bracelets Handmade in Africa",
@@ -105,6 +106,11 @@ export default function RootLayout({
           }}
         />
         <GoogleAnalytics />
+        <Script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="ohT7pEenSWgTJf9b877jlg"
+          strategy="afterInteractive"
+        />
         <CurrencyProvider>
           <CartProvider>
             <Header />
