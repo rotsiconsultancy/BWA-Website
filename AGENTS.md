@@ -32,6 +32,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-28 14:00] — Older Listings Renamed; Product Redirects
+
+- **Agent**: Claude Code
+- **Code** (pushed by owner): `lib/commerce/product-redirects.ts` maps old product slugs to current ones; `app/product/[slug]/page.tsx` sends a permanent redirect (308) only when a slug is missing from the catalogue, so renames work in either order. The men's stone bracelets page and Journal product cards match either slug. **When renaming a product, add its old slug here; never remove an entry.**
+- **Data (live Supabase, owner approved)**: 17 older products renamed to `<Name> <Stone> Stone [Chip] Bracelet` with matching slugs, stone wording, `wrist_fits` medium only; prices per owner (Longonot Black 800, Chyulu Black 1,200, round stone 1,500, chips 300); 9 variant titles "M/18CM" → "M / 18 cm". Files and undo: `../Website-data/older-listings-2026-10-28/` (`build.py`, `payload.json`, `changes.md`, `apply.mjs`, `live-before.json`).
+
 ### [2026-10-28 11:00] — 28 Stone Bracelets Added; Product Pages Use seo_title
 
 - **Agent**: Claude Code
