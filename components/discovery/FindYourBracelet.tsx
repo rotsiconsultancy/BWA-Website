@@ -12,6 +12,7 @@ import type { CommerceProduct } from "@/lib/commerce/types";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import Money from "@/components/commerce/Money";
+import { customPieceUrl } from "@/lib/commerce/custom-piece";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 export const fallbackQuestions: DiscoveryQuestion[] = [
@@ -233,12 +234,14 @@ export default function FindYourBracelet({
             Nothing in the current collection is a close enough match. Tell us
             what you have in mind and our concierge will guide the next step.
           </p>
-          <Link
+          <a
             className="btn btn-primary"
-            href={`/bespoke?quiz=${sessionToken || ""}`}
+            href={customPieceUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Start a bespoke request
-          </Link>
+            Ask us on WhatsApp
+          </a>
         </main>
       );
     return (
@@ -302,11 +305,13 @@ export default function FindYourBracelet({
               >
                 Add to bag
               </button>
-              <Link
-                href={`/bespoke?product=${match.product.id}&quiz=${sessionToken || ""}`}
+              <a
+                href={customPieceUrl(match.product.title)}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Start customising this
-              </Link>
+                Ask for a custom version
+              </a>
               <Link href={`/product/${match.product.slug}`}>
                 View bracelet details
               </Link>

@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import {
   calculateCheckout,
   normaliseDiscountCode,
 } from "@/lib/commerce/checkout-pricing";
+import { sendOrderAlert } from "@/lib/commerce/order-alert";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 
 const normalisePhone = (value: string) => {
@@ -163,6 +164,30 @@ export async function POST(request: Request) {
           order_id: order.order_id,
         });
     }
+    after(() =>
+      sendOrderAlert({
+        orderNumber: order.order_number,
+        currency: order.currency,
+        total: Number(order.total_amount),
+        discountCode: order.discount_code || null,
+        items: checkout.items,
+        customer: {
+          name: [customer.firstName, customer.lastName]
+            .map((part: string | undefined) => part?.trim())
+            .filter(Boolean)
+            .join(" "),
+          phone,
+          email: savedCustomer.email,
+        },
+        delivery: {
+          method: body.deliveryMethod === "pickup" ? "pickup" : "standard",
+          address: customer.address?.trim() || "",
+          city: customer.city?.trim() || "",
+          county: customer.county?.trim() || "",
+          note: customer.note?.trim() || "",
+        },
+      }),
+    );
     return NextResponse.json({
       orderNumber: order.order_number,
       subtotal: Number(order.subtotal),

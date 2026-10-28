@@ -38,7 +38,7 @@ export async function GET() {
     .map((s) => `${s.partner} ${s.branch} (${s.location}, ${s.area})`)
     .join(" and ")}. Directions: ${SITE_URL}/stockists
 - Not sure which bracelet? The Find Your Bracelet quiz recommends one: ${SITE_URL}/find-your-bracelet
-- Custom pieces: ${SITE_URL}/bespoke
+- Custom pieces: ask on WhatsApp, +254745474586
 - Returns and exchanges within 7 days of delivery: ${SITE_URL}/returns
 
 ## Collections

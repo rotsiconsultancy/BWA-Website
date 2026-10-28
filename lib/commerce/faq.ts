@@ -1,3 +1,5 @@
+import { customPieceUrl } from "./custom-piece";
+
 export type FaqItem = {
   question: string;
   answer: string;
@@ -47,7 +49,7 @@ export const shoppingFaqs: FaqItem[] = [
   {
     question: "Can you make a custom bracelet?",
     answer:
-      "Yes. Tell us the feeling, colours and wrist size you have in mind and we will design a bespoke piece with you.",
-    link: { href: "/bespoke", label: "Start a bespoke request" },
+      "Yes. Tell us the feeling, colours and wrist size you have in mind on WhatsApp and we will design a piece with you.",
+    link: { href: customPieceUrl(), label: "Ask on WhatsApp" },
   },
 ];

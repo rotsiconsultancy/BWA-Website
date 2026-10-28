@@ -32,6 +32,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-28 16:45] — New-Order Email Alerts; Bespoke Page Hidden
+
+- **Order alerts**: `lib/commerce/order-alert.ts` emails the owner on every new website order through Brevo's transactional API (`/v3/smtp/email`, same `BREVO_API_KEY`): order number, items, total, customer name/phone/email, delivery, a "WhatsApp the customer" button and an admin link. Called from `app/api/orders/route.ts` inside `after()`, so it runs once the response is sent and a failure is only logged. Env: `ADMIN_ALERT_EMAIL` (required, owner's Gmail), `ADMIN_ALERT_FROM` (optional, defaults to `orders@beadsworldafrica.co.ke`). Test send on 2026-10-28 got Brevo 403 "SMTP account is not yet activated": Brevo must activate transactional email on the account before alerts arrive.
+- **Bespoke hidden** (owner is rethinking the page): `/bespoke` redirects to `/bracelets`; removed from header, mobile menu, footer, sitemap and llms.txt. Custom-piece links (search empty state, quiz results, men's page, FAQ, two Journal answers) now open WhatsApp via `lib/commerce/custom-piece.ts`. `BespokeForm` and `/api/bespoke` are kept for the rethink.
+
 ### [2026-10-28 16:00] — Account Icon: Details Saved on This Phone; Install Manifest
 
 - **Agent**: Claude Code

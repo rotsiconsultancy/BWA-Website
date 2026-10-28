@@ -12,7 +12,7 @@ faq:
   - q: "Can I see the bracelet before I buy it?"
     a: "Yes. Try them on at the BWA display at ManCave, Mwanzi Market. ManCave's Nairobi Street Kitchen and Kitengela branches can also get them for you."
   - q: "Can you make one just for him?"
-    a: "Yes. Tell us his style, the colours he wears and his wrist size, and we will design a bespoke piece with you."
+    a: "Yes. Tell us his style, the colours he wears and his wrist size, and we will design a piece with you on WhatsApp."
 ---
 
 You asked him what he wants. He said, "Nothing, I'm fine." You asked again a week later and got the same answer, with a small shrug this time.
