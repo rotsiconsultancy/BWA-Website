@@ -22,37 +22,37 @@ export type MensStone = {
 export const mensStones: MensStone[] = [
   {
     name: "Tiger Eye",
-    productSlug: "red-tiger-eye-bracelet",
+    productSlug: "mara-dusk-red-tigers-eye-stone-bracelet",
     look: "Banded stone whose stripes catch and shift in the light.",
     tradition: "Traditionally associated with focus and confidence.",
   },
   {
     name: "Lava Stone",
-    productSlug: "black-lava-stone-bracelet",
+    productSlug: "longonot-black-lava-stone-bracelet",
     look: "Matte, porous volcanic rock with a rough, textured surface.",
     tradition: "Traditionally associated with grounding.",
   },
   {
     name: "Black Onyx",
-    productSlug: "black-onyx-chipped",
+    productSlug: "usiku-black-onyx-stone-chip-bracelet",
     look: "Solid black stone that pairs with any watch or outfit.",
     tradition: "Traditionally associated with strength and protection.",
   },
   {
     name: "Hematite",
-    productSlug: "plain-diagonal-hermatitie",
+    productSlug: "chuma-facet-hematite-stone-bracelet",
     look: "Dark, metallic-looking stone with a steel-grey sheen.",
     tradition: "Traditionally associated with grounding and balance.",
   },
   {
     name: "Snowflake Obsidian",
-    productSlug: "snowflake-obsidian-bracelet-800",
+    productSlug: "nelion-snow-snowflake-obsidian-stone-bracelet",
     look: "Black volcanic glass scattered with grey-white flecks.",
     tradition: "Said to support calm and clear thinking.",
   },
   {
     name: "Howlite",
-    productSlug: "grey-howlite-calm-bracelet",
+    productSlug: "ukungu-grey-howlite-stone-bracelet",
     look: "Soft grey stone with fine darker veins.",
     tradition: "Traditionally associated with calm.",
   },

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import ProductDetail from "@/components/product/ProductDetail";
 import {
   getStorefrontCatalogue,
   getStorefrontProduct,
 } from "@/lib/commerce/catalogue-server";
+import { PRODUCT_REDIRECTS } from "@/lib/commerce/product-redirects";
 import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -49,8 +50,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const product = await getStorefrontProduct((await params).slug);
-  if (!product) notFound();
+  const { slug } = await params;
+  const product = await getStorefrontProduct(slug);
+  if (!product) {
+    // Renamed product: send old links on, permanently (308).
+    const moved = PRODUCT_REDIRECTS[slug];
+    if (moved) permanentRedirect(`/product/${moved}`);
+    notFound();
+  }
   const related = (await getStorefrontCatalogue())
     .filter((item) => item.id !== product.id)
     .slice(0, 3);

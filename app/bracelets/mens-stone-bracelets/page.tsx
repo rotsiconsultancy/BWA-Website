@@ -12,6 +12,7 @@ import {
   mensStones,
   productsForMen,
 } from "@/lib/commerce/mens-stone-bracelets";
+import { isProductSlug } from "@/lib/commerce/product-redirects";
 import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
 import { getAllPosts } from "@/lib/journal/posts";
 
@@ -47,9 +48,13 @@ export const metadata: Metadata = {
 export default async function MensStoneBraceletsPage() {
   const catalogue = await getStorefrontCatalogue();
   const products = productsForMen(catalogue);
-  const stones = mensStones.filter((stone) =>
-    catalogue.some((product) => product.slug === stone.productSlug),
-  );
+  // Link to the product's live slug, so a rename works before or after the data change.
+  const stones = mensStones.flatMap((stone) => {
+    const product = catalogue.find((item) =>
+      isProductSlug(item.slug, stone.productSlug),
+    );
+    return product ? [{ ...stone, href: `/product/${product.slug}` }] : [];
+  });
   const posts = getAllPosts().slice(0, 3);
   const jsonLd = {
     "@context": "https://schema.org",
@@ -114,7 +119,7 @@ export default async function MensStoneBraceletsPage() {
           </div>
           <div className="seo-hub-links">
             {stones.map((stone) => (
-              <Link key={stone.name} href={`/product/${stone.productSlug}`}>
+              <Link key={stone.name} href={stone.href}>
                 <span>{stone.tradition}</span>
                 <strong>{stone.name} bracelet</strong>
                 <p>{stone.look}</p>

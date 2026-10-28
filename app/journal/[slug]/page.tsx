@@ -10,6 +10,7 @@ import JournalPostCard, {
 import JournalProductCard from "@/components/journal/JournalProductCard";
 import JournalShopBar from "@/components/journal/JournalShopBar";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
+import { PRODUCT_REDIRECTS } from "@/lib/commerce/product-redirects";
 import {
   absoluteUrl,
   buildOgImages,
@@ -59,7 +60,15 @@ export default async function JournalPostPage({
   const post = getPost((await params).slug);
   if (!post) notFound();
   const catalogue = await getStorefrontCatalogue();
+  // Old and new addresses both find the product, so renames never drop a card.
   const bySlug = new Map(catalogue.map((product) => [product.slug, product]));
+  for (const [oldSlug, newSlug] of Object.entries(PRODUCT_REDIRECTS)) {
+    const product = bySlug.get(newSlug) ?? bySlug.get(oldSlug);
+    if (product) {
+      bySlug.set(oldSlug, product);
+      bySlug.set(newSlug, product);
+    }
+  }
   const featured = bySlug.get(post.featuredProduct);
   const segments = renderPostBody(post.body);
   const firstCard = segments.findIndex(
