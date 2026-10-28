@@ -46,6 +46,7 @@ export default function Footer() {
               <Link href="/bracelets">All Bracelets</Link>
               <Link href="/bracelets">Popular picks</Link>
               <Link href="/find-your-bracelet">Find your bracelet</Link>
+              <Link href="/design-your-own">Design your own</Link>
               <Link href="/stockists">Where to buy</Link>
             </div>
           </div>

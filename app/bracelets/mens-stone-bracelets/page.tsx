@@ -15,7 +15,6 @@ import {
 import { isProductSlug } from "@/lib/commerce/product-redirects";
 import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
 import { getAllPosts } from "@/lib/journal/posts";
-import { customPieceUrl } from "@/lib/commerce/custom-piece";
 
 export const dynamic = "force-dynamic";
 
@@ -164,10 +163,7 @@ export default async function MensStoneBraceletsPage() {
             doorstep delivery costs the same as an Uber or Bolt ride to you;
             elsewhere in Kenya we confirm the cost on WhatsApp. Want something
             no one else has?{" "}
-            <a href={customPieceUrl()} target="_blank" rel="noopener noreferrer">
-              Ask us for a custom piece
-            </a>
-            .
+            <Link href="/design-your-own">Design your own</Link>.
           </p>
         </div>
       </section>

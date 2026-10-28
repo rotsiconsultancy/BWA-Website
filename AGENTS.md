@@ -32,6 +32,15 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-28 18:30] — Design Your Own Replaces Bespoke
+
+- **Page**: `/design-your-own` (`app/design-your-own/page.tsx`, `components/design/DesignYourOwn.tsx`). Six steps: for me or a gift, an optional feeling filter (the product's `energy_vibe`), main stone, pattern (one stone, two alternating, main + accents) with a second stone, extras (spacers, letters in metal or acrylic with a soft warning past 10, a charm), bead size (medium or large), wrist size or "not sure". A live preview ring sits beside the steps (pinned under the header on phones). The summary sends the design to WhatsApp (254745474586) with a link that reopens it (`?stone=&design=&with=&size=&spacers=&letters=&kind=&charm=`), and "Share this design" uses the share sheet or copies the link.
+- **Stones**: `lib/design/stones.ts` maps the 28 stones to their live product (photo, name, price, feelings come from the catalogue; a missing product is skipped). `designLink(productSlug)` opens the page with that stone picked (used by the quiz result).
+- **Beads**: `lib/design/beads.ts` draws each bead on a canvas as a lit 3D sphere, rondelle or tube, with noise-based stone patterns (patches, veins, pores, flecks, bands) sampled on the curved surface; cached per stone, variant and angle. Positions are rounded so server and browser HTML match.
+- **Facts used (owner, 2026-10-28)**: two stones, spacers, letters and charms are all possible; bead sizes medium and large; price is the listed price plus KES 100–500 depending on the design; making time is confirmed on WhatsApp; spacer and charm options are shown on WhatsApp.
+- **Links**: header, phone menu, footer, search empty state, quiz results, men's page, FAQ, two Journal FAQ answers, sitemap and `llms.txt` point here. `/bespoke` redirects here. Removed `lib/commerce/custom-piece.ts` and the old `BespokeForm`; `/api/bespoke` is unused but kept.
+- **GA4**: `design_your_own_view`, `design_your_own_stone`, `design_your_own_send` (with stone, pattern, size, extras), `share` with `content_type: design`.
+
 ### [2026-10-28 16:45] — New-Order Email Alerts; Bespoke Page Hidden
 
 - **Order alerts**: `lib/commerce/order-alert.ts` emails the owner on every new website order through Brevo's transactional API (`/v3/smtp/email`, same `BREVO_API_KEY`): order number, items, total, customer name/phone/email, delivery, a "WhatsApp the customer" button and an admin link. Called from `app/api/orders/route.ts` inside `after()`, so it runs once the response is sent and a failure is only logged. Env: `ADMIN_ALERT_EMAIL` (required, owner's Gmail), `ADMIN_ALERT_FROM` (optional, defaults to `orders@beadsworldafrica.co.ke`). Test send on 2026-10-28 got Brevo 403 "SMTP account is not yet activated": Brevo must activate transactional email on the account before alerts arrive.

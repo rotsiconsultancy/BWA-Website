@@ -8,7 +8,6 @@ import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import Money from "@/components/commerce/Money";
 import AccountDrawer from "@/components/layout/AccountDrawer";
-import { customPieceUrl } from "@/lib/commerce/custom-piece";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 export default function Header() {
@@ -122,6 +121,12 @@ export default function Header() {
               className={pathname === "/find-your-bracelet" ? "active" : ""}
             >
               Find Your Bracelet
+            </Link>
+            <Link
+              href="/design-your-own"
+              className={pathname === "/design-your-own" ? "active" : ""}
+            >
+              Design Your Own
             </Link>
             <Link href="/#story">Our Story</Link>
             <Link
@@ -252,13 +257,12 @@ export default function Header() {
             {query.length >= 2 && !results.length && (
               <p className="site-search-hint">
                 No pieces found yet.{" "}
-                <a
-                  href={customPieceUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/design-your-own"
+                  onClick={() => setSearchOpen(false)}
                 >
-                  Ask us for a custom piece.
-                </a>
+                  Design your own.
+                </Link>
               </p>
             )}
             <div className="site-search-results">
@@ -357,6 +361,9 @@ export default function Header() {
           </Link>
           <Link href="/find-your-bracelet" onClick={() => setOpen(false)}>
             Find Your Bracelet
+          </Link>
+          <Link href="/design-your-own" onClick={() => setOpen(false)}>
+            Design Your Own
           </Link>
           <Link href="/#story" onClick={() => setOpen(false)}>
             Our Story

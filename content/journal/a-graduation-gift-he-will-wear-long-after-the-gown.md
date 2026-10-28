@@ -10,7 +10,7 @@ faq:
   - q: "What if I can't measure his wrist?"
     a: "Message us on WhatsApp with what you know and we will help you choose. If the size is wrong, contact us within 7 days of delivery to exchange an unworn bracelet."
   - q: "Can I get a bracelet in his university colours?"
-    a: "Yes. Message us on WhatsApp, tell us the colours and his wrist size, and we will design a piece with you."
+    a: "Yes. Use our Design Your Own page to pick the stones, add his initials if you like, and send the design to us on WhatsApp."
   - q: "Can I pick it up before the ceremony?"
     a: "Yes. Choose Collect with BWA at checkout, or try them on at the BWA display at ManCave, Mwanzi Market. ManCave's Nairobi Street Kitchen and Kitengela branches can also get them for you."
 ---

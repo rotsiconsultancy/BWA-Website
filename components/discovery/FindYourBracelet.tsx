@@ -12,7 +12,7 @@ import type { CommerceProduct } from "@/lib/commerce/types";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import Money from "@/components/commerce/Money";
-import { customPieceUrl } from "@/lib/commerce/custom-piece";
+import { designLink } from "@/lib/design/stones";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 export const fallbackQuestions: DiscoveryQuestion[] = [
@@ -234,14 +234,9 @@ export default function FindYourBracelet({
             Nothing in the current collection is a close enough match. Tell us
             what you have in mind and our concierge will guide the next step.
           </p>
-          <a
-            className="btn btn-primary"
-            href={customPieceUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Ask us on WhatsApp
-          </a>
+          <Link className="btn btn-primary" href="/design-your-own">
+            Design your own
+          </Link>
         </main>
       );
     return (
@@ -305,13 +300,9 @@ export default function FindYourBracelet({
               >
                 Add to bag
               </button>
-              <a
-                href={customPieceUrl(match.product.title)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Ask for a custom version
-              </a>
+              <Link href={designLink(match.product.slug)}>
+                Design your own with this stone
+              </Link>
               <Link href={`/product/${match.product.slug}`}>
                 View bracelet details
               </Link>
