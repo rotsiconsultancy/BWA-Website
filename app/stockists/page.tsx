@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { stockistMapLink, stockists } from "@/lib/commerce/stockists";
+import {
+  STOCKIST_ENQUIRY_URL,
+  stockistMapLink,
+  stockists,
+} from "@/lib/commerce/stockists";
 import {
   absoluteUrl,
   buildOgImages,
@@ -111,7 +115,7 @@ export default function StockistsPage() {
             what they wear. Tell us about yours.
           </p>
           <a
-            href={`https://wa.me/254745474586?text=${encodeURIComponent("Hello BWA, I would like to stock your bracelets in my shop.")}`}
+            href={STOCKIST_ENQUIRY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-whatsapp"

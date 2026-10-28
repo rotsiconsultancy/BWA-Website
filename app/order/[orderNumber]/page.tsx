@@ -1,8 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { readSavedCustomer } from "@/lib/commerce/saved-customer";
 
 const labels: Record<string, string> = {
   order_received: "Order received",
@@ -21,6 +22,10 @@ export default function OrderTrackingPage() {
   const [phone, setPhone] = useState("");
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState("");
+  useEffect(() => {
+    const saved = readSavedCustomer();
+    if (saved) setPhone(saved.phone);
+  }, []);
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     setError("");

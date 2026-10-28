@@ -2,16 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import Money from "@/components/commerce/Money";
+import AccountDrawer from "@/components/layout/AccountDrawer";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const closeAccount = useCallback(() => setAccountOpen(false), []);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<
     {
@@ -52,6 +55,7 @@ export default function Header() {
   // Close menu on route change
   useEffect(() => {
     setOpen(false);
+    setAccountOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -184,7 +188,14 @@ export default function Header() {
             >
               <Search size={16} strokeWidth={1.75} />
             </button>
-            <button className="icon-btn" aria-label="Account">
+            <button
+              className="icon-btn"
+              aria-label="Your details"
+              onClick={() => {
+                setAccountOpen(true);
+                trackGa4Event("account_open");
+              }}
+            >
               <User size={16} strokeWidth={1.75} />
             </button>
             <button
@@ -272,6 +283,8 @@ export default function Header() {
           </section>
         </div>
       )}
+
+      <AccountDrawer open={accountOpen} onClose={closeAccount} />
 
       {/* Mobile Drawer */}
       <aside

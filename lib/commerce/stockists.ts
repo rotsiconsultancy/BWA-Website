@@ -42,3 +42,7 @@ export function stockistMapLink(stockist: Stockist) {
     `${stockist.partner} ${stockist.location} ${stockist.area} Kenya`,
   )}`;
 }
+
+// Inbound stockist enquiries are the first brand metric, so every
+// "stock BWA" button opens the same prefilled WhatsApp message.
+export const STOCKIST_ENQUIRY_URL = `https://wa.me/254745474586?text=${encodeURIComponent("Hello BWA, I would like to stock your bracelets in my shop.")}`;

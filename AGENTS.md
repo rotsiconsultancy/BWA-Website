@@ -32,6 +32,14 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-28 16:00] — Account Icon: Details Saved on This Phone; Install Manifest
+
+- **Agent**: Claude Code
+- **Account drawer**: the header person icon (was a dead button) opens `components/layout/AccountDrawer.tsx`, reusing the bag drawer styles. It shows the name, phone, email and address from the last checkout plus up to 10 past orders (links to `/order/<number>`), all read from `localStorage` key `bwa_saved_customer` (`lib/commerce/saved-customer.ts`). No account, password or server storage; "Forget me on this phone" clears it. Checkout fills itself in from it (with a "Not you?" reset) and saves it after the order is created; the tracking page prefills the phone.
+- **Brand actions** (`components/marketing/GrowBwaLinks.tsx`), in the drawer and on the order confirmation screen: Follow @beadsworldafrica, Share BWA (native share sheet, WhatsApp fallback), Own a shop? Stock BWA (same WhatsApp message as `/stockists`, now `STOCKIST_ENQUIRY_URL` in `lib/commerce/stockists.ts`). GA4 events: `account_open`, `instagram_follow_click`, `share`, `stockist_enquiry_click` (each with `placement`), `app_install_prompt`.
+- **Install**: `app/manifest.ts` (standalone, forest theme) with icons in `public/icons/` rendered from `public/brand/BWA-social-profile-dark-green.svg`; Apple touch icon in the layout metadata. Android Chrome shows an "Add BWA to your home screen" row in the drawer when installable. No service worker or push.
+- **Fix**: `.cart-drawer-root` z-index 100 → 210. The header (200) covered the top of the bag drawer on phones, hiding its close button.
+
 ### [2026-10-28 14:00] — Older Listings Renamed; Product Redirects
 
 - **Agent**: Claude Code

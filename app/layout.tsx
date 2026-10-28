@@ -84,7 +84,11 @@ export const metadata: Metadata = {
       "https://beadsworldafrica.co.ke/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
     ],
   },
-  icons: { icon: "/brand/bwa-emblem.svg" },
+  icons: {
+    icon: "/brand/bwa-emblem.svg",
+    apple: "/icons/apple-touch-icon.png",
+  },
+  appleWebApp: { title: "BWA", statusBarStyle: "default" },
   robots: {
     index: true,
     follow: true,

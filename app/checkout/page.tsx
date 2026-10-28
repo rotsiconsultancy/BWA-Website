@@ -9,6 +9,12 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
 import { DELIVERY_NOTE } from "@/lib/commerce/money";
 import {
+  forgetSavedCustomer,
+  readSavedCustomer,
+  saveCustomerOrder,
+} from "@/lib/commerce/saved-customer";
+import GrowBwaLinks from "@/components/marketing/GrowBwaLinks";
+import {
   cartLineToGa4Item,
   cartValue,
   trackGa4Event,
@@ -66,6 +72,24 @@ export default function CheckoutPage() {
   const discountAmount = appliedDiscount?.discountAmount || 0;
   const checkoutTracked = useRef(false);
   const [whatsappOpened, setWhatsappOpened] = useState(false);
+  const [returning, setReturning] = useState(false);
+  // Fill the form from the last order on this phone, once, before typing.
+  useEffect(() => {
+    const saved = readSavedCustomer();
+    if (!saved) return;
+    setReturning(true);
+    setDeliveryMethod(saved.deliveryMethod);
+    setForm((current) => ({
+      ...current,
+      firstName: saved.firstName,
+      lastName: saved.lastName,
+      email: saved.email,
+      phone: saved.phone,
+      address: saved.address,
+      city: saved.city,
+      county: saved.county || current.county,
+    }));
+  }, []);
   useEffect(() => {
     if (checkoutTracked.current || !items.length) return;
     checkoutTracked.current = true;
@@ -254,6 +278,23 @@ export default function CheckoutPage() {
         whatsappNumber +
         "?text=" +
         encodeURIComponent(message);
+      saveCustomerOrder(
+        {
+          firstName: form.firstName.trim(),
+          lastName: form.lastName.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          address: form.address.trim(),
+          city: form.city.trim(),
+          county: form.county.trim(),
+          deliveryMethod,
+        },
+        {
+          orderNumber: data.orderNumber,
+          placedAt: new Date().toISOString(),
+          total: format(Number(data.total)),
+        },
+      );
       setConfirmation({
         orderNumber: data.orderNumber,
         total: Number(data.total),
@@ -341,6 +382,10 @@ export default function CheckoutPage() {
           Track your order
         </Link>
         <Link href="/bracelets">Continue exploring</Link>
+        <section className="order-grow">
+          <h2>While we confirm your order</h2>
+          <GrowBwaLinks placement="order_confirmation" />
+        </section>
       </main>
     );
   return (
@@ -362,6 +407,32 @@ export default function CheckoutPage() {
         <form onSubmit={order} className="checkout-form">
           <section>
             <h2>Contact</h2>
+            {returning && (
+              <p className="checkout-returning">
+                Welcome back, {form.firstName || "friend"}. We filled in your
+                details from this phone.{" "}
+                <button
+                  type="button"
+                  onClick={() => {
+                    forgetSavedCustomer();
+                    setReturning(false);
+                    setDeliveryMethod("pickup");
+                    setForm((current) => ({
+                      ...current,
+                      firstName: "",
+                      lastName: "",
+                      email: "",
+                      phone: "",
+                      address: "",
+                      city: "",
+                      county: "Nairobi",
+                    }));
+                  }}
+                >
+                  Not you?
+                </button>
+              </p>
+            )}
             <div className="checkout-fields">
               <label>
                 First name
