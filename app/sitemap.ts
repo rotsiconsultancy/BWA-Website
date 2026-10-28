@@ -4,6 +4,9 @@ import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
 import { MENS_PAGE_PATH } from "@/lib/commerce/mens-stone-bracelets";
 import { getAllPosts } from "@/lib/journal/posts";
 
+// Rebuild hourly so products added straight in Supabase (not via admin) still appear.
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://beadsworldafrica.co.ke";
 
