@@ -6319,8 +6319,10 @@ body {
   text-underline-offset: 3px;
 }
 
-/* Design Your Own (/design-your-own): the preview stays in view (beside the
-   steps on desktop, pinned under the header on phones) while people choose. */
+/* Design Your Own (/design-your-own): three steps (Stones, Style, Fit) beside
+   a preview that stays in view. On phones the preview is pinned under the
+   header, one step is open at a time, and a bar at the bottom carries the
+   price and the WhatsApp button until the summary scrolls in. */
 .dyo-intro {
   max-width: var(--max);
   margin: 0 auto;
@@ -6344,12 +6346,14 @@ body {
   gap: 48px;
   align-items: start;
 }
+
+/* Preview */
 .dyo-preview {
   position: sticky;
   top: 96px;
   background: var(--soft);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 20px 24px 18px;
 }
 .dyo-preview svg {
   display: block;
@@ -6359,42 +6363,60 @@ body {
 }
 .dyo-preview-meta {
   display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-top: 8px;
-}
-.dyo-preview-meta img {
-  width: 64px;
-  height: 64px;
-  flex: none;
-  border-radius: var(--radius-md);
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 4px;
 }
 .dyo-preview-meta p {
   margin: 0;
-  font-size: 13px;
-  color: var(--muted);
 }
 .dyo-preview-meta b {
   display: block;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.1;
   color: var(--charcoal);
+}
+.dyo-preview-meta span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.dyo-preview-price {
+  flex: none;
   font-size: 15px;
+  font-weight: 700;
+  color: var(--charcoal);
 }
 .dyo-note {
   font-size: 12px;
   color: var(--muted);
   margin: 10px 0 0;
 }
+
+/* Steps */
 .dyo-steps {
   display: grid;
-  gap: 36px;
+  gap: 12px;
 }
-.dyo-step header {
+.dyo-step {
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+.dyo-step + .dyo-step {
+  margin-top: 16px;
+}
+.dyo-step-head {
   display: flex;
   gap: 12px;
   align-items: baseline;
-  margin-bottom: 14px;
+  width: 100%;
+  margin-bottom: 16px;
+  text-align: left;
+  cursor: default;
 }
-.dyo-step header span {
+.dyo-step-num {
   font-size: 12px;
   font-weight: 700;
   color: var(--brass);
@@ -6402,14 +6424,31 @@ body {
 }
 .dyo-step h2,
 .dyo-summary h2 {
-  font-size: 28px;
+  font-size: 30px;
   margin: 0;
 }
-.dyo-step header small {
-  margin-left: auto;
-  color: var(--muted);
-  font-size: 13px;
+.dyo-step-sum,
+.dyo-step-chev,
+.dyo-next {
+  display: none;
 }
+.dyo-step-body {
+  display: grid;
+  gap: 16px;
+}
+.dyo-label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.dyo-step-body .dyo-note {
+  margin: 0;
+}
+.dyo-fit .dyo-note {
+  margin-top: 8px;
+}
+
+/* Choices */
 .dyo-seg {
   display: grid;
   grid-auto-flow: column;
@@ -6417,9 +6456,10 @@ body {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   overflow: hidden;
+  background: var(--white);
 }
 .dyo-seg button {
-  padding: 14px 10px;
+  padding: 12px 10px;
   font-weight: 600;
   font-size: 14px;
 }
@@ -6433,13 +6473,13 @@ body {
 .dyo-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 .dyo-chips button {
   border: 1px solid var(--line);
   background: var(--white);
   border-radius: 999px;
-  padding: 8px 16px;
+  padding: 7px 14px;
   font-size: 13px;
   font-weight: 600;
 }
@@ -6448,64 +6488,117 @@ body {
   border-color: var(--forest);
   color: var(--ivory);
 }
-.dyo-stones {
+
+/* Bead swatches: one real bead per stone. */
+.dyo-bead {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 3px 6px rgba(23, 23, 22, 0.22);
+}
+.dyo-bead-empty {
+  background: #efe9df;
+  border: 2px dashed #a39a8c;
+  box-shadow: none;
+}
+.dyo-swatches {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 14px 6px;
 }
-.dyo-stones button {
+.dyo-swatches button {
   position: relative;
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  text-align: left;
-}
-.dyo-stones img {
-  aspect-ratio: 1;
-  height: auto;
-}
-.dyo-stones span {
-  display: block;
-  padding: 8px 10px 10px;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 4px 2px;
   font-size: 12px;
-  line-height: 1.3;
-  color: var(--muted);
-}
-.dyo-stones span b {
-  display: block;
+  line-height: 1.25;
+  text-align: center;
   color: var(--charcoal);
-  font-size: 13px;
 }
-.dyo-stones button[aria-pressed="true"] {
-  outline: 2px solid var(--charcoal);
-  outline-offset: -2px;
+.dyo-swatches button .dyo-bead {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.dyo-swatches button:hover .dyo-bead {
+  transform: translateY(-2px);
+}
+.dyo-swatches button[aria-pressed="true"] .dyo-bead {
+  box-shadow:
+    0 0 0 3px var(--ivory),
+    0 0 0 5px var(--charcoal);
+}
+.dyo-swatches button[aria-pressed="true"] span {
+  font-weight: 700;
+}
+.dyo-swatches button:disabled {
+  opacity: 0.3;
 }
 .dyo-tick {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 24px;
-  height: 24px;
-  padding: 5px;
+  top: 0;
+  right: calc(50% - 34px);
+  width: 18px;
+  height: 18px;
+  padding: 3px;
   border-radius: 50%;
   background: var(--charcoal);
   color: var(--ivory);
 }
-.dyo-stones button:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
+.dyo-stone-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 12px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--muted);
 }
+.dyo-stone-card img {
+  width: 88px;
+  height: 88px;
+  flex: none;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+.dyo-stone-card p {
+  margin: 0;
+}
+.dyo-stone-card p + p {
+  margin-top: 4px;
+}
+.dyo-stone-card-name b {
+  display: block;
+  font-size: 15px;
+  color: var(--charcoal);
+}
+.dyo-stone-card-price {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+.dyo-stone-card-price a {
+  color: var(--charcoal);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Style */
 .dyo-patterns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 .dyo-patterns button {
   display: grid;
   justify-items: center;
-  gap: 6px;
-  padding: 12px 8px;
+  gap: 4px;
+  padding: 10px 6px;
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -6517,25 +6610,54 @@ body {
   box-shadow: inset 0 0 0 1px var(--charcoal);
 }
 .dyo-patterns svg {
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
+}
+.dyo-slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.dyo-slots button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+.dyo-slots button[aria-expanded="true"],
+.dyo-slots button[data-gone="true"] {
+  border-color: var(--charcoal);
+}
+.dyo-slots .dyo-bead {
+  width: 36px;
+  height: 36px;
+  flex: none;
+}
+.dyo-slots span {
+  flex: 1;
+  min-width: 0;
+}
+.dyo-slots small {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
 }
 .dyo-sub {
-  margin-top: 16px;
-  padding: 16px;
+  padding: 14px;
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
-.dyo-sub > p {
-  margin: 0 0 10px;
-  font-size: 13px;
-  font-weight: 600;
-}
 .dyo-toggles {
   display: grid;
-  gap: 10px;
-  margin-top: 12px;
+  gap: 8px;
 }
 .dyo-toggle {
   display: flex;
@@ -6544,17 +6666,16 @@ body {
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  padding: 14px 16px;
+  padding: 12px 14px;
 }
 .dyo-toggle > div {
   flex: 1;
 }
 .dyo-toggle input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   margin-top: 2px;
-  flex: none;
-  accent-color: var(--charcoal);
+  accent-color: var(--forest);
 }
 .dyo-toggle b {
   display: block;
@@ -6587,44 +6708,32 @@ body {
   min-height: 80px;
   resize: vertical;
 }
-.dyo-gift {
-  margin-top: 16px;
-}
 .dyo-warn {
   color: var(--clay);
   font-size: 12px;
   font-weight: 600;
 }
-.dyo-row {
-  display: flex;
-  gap: 12px;
-  align-items: end;
-  flex-wrap: wrap;
-}
-.dyo-row > * {
-  flex: 1;
-  min-width: 180px;
-}
+
+/* Summary */
 .dyo-summary {
+  margin-top: 16px;
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 22px;
 }
 .dyo-summary ul {
-  margin: 12px 0 16px;
+  margin: 14px 0 16px;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 6px;
+  gap: 8px;
   font-size: 14px;
 }
 .dyo-summary li {
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  border-bottom: 1px dashed var(--line);
-  padding-bottom: 6px;
 }
 .dyo-summary li span:first-child {
   color: var(--muted);
@@ -6634,11 +6743,19 @@ body {
   font-weight: 600;
 }
 .dyo-price {
-  font-size: 13px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  margin-bottom: 16px;
+  font-size: 12px;
   color: var(--muted);
-  margin: 0 0 16px;
 }
-.dyo-price b {
+.dyo-price p {
+  margin: 0;
+}
+.dyo-price .dyo-price-range {
+  margin-bottom: 4px;
+  font-size: 22px;
+  font-weight: 700;
   color: var(--charcoal);
 }
 .dyo-send,
@@ -6649,27 +6766,30 @@ body {
   margin-top: 10px;
 }
 .dyo-send:disabled,
-.dyo-share:disabled {
+.dyo-share:disabled,
+.dyo-bar .btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 .dyo-summary .dyo-warn {
   margin: 0 0 10px;
 }
-.dyo-swatch {
-  display: block;
-  aspect-ratio: 1;
-  padding: 0;
+.dyo-bar {
+  display: none;
 }
+
+/* A stone from a shared link that is gone */
 .dyo-gone {
   display: flex;
   gap: 12px;
-  margin-bottom: 14px;
   padding: 14px 16px;
   background: var(--white);
   border: 1px solid var(--clay);
   border-radius: var(--radius-md);
   color: var(--clay);
+}
+.dyo-sub .dyo-gone {
+  margin-bottom: 14px;
 }
 .dyo-gone > svg {
   flex: none;
@@ -6698,7 +6818,7 @@ body {
   padding: 6px 12px 6px 6px;
   background: var(--white);
   border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   text-align: left;
   font-size: 12px;
   line-height: 1.3;
@@ -6707,10 +6827,9 @@ body {
 .dyo-gone-picks button:hover {
   border-color: var(--charcoal);
 }
-.dyo-gone-picks img {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-sm, 6px);
+.dyo-gone-picks .dyo-bead {
+  width: 32px;
+  height: 32px;
 }
 .dyo-gone-picks b {
   display: block;
@@ -6722,44 +6841,183 @@ body {
 .dyo-resting .btn {
   margin-top: 20px;
 }
+
 @media (max-width: 860px) {
   .dyo-intro {
-    padding-top: 24px;
+    padding-top: 20px;
+  }
+  .dyo-intro h1 {
+    font-size: 40px;
+  }
+  .dyo-intro > p:last-child {
+    font-size: 14px;
   }
   .dyo-layout {
     grid-template-columns: 1fr;
-    gap: 20px;
-    padding-top: 0;
+    gap: 8px;
+    padding-top: 12px;
+    padding-bottom: 32px;
   }
   .dyo-preview {
     top: 76px; /* under the sticky header */
     z-index: 5;
     margin: 0 calc(-1 * var(--pad));
     border-radius: 0;
-    padding: 10px var(--pad);
+    padding: 8px var(--pad);
     display: grid;
-    grid-template-columns: 150px 1fr;
-    gap: 12px;
+    grid-template-columns: 172px 1fr;
+    gap: 14px;
     align-items: center;
     box-shadow: 0 6px 16px rgba(23, 23, 22, 0.08);
   }
   .dyo-preview svg {
-    max-height: 150px;
+    max-height: 172px;
   }
   .dyo-preview-meta {
+    display: grid;
+    gap: 6px;
     margin: 0;
   }
-  .dyo-preview-meta img,
+  .dyo-preview-meta b {
+    font-size: 22px;
+  }
+  .dyo-preview-meta span {
+    font-size: 12px;
+  }
   .dyo-preview .dyo-note {
     display: none;
   }
-  .dyo-stones {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+
+  /* One step open at a time; a closed step shows what was chosen. */
+  .dyo-steps {
+    gap: 0;
   }
-  .dyo-stones span {
-    padding: 6px 8px 8px;
+  .dyo-step {
+    padding-top: 0;
+    scroll-margin-top: 270px; /* clear of the header and the pinned preview */
+  }
+  .dyo-step + .dyo-step {
+    margin-top: 0;
+  }
+  .dyo-step-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    column-gap: 10px;
+    margin: 0;
+    padding: 16px 0;
+    cursor: pointer;
+  }
+  .dyo-step h2 {
+    font-size: 26px;
+  }
+  .dyo-step-sum {
+    display: block;
+    grid-column: 2;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dyo-step-chev {
+    display: block;
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    color: var(--muted);
+    transition: transform 0.2s ease;
+  }
+  .dyo-step[data-open="true"] .dyo-step-chev {
+    transform: rotate(180deg);
+  }
+  .dyo-step[data-open="true"] .dyo-step-sum {
+    display: none;
+  }
+  .dyo-step[data-open="false"] .dyo-step-body {
+    display: none;
+  }
+  .dyo-step-body {
+    padding-bottom: 20px;
+  }
+  .dyo-next {
+    display: inline-flex;
+    width: 100%;
+  }
+  .dyo-swatches {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px 2px;
+  }
+  .dyo-bead {
+    width: 50px;
+    height: 50px;
+  }
+  .dyo-swatches button {
     font-size: 11px;
+  }
+  .dyo-tick {
+    right: calc(50% - 31px);
+  }
+  .dyo-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 0 calc(-1 * var(--pad));
+    padding: 0 var(--pad) 2px;
+    scrollbar-width: none;
+  }
+  .dyo-chips::-webkit-scrollbar {
+    display: none;
+  }
+  .dyo-chips button {
+    flex: none;
+  }
+  .dyo-fit .dyo-chips {
+    flex-wrap: wrap;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+  }
+  .dyo-stone-card img {
+    width: 64px;
+    height: 64px;
+  }
+  .dyo-patterns button {
+    font-size: 12px;
+  }
+
+  /* The bar at the bottom: price and the WhatsApp button. */
+  .dyo-page[data-bar="true"] {
+    padding-bottom: 76px;
+  }
+  .dyo-page[data-bar="true"] .dyo-bar {
+    display: flex;
+  }
+  .dyo-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom));
+    background: var(--ivory);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -6px 16px rgba(23, 23, 22, 0.08);
+  }
+  .dyo-bar p {
+    margin: 0;
+    font-size: 15px;
+  }
+  .dyo-bar small {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .dyo-bar .btn {
+    min-height: 46px;
+    padding: 0 16px;
+    font-size: 14px;
   }
 }
 @media (max-width: 699px) {

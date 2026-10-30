@@ -13,6 +13,7 @@ import {
 type Row = {
   slug: string;
   title: string;
+  active: boolean;
   price: number | string;
   price_kes: number | string;
   price_usd: number | string | null;
@@ -41,7 +42,7 @@ export async function getDesignStones(): Promise<{ stones: DesignStone[]; retire
     const { data, error } = await admin
       .from("products")
       .select(
-        "slug,title,price,price_kes,price_usd,energy_vibe,stone_type,color_palette,design_enabled,design_slug,design_name,design_bead_shape,design_bead_images,design_colour,design_aliases,product_images(url,sort_order)",
+        "slug,title,active,price,price_kes,price_usd,energy_vibe,stone_type,color_palette,design_enabled,design_slug,design_name,design_bead_shape,design_bead_images,design_colour,design_aliases,product_images(url,sort_order)",
       )
       .not("design_slug", "is", null);
     if (!error && data) {
@@ -56,6 +57,7 @@ export async function getDesignStones(): Promise<{ stones: DesignStone[]; retire
             name,
             stone: stoneLabel(r.title, name, stoneTypes),
             product: r.slug,
+            listed: r.active,
             image: [...(r.product_images || [])].sort((a, b) => a.sort_order - b.sort_order)[0]?.url ?? null,
             prices: {
               KES: Number(r.price_kes ?? r.price),
@@ -99,6 +101,7 @@ export async function getDesignStones(): Promise<{ stones: DesignStone[]; retire
         name,
         stone: stoneLabel(listed.title, name, listed.stone_type),
         product: listed.slug,
+        listed: true,
         image: listed.images[0] ?? null,
         prices: listed.prices,
         feelings: listed.energy_vibe,

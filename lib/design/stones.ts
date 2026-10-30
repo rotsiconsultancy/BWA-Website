@@ -11,6 +11,8 @@ export type DesignStone = {
   /** What the stone is, e.g. "Tiger's Eye". */
   stone: string;
   product: string;
+  /** Whether the bracelet itself is for sale, so the page can link to it. */
+  listed: boolean;
   image: string | null;
   prices: Prices;
   feelings: string[];

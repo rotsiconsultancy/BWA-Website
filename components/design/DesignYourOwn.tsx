@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Check, Share2, TriangleAlert } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, ChevronDown, Share2, TriangleAlert } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import StoreImage from "@/components/commerce/StoreImage";
 import Money from "@/components/commerce/Money";
+import { useCurrency } from "@/context/CurrencyContext";
+import type { Prices } from "@/lib/commerce/money";
 import { beadImage, SHAPE_BOX, widthOf } from "@/lib/design/beads";
 import {
   DESIGN_LINK_VERSION,
@@ -17,8 +20,9 @@ import {
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 type Pattern = "one" | "alt" | "accent";
+type Role = "main" | "second";
 type Design = {
-  forWhom: "me" | "gift";
+  gift: boolean;
   feeling: string | null;
   main: string;
   pattern: Pattern;
@@ -29,9 +33,9 @@ type Design = {
   letterKind: "metal" | "acrylic";
   charm: boolean;
   size: "medium" | "large";
-  wrist: string;
-  notSure: boolean;
-  gift: string;
+  /** Wrist size in cm, or null for "not sure". */
+  wrist: number | null;
+  message: string;
   /** Stones a shared link asked for that the page no longer offers, by role. */
   gone: { main?: Gone; second?: Gone };
 };
@@ -41,7 +45,7 @@ const WHATSAPP = "254745474586";
 const FEELINGS = ["calm", "grounding", "focus", "clarity", "vitality", "protection"];
 const PATTERNS: [Pattern, string][] = [
   ["one", "One stone"],
-  ["alt", "Two stones, alternating"],
+  ["alt", "Two, alternating"],
   ["accent", "Main + accents"],
 ];
 const PATTERN_NAMES: Record<Pattern, string> = {
@@ -49,16 +53,20 @@ const PATTERN_NAMES: Record<Pattern, string> = {
   alt: "Two stones, alternating",
   accent: "Main stone with accents",
 };
+const WRISTS = [15, 16, 17, 18, 19, 20];
 // Letters past this many get crowded on a bracelet (owner, 2026-10-28).
 const LETTERS_COMFORT = 10;
+// The design adds this to the listed price (owner, 2026-10-28).
+const EXTRA_KES: [number, number] = [100, 500];
 
 // Ring geometry, in the preview's 600 × 600 drawing.
-const R = 200, CX = 300, CY = 280, SPACER = 0.38, CUBE = 0.74;
+const R = 200, CX = 300, CY = 285, SPACER = 0.36, CUBE = 0.74;
 // Rounded so the server and the browser draw identical numbers (trig can
 // differ in the last digits, which React reports as a hydration mismatch).
 const r2 = (n: number) => Math.round(n * 100) / 100;
+const title = (s: string) => s[0].toUpperCase() + s.slice(1);
 type Item =
-  | { kind: "bead"; stone: DesignStone; gone: boolean; w: number; idx: number }
+  | { kind: "bead"; stone: DesignStone; role: Role; gone: boolean; w: number; idx: number }
   | { kind: "spacer"; w: number }
   | { kind: "letter"; ch: string; w: number };
 
@@ -69,10 +77,9 @@ function layout(d: Design, main: DesignStone, second: DesignStone) {
   const count = Math.max(4, Math.round((target - letters.length * CUBE) / per));
   const items: Item[] = [...letters].map((ch) => ({ kind: "letter" as const, ch, w: CUBE }));
   for (let i = 0; i < count; i++) {
-    const isSecond = (d.pattern === "alt" && i % 2 === 1) || (d.pattern === "accent" && i % 4 === 2);
-    const stone = isSecond ? second : main;
-    const gone = !!(isSecond ? d.gone.second : d.gone.main);
-    items.push({ kind: "bead", stone, gone, w: widthOf(stone.shape), idx: i });
+    const role: Role = (d.pattern === "alt" && i % 2 === 1) || (d.pattern === "accent" && i % 4 === 2) ? "second" : "main";
+    const stone = role === "second" ? second : main;
+    items.push({ kind: "bead", stone, role, gone: !!d.gone[role], w: widthOf(stone.shape), idx: i });
     if (d.spacers) items.push({ kind: "spacer", w: SPACER });
   }
   const unit = (2 * Math.PI * R) / items.reduce((a, b) => a + b.w, 0);
@@ -100,21 +107,39 @@ function layout(d: Design, main: DesignStone, second: DesignStone) {
   return { placed, unit: r2(unit), beadR: r2((unit / 2) * 0.97), charmAt };
 }
 
-function Ring({ design, main, second, ready }: { design: Design; main: DesignStone; second: DesignStone; ready: boolean }) {
+function Ring({
+  design,
+  main,
+  second,
+  ready,
+  onPick,
+}: {
+  design: Design;
+  main: DesignStone;
+  second: DesignStone;
+  ready: boolean;
+  onPick: (role: Role) => void;
+}) {
   const { placed, unit, beadR, charmAt } = useMemo(() => layout(design, main, second), [design, main, second]);
   const charm = (() => {
     const ax = r2(CX + R * Math.cos(charmAt)), ay = r2(CY + R * Math.sin(charmAt));
     const jr = beadR * 0.34, cr = beadR * 0.78, jy = ay + beadR * 0.62, cy = jy + jr + cr * 0.95;
     return { ax, ay, jr, cr, jy, cy };
   })();
-  const metalFill = design.letterKind === "metal" ? "url(#dyo-metal)" : "url(#dyo-acrylic)";
+  const letterFill = design.letterKind === "metal" ? "url(#dyo-metal)" : "url(#dyo-acrylic)";
+  const two = design.pattern !== "one";
   return (
-    <svg viewBox="0 0 600 600" role="img" aria-label="Preview of your bracelet">
+    <svg viewBox="0 0 600 600" role="img" aria-label={`Preview of your bracelet: ${main.name}${two ? ` and ${second.name}` : ""}`}>
       <defs>
         <linearGradient id="dyo-metal" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#e9e6e0" />
-          <stop offset=".5" stopColor="#a9a59c" />
+          <stop offset="0" stopColor="#ece9e3" />
+          <stop offset=".5" stopColor="#aca89f" />
           <stop offset="1" stopColor="#6f6b64" />
+        </linearGradient>
+        <linearGradient id="dyo-gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#f3e2a9" />
+          <stop offset=".5" stopColor="#c49a45" />
+          <stop offset="1" stopColor="#7d5a1f" />
         </linearGradient>
         <linearGradient id="dyo-acrylic" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#ffffff" />
@@ -125,10 +150,18 @@ function Ring({ design, main, second, ready }: { design: Design; main: DesignSto
           <stop offset=".55" stopColor="#a9a59c" />
           <stop offset="1" stopColor="#5f5b55" />
         </radialGradient>
+        <radialGradient id="dyo-floor" cx=".5" cy=".5" r=".5">
+          <stop offset=".72" stopColor="#171716" stopOpacity="0" />
+          <stop offset=".86" stopColor="#171716" stopOpacity=".09" />
+          <stop offset="1" stopColor="#171716" stopOpacity="0" />
+        </radialGradient>
         <filter id="dyo-drop" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="5" stdDeviation="5" floodColor="#171716" floodOpacity=".22" />
+          <feDropShadow dx="0" dy="4" stdDeviation="3.5" floodColor="#171716" floodOpacity=".26" />
         </filter>
       </defs>
+      {/* A soft shadow where the bracelet rests, and the cord through the beads. */}
+      <ellipse cx={CX} cy={CY + 14} rx={R + beadR * 1.6} ry={R + beadR * 1.5} fill="url(#dyo-floor)" />
+      <circle cx={CX} cy={CY} r={R} fill="none" stroke="#5d564c" strokeWidth="2.5" opacity=".28" />
       {design.charm && (
         <g filter="url(#dyo-drop)">
           <line x1={charm.ax} y1={charm.ay} x2={charm.ax} y2={charm.jy - charm.jr} stroke="#8d887f" strokeWidth={beadR * 0.1} />
@@ -138,15 +171,16 @@ function Ring({ design, main, second, ready }: { design: Design; main: DesignSto
         </g>
       )}
       <g filter="url(#dyo-drop)">
-        <circle cx={CX} cy={CY} r={R} fill="none" stroke="#3a3833" strokeWidth="2" opacity=".5" />
         {placed.map((it, k) => {
           if (it.kind === "bead") {
             const { shape, beads } = it.stone;
             const [bx, by] = SHAPE_BOX[shape];
             const w = beadR * 2 * bx, h = beadR * 2 * by;
+            // Tapping a bead of the second stone opens its picker.
+            const pick = two ? { onClick: () => onPick(it.role), style: { cursor: "pointer" } } : {};
             // A stone a shared link asked for that is gone: an empty place to fill.
             if (it.gone)
-              return <circle key={k} cx={it.x} cy={it.y} r={beadR * 0.9} fill="#efe9df" stroke="#a39a8c" strokeWidth="2" strokeDasharray="5 4" />;
+              return <circle key={k} cx={it.x} cy={it.y} r={beadR * 0.9} fill="#efe9df" stroke="#a39a8c" strokeWidth="2" strokeDasharray="5 4" {...pick} />;
             // Photographed beads first, else the drawn material.
             const photo = beads.length ? beads[it.idx % beads.length] : null;
             return ready ? (
@@ -159,21 +193,23 @@ function Ring({ design, main, second, ready }: { design: Design; main: DesignSto
                 height={h}
                 transform={shape === "sphere" ? undefined : `rotate(${it.deg} ${it.x} ${it.y})`}
                 preserveAspectRatio="xMidYMid slice"
+                {...pick}
               />
             ) : (
               <circle key={k} cx={it.x} cy={it.y} r={beadR} fill="#d8d0c2" />
             );
           }
           if (it.kind === "spacer") {
+            // Small gold discs, so they never read as a stone.
             const r = (it.w * unit) / 2;
             return (
-              <ellipse key={k} cx={it.x} cy={it.y} rx={r * 0.55} ry={r * 1.25} transform={`rotate(${it.deg} ${it.x} ${it.y})`} fill="url(#dyo-metal)" stroke="rgba(0,0,0,.25)" />
+              <ellipse key={k} cx={it.x} cy={it.y} rx={r * 0.62} ry={beadR * 0.62} transform={`rotate(${it.deg} ${it.x} ${it.y})`} fill="url(#dyo-gold)" stroke="rgba(60,40,10,.35)" />
             );
           }
           const s = unit * CUBE * 0.96;
           return (
             <g key={k} transform={`translate(${it.x} ${it.y}) rotate(${it.deg + 90})`}>
-              <rect x={-s / 2} y={-s / 2} width={s} height={s} rx={s * 0.18} fill={metalFill} stroke="rgba(0,0,0,.22)" />
+              <rect x={-s / 2} y={-s / 2} width={s} height={s} rx={s * 0.18} fill={letterFill} stroke="rgba(0,0,0,.22)" />
               <rect x={-s / 2 + 2} y={-s / 2 + 2} width={s - 4} height={s * 0.35} rx={s * 0.14} fill="#fff" opacity=".25" />
               <text y={s * 0.2} textAnchor="middle" fontFamily="Manrope, sans-serif" fontWeight="700" fontSize={s * 0.56} fill="#1f1e1c">
                 {it.ch.toUpperCase()}
@@ -183,6 +219,18 @@ function Ring({ design, main, second, ready }: { design: Design; main: DesignSto
         })}
       </g>
     </svg>
+  );
+}
+
+/** One bead of a stone, round: its photo, else its drawing, else its colour. */
+function Bead({ stone, ready }: { stone: DesignStone; ready: boolean }) {
+  const src = stone.beads[0] ?? (ready ? beadImage(stone, 0, -90, 112) : null);
+  return src ? (
+    // Tiny WebP bead photos (or canvas data URLs): next/image adds nothing here.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img className="dyo-bead" src={src} alt="" width={56} height={56} loading="lazy" decoding="async" />
+  ) : (
+    <span className="dyo-bead" style={{ background: stone.colour ?? "#8a8279" }} />
   );
 }
 
@@ -220,6 +268,14 @@ function Segmented<T extends string>({
   );
 }
 
+/** The likely price: the listed price plus the design's KES 100–500. */
+function PriceRange({ base }: { base: Prices }) {
+  const { currency, format } = useCurrency();
+  if (currency === "KES")
+    return <>{format(base.KES + EXTRA_KES[0])}–{(base.KES + EXTRA_KES[1]).toLocaleString("en-KE")}</>;
+  return base.USD === null ? <>Confirmed on WhatsApp</> : <>From {format(base.USD)}</>;
+}
+
 export default function DesignYourOwn({ stones, retired }: { stones: DesignStone[]; retired: RetiredStone[] }) {
   if (!stones.length) return <Resting />;
   return <Designer stones={stones} retired={retired} />;
@@ -253,7 +309,7 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
   const fallback = stones.find((s) => s.slug === "simba-gold") ?? stones[0];
   const otherThan = (slug: string) => (stones.find((s) => s.slug !== slug) ?? fallback).slug;
   const [d, setD] = useState<Design>(() => ({
-    forWhom: "me",
+    gift: false,
     feeling: null,
     main: fallback.slug,
     pattern: "one",
@@ -264,13 +320,19 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
     letterKind: "metal",
     charm: false,
     size: "medium",
-    wrist: "",
-    notSure: false,
-    gift: "",
+    wrist: null,
+    message: "",
     gone: {},
   }));
   const [ready, setReady] = useState(false);
   const [copied, setCopied] = useState(false);
+  // On phones one step is open at a time; on wider screens all are.
+  const [open, setOpen] = useState(1);
+  // The second stone's picker, opened from its place on the ring or in Style.
+  const [pickingSecond, setPickingSecond] = useState(false);
+  const [summaryInView, setSummaryInView] = useState(false);
+  const summaryRef = useRef<HTMLElement>(null);
+  const stepRefs = useRef<(HTMLElement | null)[]>([]);
   const set = (patch: Partial<Design>) => setD((prev) => ({ ...prev, ...patch }));
   const find = (slug: string) => stones.find((s) => s.slug === slug) ?? fallback;
   const canPair = stones.length > 1;
@@ -287,7 +349,7 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
       const stone = findStone(stones, code);
       if (stone) return { stone };
       const was = retired.find((r) => r.slug === code || r.aliases.includes(code));
-      const name = was?.name ?? code.split("-").map((w) => w && w[0].toUpperCase() + w.slice(1)).join(" ");
+      const name = was?.name ?? code.split("-").map((w) => w && title(w)).join(" ");
       return { gone: { code, name, retired: was } };
     };
     const main = read(q.get("stone"));
@@ -315,10 +377,24 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
     }
     if (gone.main || gone.second) patch.gone = gone;
     if (Object.keys(patch).length) set(patch);
+    // A gone second stone: open its picker right away.
+    if (gone.second && !gone.main) {
+      setOpen(2);
+      setPickingSecond(true);
+    }
     setReady(true);
     trackGa4Event("design_your_own_view", { shared: q.has("stone"), link_version: Number(q.get("v") ?? 1) });
     for (const [role, g] of Object.entries(gone))
       trackGa4Event("design_your_own_missing_stone", { stone: g.code, role, known: !!g.retired });
+  }, []);
+
+  // The phone's bottom bar steps aside once the summary (with the same button) is on screen.
+  useEffect(() => {
+    const el = summaryRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setSummaryInView(e.isIntersecting), { threshold: 0.2 });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const main = find(d.main), second = find(d.second), two = d.pattern !== "one";
@@ -327,7 +403,18 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
   const blocked = !!(goneMain || goneSecond);
   const shown = stones.filter((s) => !d.feeling || s.feelings.includes(d.feeling));
   const letters = d.letters.trim();
-  const rows: [string, string][] = [
+  const mainName = goneMain ? goneMain.name : main.name;
+  const secondName = goneSecond ? goneSecond.name : second.name;
+  const previewName = `${mainName}${two ? ` + ${secondName}` : ""}`;
+  const base = (two && second.prices.KES > main.prices.KES ? second : main).prices;
+  const extras = [
+    d.spacers && "Spacers",
+    d.lettersOn && letters && `Letters ${letters.toUpperCase()} (${d.letterKind})`,
+    d.charm && "Charm",
+  ].filter(Boolean) as string[];
+
+  // The WhatsApp message keeps every line, so nothing is left to guess.
+  const messageRows: [string, string][] = [
     ["Main stone", goneMain ? `${goneMain.name} (no longer available)` : `${main.name}${main.stone && ` (${main.stone})`}`],
     ...(two ? [["Second stone", goneSecond ? `${goneSecond.name} (no longer available)` : `${second.name}${second.stone && ` (${second.stone})`}`] as [string, string]] : []),
     ["Design", PATTERN_NAMES[d.pattern]],
@@ -335,8 +422,17 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
     ["Spacers", d.spacers ? "Yes" : "No"],
     ["Letters", d.lettersOn && letters ? `${letters} (${d.letterKind})` : "No"],
     ["Charm", d.charm ? "Yes, show me the options" : "No"],
-    ["Wrist", d.notSure ? "Not sure, help me" : d.wrist ? `${d.wrist} cm` : "Not given yet"],
-    ...(d.forWhom === "gift" ? [["Gift", d.gift.trim() ? "Yes, with a message" : "Yes"] as [string, string]] : []),
+    ["Wrist", d.wrist ? `${d.wrist} cm` : "Not sure, help me"],
+    ...(d.gift ? [["Gift", d.message.trim() ? "Yes, with a message" : "Yes"] as [string, string]] : []),
+  ];
+  // The page's summary shows only what was chosen.
+  const summaryRows: [string, string][] = [
+    ["Stones", two ? `${mainName} + ${secondName}` : mainName],
+    ...(two ? [["Design", PATTERN_NAMES[d.pattern]] as [string, string]] : []),
+    ["Beads", d.size === "large" ? "Large" : "Medium"],
+    ...(extras.length ? [["Extras", extras.join(", ")] as [string, string]] : []),
+    ["Wrist", d.wrist ? `${d.wrist} cm` : "We'll help you measure"],
+    ...(d.gift ? [["Gift", d.message.trim() ? "With a card message" : "Yes"] as [string, string]] : []),
   ];
 
   const shareUrl = () => {
@@ -350,7 +446,7 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
     if (d.charm) p.set("charm", "1");
     return `${window.location.origin}/design-your-own?${p}`;
   };
-  const designEvent = () => ({
+  const designEvent = (placement: string) => ({
     stone: d.main,
     second_stone: two ? d.second : undefined,
     pattern: d.pattern,
@@ -358,18 +454,19 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
     spacers: d.spacers,
     letters: d.lettersOn && !!letters,
     charm: d.charm,
-    gift: d.forWhom === "gift",
+    gift: d.gift,
+    placement,
   });
-  const send = () => {
+  const send = (placement: "summary" | "bar") => {
     if (blocked) return;
     const lines = [
       "Hello BWA, I designed a bracelet on your website:",
-      ...rows.map(([a, b]) => `• ${a}: ${b}`),
-      ...(d.forWhom === "gift" && d.gift.trim() ? [`• Gift message: ${d.gift.trim()}`] : []),
+      ...messageRows.map(([a, b]) => `• ${a}: ${b}`),
+      ...(d.gift && d.message.trim() ? [`• Gift message: ${d.message.trim()}`] : []),
       "",
       `Design link: ${shareUrl()}`,
     ];
-    trackGa4Event("design_your_own_send", designEvent());
+    trackGa4Event("design_your_own_send", designEvent(placement));
     window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank", "noopener,noreferrer");
   };
   const share = async () => {
@@ -404,33 +501,49 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
   };
   const pickSecond = (slug: string, from: "grid" | "suggestion" = "grid") => {
     setD((prev) => ({ ...prev, second: slug, gone: { ...prev.gone, second: undefined } }));
+    setPickingSecond(false);
     trackGa4Event("design_your_own_stone", { stone: slug, role: "second", from });
   };
-  const stoneButton = (s: DesignStone, role: "main" | "second") => {
-    const picked = role === "main" ? !goneMain && d.main === s.slug : !goneSecond && d.second === s.slug;
-    return (
-      <button
-        key={s.slug}
-        type="button"
-        aria-pressed={picked}
-        disabled={role === "second" && s.slug === d.main}
-        onClick={() => (role === "main" ? pickMain(s.slug) : pickSecond(s.slug))}
-      >
-        {s.image ? (
-          <StoreImage src={s.image} alt="" sizes="(max-width: 860px) 30vw, 140px" width={300} height={300} />
-        ) : (
-          <span className="dyo-swatch" style={{ background: s.colour ?? "#8a8279" }} aria-hidden="true" />
-        )}
-        <span>
-          <b>{s.name}</b>
-          {s.stone}
-        </span>
-        {picked && <Check className="dyo-tick" size={14} aria-hidden="true" />}
-      </button>
-    );
+  const goTo = (step: number) => {
+    setOpen(step);
+    requestAnimationFrame(() => stepRefs.current[step]?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
+  const pickFromRing = (role: Role) => {
+    if (role === "second") {
+      setPickingSecond(true);
+      goTo(2);
+    } else goTo(1);
+  };
+  const choosePattern = (pattern: Pattern) => {
+    // Going to two stones for the first time: choose the second one now.
+    if (pattern !== "one" && d.pattern === "one") setPickingSecond(true);
+    if (pattern === "one") setPickingSecond(false);
+    set({ pattern });
+  };
+
+  const swatches = (list: DesignStone[], role: Role) => (
+    <div className="dyo-swatches" role="group" aria-label={role === "main" ? "Stones" : "Second stone"}>
+      {list.map((s) => {
+        const picked = role === "main" ? !goneMain && d.main === s.slug : !goneSecond && d.second === s.slug;
+        return (
+          <button
+            key={s.slug}
+            type="button"
+            aria-pressed={picked}
+            disabled={role === "second" && s.slug === d.main}
+            title={s.stone ? `${s.name}, ${s.stone}` : s.name}
+            onClick={() => (role === "main" ? pickMain(s.slug) : pickSecond(s.slug))}
+          >
+            <Bead stone={s} ready={ready} />
+            <span>{s.name}</span>
+            {picked && <Check className="dyo-tick" size={12} strokeWidth={3} aria-hidden="true" />}
+          </button>
+        );
+      })}
+    </div>
+  );
   // A stone from the link is gone: say so, and offer the closest ones.
-  const goneNotice = (role: "main" | "second", g: Gone) => (
+  const goneNotice = (role: Role, g: Gone) => (
     <div className="dyo-gone" role="status">
       <TriangleAlert size={18} aria-hidden="true" />
       <div>
@@ -440,7 +553,7 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
         <div className="dyo-gone-picks">
           {similarStones(stones.filter((s) => role === "main" || s.slug !== d.main), g.retired).map((s) => (
             <button key={s.slug} type="button" onClick={() => (role === "main" ? pickMain(s.slug, "suggestion") : pickSecond(s.slug, "suggestion"))}>
-              {s.image && <StoreImage src={s.image} alt="" sizes="48px" width={96} height={96} />}
+              <Bead stone={s} ready={ready} />
               <span><b>{s.name}</b>{s.stone}</span>
             </button>
           ))}
@@ -449,150 +562,208 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
       </div>
     </div>
   );
-  const from = (two && (second.prices.KES > main.prices.KES) ? second : main).prices;
-  const previewName = `${goneMain ? goneMain.name : main.name}${two ? ` + ${goneSecond ? goneSecond.name : second.name}` : ""}`;
+  const step = (n: number, heading: string, summary: string, body: React.ReactNode, next?: string) => (
+    <section className="dyo-step" data-open={open === n} ref={(el) => { stepRefs.current[n] = el; }}>
+      <button type="button" className="dyo-step-head" aria-expanded={open === n} onClick={() => setOpen(open === n ? 0 : n)}>
+        <span className="dyo-step-num">0{n}</span>
+        <h2>{heading}</h2>
+        <span className="dyo-step-sum">{summary}</span>
+        <ChevronDown className="dyo-step-chev" size={18} aria-hidden="true" />
+      </button>
+      <div className="dyo-step-body">
+        {body}
+        {next && (
+          <button type="button" className="btn btn-outline dyo-next" onClick={() => goTo(n + 1)}>
+            Next: {next}
+          </button>
+        )}
+      </div>
+    </section>
+  );
 
   return (
-    <main className="dyo-page">
+    <main className="dyo-page" data-bar={!summaryInView}>
       <section className="dyo-intro">
         <p className="eyebrow">Design your own</p>
         <h1>Make it yours.</h1>
-        <p>
-          Pick your stones, the design and the size. We make it by hand in
-          Kenya and confirm the details with you on WhatsApp.
-        </p>
+        <p>Pick your stones, the style and the fit. We make it by hand in Kenya and confirm the details with you on WhatsApp.</p>
       </section>
       <div className="dyo-layout">
         <aside className="dyo-preview" aria-label="Your bracelet">
-          <Ring design={d} main={main} second={second} ready={ready} />
+          <Ring design={d} main={main} second={second} ready={ready} onPick={pickFromRing} />
           <div className="dyo-preview-meta">
-            {main.image && !goneMain && <StoreImage src={main.image} alt={`${main.name} ${main.stone} bracelet`} sizes="64px" width={128} height={128} />}
             <p>
               <b>{previewName}</b>
-              {!goneMain && main.stone}{two && !goneSecond && ` with ${second.stone}`} · {d.size === "large" ? "Large" : "Medium"} beads
+              <span>
+                {[!goneMain && main.stone, two && !goneSecond && second.stone].filter(Boolean).join(" + ")}
+                {" · "}
+                {d.size === "large" ? "Large" : "Medium"} beads
+              </span>
             </p>
+            <p className="dyo-preview-price"><PriceRange base={base} /></p>
           </div>
-          <p className="dyo-note">The ring is a drawing to show the design. The photos are the real stones.</p>
+          <p className="dyo-note">Bead photos are of the real stones. We confirm the final piece with you on WhatsApp.</p>
         </aside>
 
         <div className="dyo-steps">
-          <section className="dyo-step">
-            <header><span>01</span><h2>Who is it for?</h2></header>
-            <Segmented label="Who is it for" value={d.forWhom} options={[["me", "For me"], ["gift", "A gift"]]} onChange={(forWhom) => set({ forWhom })} />
-          </section>
-
-          <section className="dyo-step">
-            <header><span>02</span><h2>Pick a feeling</h2><small>Optional</small></header>
-            <div className="dyo-chips">
-              {[null, ...FEELINGS].map((f) => (
-                <button
-                  key={f ?? "all"}
-                  type="button"
-                  aria-pressed={d.feeling === f}
-                  onClick={() => {
-                    const list = stones.filter((s) => !f || s.feelings.includes(f));
-                    set({ feeling: f, ...(list.some((s) => s.slug === d.main) || !list[0] ? {} : { main: list[0].slug }) });
-                  }}
-                >
-                  {f ? f[0].toUpperCase() + f.slice(1) : "All"}
-                </button>
-              ))}
-            </div>
-            <p className="dyo-note">Shows stones traditionally associated with that feeling.</p>
-          </section>
-
-          <section className="dyo-step">
-            <header><span>03</span><h2>Choose your stone</h2><small>{shown.length} stones</small></header>
-            {goneMain && goneNotice("main", goneMain)}
-            <div className="dyo-stones">{shown.map((s) => stoneButton(s, "main"))}</div>
-          </section>
-
-          <section className="dyo-step">
-            <header><span>04</span><h2>Choose the design</h2></header>
-            <div className="dyo-patterns" role="group" aria-label="Design">
-              {PATTERNS.filter(([v]) => canPair || v === "one").map(([v, label]) => (
-                <button key={v} type="button" aria-pressed={d.pattern === v} onClick={() => set({ pattern: v })}>
-                  <PatternIcon pattern={v} />
-                  {label}
-                </button>
-              ))}
-            </div>
-            {two && (
-              <div className="dyo-sub">
-                <p>Pick your second stone</p>
-                {goneSecond && goneNotice("second", goneSecond)}
-                <div className="dyo-stones">{stones.map((s) => stoneButton(s, "second"))}</div>
+          {step(
+            1,
+            "Stones",
+            mainName,
+            <>
+              <div className="dyo-chips" role="group" aria-label="Filter by feeling">
+                {[null, ...FEELINGS].map((f) => (
+                  <button
+                    key={f ?? "all"}
+                    type="button"
+                    aria-pressed={d.feeling === f}
+                    onClick={() => {
+                      set({ feeling: f });
+                      if (f) trackGa4Event("design_your_own_feeling", { feeling: f });
+                    }}
+                  >
+                    {f ? title(f) : `All ${stones.length}`}
+                  </button>
+                ))}
               </div>
-            )}
-            <div className="dyo-toggles">
-              <label className="dyo-toggle">
-                <input type="checkbox" checked={d.spacers} onChange={(e) => set({ spacers: e.target.checked })} />
-                <span><b>Add spacer beads</b><small>Small beads between the stones. We show you the colours on WhatsApp.</small></span>
-              </label>
-              <div className="dyo-toggle">
-                <input type="checkbox" id="dyo-letters-on" checked={d.lettersOn} onChange={(e) => set({ lettersOn: e.target.checked })} />
-                <div>
-                  <label htmlFor="dyo-letters-on"><b>Add letters</b><small>Initials, a name or a short word.</small></label>
-                  {d.lettersOn && (
-                    <div className="dyo-more">
-                      <label className="dyo-field">
-                        Your letters
-                        <input value={d.letters} autoComplete="off" placeholder="e.g. AK" maxLength={30} onChange={(e) => set({ letters: e.target.value })} />
-                      </label>
-                      {d.letters.replace(/\s+/g, "").length > LETTERS_COMFORT && (
-                        <span className="dyo-warn">Over {LETTERS_COMFORT} letters gets crowded. Shorter reads better.</span>
-                      )}
-                      <Segmented label="Letter beads" value={d.letterKind} options={[["metal", "Metal"], ["acrylic", "Acrylic"]]} onChange={(letterKind) => set({ letterKind })} />
-                    </div>
-                  )}
+              {goneMain && goneNotice("main", goneMain)}
+              {shown.length ? swatches(shown, "main") : <p className="dyo-note">No stone matches that feeling yet.</p>}
+              {!goneMain && (
+                <div className="dyo-stone-card">
+                  {main.image && <StoreImage src={main.image} alt={`${main.name} bracelet`} sizes="88px" width={176} height={176} />}
+                  <div>
+                    <p className="dyo-stone-card-name"><b>{main.name}</b>{main.stone}</p>
+                    {!!main.feelings.length && (
+                      <p>Traditionally associated with {main.feelings.slice(0, 3).join(", ")}.</p>
+                    )}
+                    <p className="dyo-stone-card-price">
+                      Bracelet <Money prices={main.prices} />
+                      {main.listed && <Link href={`/product/${main.product}`}>See it</Link>}
+                    </p>
+                  </div>
                 </div>
+              )}
+              <p className="dyo-note">Feelings are what each stone is traditionally associated with.</p>
+            </>,
+            "Style",
+          )}
+
+          {step(
+            2,
+            "Style",
+            [two ? PATTERN_NAMES[d.pattern] : "One stone", ...extras].join(" · "),
+            <>
+              <div className="dyo-patterns" role="group" aria-label="Design">
+                {PATTERNS.filter(([v]) => canPair || v === "one").map(([v, label]) => (
+                  <button key={v} type="button" aria-pressed={d.pattern === v} onClick={() => choosePattern(v)}>
+                    <PatternIcon pattern={v} />
+                    {label}
+                  </button>
+                ))}
+              </div>
+              {two && (
+                <div className="dyo-slots">
+                  <button type="button" onClick={() => goTo(1)}>
+                    <Bead stone={main} ready={ready} />
+                    <span><small>Main stone</small>{mainName}</span>
+                  </button>
+                  <button type="button" aria-expanded={pickingSecond} data-gone={!!goneSecond} onClick={() => setPickingSecond(!pickingSecond)}>
+                    {goneSecond ? <span className="dyo-bead dyo-bead-empty" /> : <Bead stone={second} ready={ready} />}
+                    <span><small>{d.pattern === "accent" ? "Accent stone" : "Second stone"}</small>{secondName}</span>
+                    <ChevronDown size={16} aria-hidden="true" />
+                  </button>
+                </div>
+              )}
+              {two && pickingSecond && (
+                <div className="dyo-sub">
+                  {goneSecond && goneNotice("second", goneSecond)}
+                  {swatches(stones, "second")}
+                </div>
+              )}
+              <div className="dyo-toggles">
+                <label className="dyo-toggle">
+                  <input type="checkbox" checked={d.spacers} onChange={(e) => set({ spacers: e.target.checked })} />
+                  <span><b>Spacer beads</b><small>Small beads between the stones. We show you the colours on WhatsApp.</small></span>
+                </label>
+                <div className="dyo-toggle">
+                  <input type="checkbox" id="dyo-letters-on" checked={d.lettersOn} onChange={(e) => set({ lettersOn: e.target.checked })} />
+                  <div>
+                    <label htmlFor="dyo-letters-on"><b>Letters</b><small>Initials, a name or a short word.</small></label>
+                    {d.lettersOn && (
+                      <div className="dyo-more">
+                        <label className="dyo-field">
+                          Your letters
+                          <input value={d.letters} autoComplete="off" placeholder="e.g. AK" maxLength={30} onChange={(e) => set({ letters: e.target.value })} />
+                        </label>
+                        {d.letters.replace(/\s+/g, "").length > LETTERS_COMFORT && (
+                          <span className="dyo-warn">Over {LETTERS_COMFORT} letters gets crowded. Shorter reads better.</span>
+                        )}
+                        <Segmented label="Letter beads" value={d.letterKind} options={[["metal", "Metal"], ["acrylic", "Acrylic"]]} onChange={(letterKind) => set({ letterKind })} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <label className="dyo-toggle">
+                  <input type="checkbox" checked={d.charm} onChange={(e) => set({ charm: e.target.checked })} />
+                  <span><b>A charm</b><small>Tell us what you&apos;d like. We show you what we have on WhatsApp.</small></span>
+                </label>
+              </div>
+            </>,
+            "Fit",
+          )}
+
+          {step(
+            3,
+            "Fit",
+            `${d.size === "large" ? "Large" : "Medium"} beads · ${d.wrist ? `${d.wrist} cm` : "wrist not sure"}${d.gift ? " · gift" : ""}`,
+            <>
+              <div className="dyo-fit">
+                <p className="dyo-label">Bead size</p>
+                <Segmented label="Bead size" value={d.size} options={[["medium", "Medium"], ["large", "Large"]]} onChange={(size) => set({ size })} />
+              </div>
+              <div className="dyo-fit">
+                <p className="dyo-label">Around the wrist</p>
+                <div className="dyo-chips" role="group" aria-label="Wrist size">
+                  <button type="button" aria-pressed={d.wrist === null} onClick={() => set({ wrist: null })}>Not sure</button>
+                  {WRISTS.map((w) => (
+                    <button key={w} type="button" aria-pressed={d.wrist === w} onClick={() => set({ wrist: w })}>{w} cm</button>
+                  ))}
+                </div>
+                <p className="dyo-note">
+                  {d.wrist === null
+                    ? "No problem: we'll help you measure on WhatsApp."
+                    : "Wrap a string around the wrist, mark it, and measure it on a ruler."}
+                </p>
               </div>
               <label className="dyo-toggle">
-                <input type="checkbox" checked={d.charm} onChange={(e) => set({ charm: e.target.checked })} />
-                <span><b>Add a charm</b><small>Tell us what you&apos;d like. We show you what we have on WhatsApp.</small></span>
+                <input type="checkbox" checked={d.gift} onChange={(e) => set({ gift: e.target.checked })} />
+                <span><b>It&apos;s a gift</b><small>Add a message for the card.</small></span>
               </label>
-            </div>
-          </section>
+              {d.gift && (
+                <label className="dyo-field dyo-gift">
+                  Card message (optional)
+                  <textarea value={d.message} placeholder="What should the card say?" onChange={(e) => set({ message: e.target.value })} />
+                </label>
+              )}
+            </>,
+          )}
 
-          <section className="dyo-step">
-            <header><span>05</span><h2>Bead size</h2></header>
-            <Segmented label="Bead size" value={d.size} options={[["medium", "Medium"], ["large", "Large"]]} onChange={(size) => set({ size })} />
-          </section>
-
-          <section className="dyo-step">
-            <header><span>06</span><h2>Wrist size</h2></header>
-            <div className="dyo-row">
-              <label className="dyo-field">
-                Around the wrist, in cm
-                <input inputMode="decimal" placeholder="e.g. 17" value={d.wrist} disabled={d.notSure} onChange={(e) => set({ wrist: e.target.value.trim() })} />
-              </label>
-              <label className="dyo-toggle">
-                <input type="checkbox" checked={d.notSure} onChange={(e) => set({ notSure: e.target.checked })} />
-                <span><b>Not sure</b><small>We&apos;ll help you on WhatsApp.</small></span>
-              </label>
-            </div>
-            <p className="dyo-note">Wrap a string around the wrist, mark it, and measure it on a ruler.</p>
-            {d.forWhom === "gift" && (
-              <label className="dyo-field dyo-gift">
-                Gift message (optional)
-                <textarea value={d.gift} placeholder="What should the card say?" onChange={(e) => set({ gift: e.target.value })} />
-              </label>
-            )}
-          </section>
-
-          <section className="dyo-summary" aria-label="Your design">
+          <section className="dyo-summary" aria-label="Your design" ref={summaryRef}>
             <p className="eyebrow">Your design</p>
             <h2>{previewName}</h2>
             <ul>
-              {rows.map(([a, b]) => (
+              {summaryRows.map(([a, b]) => (
                 <li key={a}><span>{a}</span><span>{b}</span></li>
               ))}
             </ul>
-            <p className="dyo-price">
-              <b>Price depends on your design.</b> Usually the listed price (from <Money prices={from} />) plus KES 100–500. Making time and the final price are confirmed on WhatsApp.
-            </p>
+            <div className="dyo-price">
+              <p className="dyo-price-range"><PriceRange base={base} /></p>
+              <p>
+                The listed price (<Money prices={base} />) plus KES {EXTRA_KES[0]}–{EXTRA_KES[1]} for the design. We confirm the final price and making time on WhatsApp.
+              </p>
+            </div>
             {blocked && <p className="dyo-warn">Replace the stone that&apos;s no longer available, then send your design.</p>}
-            <button type="button" className="btn btn-whatsapp dyo-send" onClick={send} disabled={blocked}>
+            <button type="button" className="btn btn-whatsapp dyo-send" onClick={() => send("summary")} disabled={blocked}>
               <FaWhatsapp size={18} aria-hidden="true" /> Send my design on WhatsApp
             </button>
             <button type="button" className="btn btn-outline dyo-share" onClick={share} disabled={blocked}>
@@ -600,6 +771,16 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
             </button>
           </section>
         </div>
+      </div>
+
+      <div className="dyo-bar" aria-hidden={summaryInView}>
+        <p>
+          <small>Your design</small>
+          <b><PriceRange base={base} /></b>
+        </p>
+        <button type="button" className="btn btn-whatsapp" onClick={() => send("bar")} disabled={blocked} tabIndex={summaryInView ? -1 : 0}>
+          <FaWhatsapp size={18} aria-hidden="true" /> Send on WhatsApp
+        </button>
       </div>
     </main>
   );

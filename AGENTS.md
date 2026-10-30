@@ -32,6 +32,15 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-30 19:00] — Design Your Own: Three Steps, Bead Swatches, Phone Bar
+
+- **Steps**: Stones → Style → Fit (was six). Stones: feeling chips as a filter, then one round bead per stone (`Bead`: photo, else drawing, else colour), then a card for the chosen stone (bracelet photo, "traditionally associated with…", price, "See it" link only when the bracelet is listed: `DesignStone.listed` from `products.active`). Style: pattern, then for two stones a slot row (main / second); the second stone's swatches open from its slot or by tapping its beads on the ring. Fit: bead size, wrist as chips (15–20 cm, "Not sure" by default), "It's a gift" with a card message. "For me / a gift" is gone as a step.
+- **Phones**: one step open at a time; a closed step shows what was chosen; "Next" buttons. The pinned preview is larger (172 px ring, name, price). A bottom bar with the price range and "Send on WhatsApp" shows until the summary scrolls in (IntersectionObserver). Page height 5,087 → ~2,750–3,200 px; stone grid 1,700 → ~600 px.
+- **Ring**: soft floor shadow, faint cord, spacers drawn as small gold discs so they never look like a stone; preview note now says the bead photos are of the real stones.
+- **Summary**: only what was chosen (stones, design, beads, extras, wrist, gift); the price as a range, KES listed price + 100–500 (higher of the two stones' listed prices; USD shows "From <listed>"). The WhatsApp message still lists every line.
+- **GA4**: `design_your_own_send` gains `placement` (summary/bar); new `design_your_own_feeling`.
+- **Link state**: a link with a gone second stone opens Style with its picker. Wrist is no longer free text (`Design.wrist` number or null); links never carried it.
+
 ### [2026-10-30 17:00] — Design Your Own: Stones From Supabase, Safe Links, Bead Photos
 
 - **Stones from Supabase**: new `products` columns `design_enabled`, `design_slug` (the stone's code in design links), `design_name`, `design_bead_shape` (sphere/rondelle/tube), `design_bead_images` (text[]), `design_colour` (#hex), `design_aliases` (old codes) at the end of `supabase/schema.sql`. `lib/design/stones-server.ts` `getDesignStones()` returns the enabled stones (whether or not the bracelet listing is active) plus retired ones for old links. Until the columns exist (PostgREST 42703) it falls back to `LEGACY_DESIGN_STONES` in `lib/design/stones.ts`, matched against the catalogue.
