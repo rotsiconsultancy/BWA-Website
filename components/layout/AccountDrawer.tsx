@@ -8,6 +8,10 @@ import {
   forgetSavedCustomer,
   useSavedCustomer,
 } from "@/lib/commerce/saved-customer";
+import {
+  forgetSavedDesigns,
+  useSavedDesigns,
+} from "@/lib/design/saved-designs";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 // Chrome on Android fires this when the site can be installed; iOS never
@@ -31,6 +35,7 @@ export default function AccountDrawer({
   onClose: () => void;
 }) {
   const customer = useSavedCustomer();
+  const designs = useSavedDesigns();
   const closeButton = useRef<HTMLButtonElement>(null);
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(
     null,
@@ -160,6 +165,48 @@ export default function AccountDrawer({
               </Link>
             </section>
           )}
+          {designs.length > 0 && (
+            <section className="account-section">
+              <h3>Your designs</h3>
+              <ul className="account-orders account-designs">
+                {designs.map((design) => (
+                  <li key={design.id}>
+                    <Link
+                      href={"/design-your-own?" + design.query}
+                      onClick={() => {
+                        trackGa4Event("design_your_own_reopen", { design_id: design.id });
+                        onClose();
+                      }}
+                    >
+                      {design.bead?.startsWith("#") || !design.bead ? (
+                        <span className="account-design-bead" style={{ background: design.bead ?? "#8a8279" }} />
+                      ) : (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img className="account-design-bead" src={design.bead} alt="" width={36} height={36} />
+                      )}
+                      <strong>{design.name}</strong>
+                      <span>
+                        {design.id} · {placedOn.format(new Date(design.savedAt))}
+                      </span>
+                      <em>Open</em>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              {!customer && (
+                <button
+                  type="button"
+                  className="account-forget"
+                  onClick={() => {
+                    if (window.confirm("Remove your saved designs from this phone?"))
+                      forgetSavedDesigns();
+                  }}
+                >
+                  Remove these designs from this phone
+                </button>
+              )}
+            </section>
+          )}
           <section className="account-section">
             <h3>Be part of BWA</h3>
             <GrowBwaLinks placement="account" />
@@ -175,8 +222,10 @@ export default function AccountDrawer({
               type="button"
               className="account-forget"
               onClick={() => {
-                if (window.confirm("Forget your details on this phone?"))
+                if (window.confirm("Forget your details on this phone?")) {
                   forgetSavedCustomer();
+                  forgetSavedDesigns();
+                }
               }}
             >
               Not you? Forget me on this phone

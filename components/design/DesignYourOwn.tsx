@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronDown, Share2, TriangleAlert } from "lucide-react";
+import { Check, ChevronDown, Share2, Shuffle, TriangleAlert } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import StoreImage from "@/components/commerce/StoreImage";
 import Money from "@/components/commerce/Money";
 import { useCurrency } from "@/context/CurrencyContext";
 import type { Prices } from "@/lib/commerce/money";
 import { beadImage, SHAPE_BOX, widthOf } from "@/lib/design/beads";
+import { DESIGN_ID, newDesignId } from "@/lib/design/design-id";
+import { designQuery, EXTRA_KES, type Pattern } from "@/lib/design/design-link";
+import { saveDesign } from "@/lib/design/saved-designs";
 import {
-  DESIGN_LINK_VERSION,
   type DesignStone,
   findStone,
   findStoneByProduct,
@@ -19,7 +21,6 @@ import {
 } from "@/lib/design/stones";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
-type Pattern = "one" | "alt" | "accent";
 type Role = "main" | "second";
 type Design = {
   gift: boolean;
@@ -56,8 +57,14 @@ const PATTERN_NAMES: Record<Pattern, string> = {
 const WRISTS = [15, 16, 17, 18, 19, 20];
 // Letters past this many get crowded on a bracelet (owner, 2026-10-28).
 const LETTERS_COMFORT = 10;
-// The design adds this to the listed price (owner, 2026-10-28).
-const EXTRA_KES: [number, number] = [100, 500];
+// Starting points: pairings of stones the page offers, named for how they look
+// (no "best seller" claims). One is skipped if either stone is switched off.
+const IDEAS: { name: string; main: string; second: string; pattern: Pattern }[] = [
+  { name: "Gold and black", main: "simba-gold", second: "chyulu-black", pattern: "alt" },
+  { name: "Deep blue", main: "watamu-deep", second: "kirinyaga-cloud", pattern: "accent" },
+  { name: "Forest", main: "mau-evergreen", second: "chyulu-black", pattern: "accent" },
+  { name: "Earth", main: "tsavo-clay", second: "chalbi-map", pattern: "alt" },
+];
 
 // Ring geometry, in the preview's 600 × 600 drawing.
 const R = 200, CX = 300, CY = 285, SPACER = 0.36, CUBE = 0.74;
@@ -331,9 +338,20 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
   // The second stone's picker, opened from its place on the ring or in Style.
   const [pickingSecond, setPickingSecond] = useState(false);
   const [summaryInView, setSummaryInView] = useState(false);
+  // For the send event: how long the design took and how many choices it took.
+  const startedAt = useRef(0);
+  const changes = useRef(0);
+  // The id of the design this page was opened from (a link from a sent design).
+  const openedFrom = useRef<string | null>(null);
   const summaryRef = useRef<HTMLElement>(null);
   const stepRefs = useRef<(HTMLElement | null)[]>([]);
   const set = (patch: Partial<Design>) => setD((prev) => ({ ...prev, ...patch }));
+  // A choice the customer made: apply it and count it.
+  const choose = (field: string, value: string | number | boolean | null, patch: Partial<Design>) => {
+    set(patch);
+    changes.current += 1;
+    trackGa4Event("design_your_own_change", { field, value: value === null ? "none" : String(value) });
+  };
   const find = (slug: string) => stones.find((s) => s.slug === slug) ?? fallback;
   const canPair = stones.length > 1;
 
@@ -383,7 +401,10 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
       setPickingSecond(true);
     }
     setReady(true);
-    trackGa4Event("design_your_own_view", { shared: q.has("stone"), link_version: Number(q.get("v") ?? 1) });
+    startedAt.current = Date.now();
+    const from = q.get("id");
+    if (from && DESIGN_ID.test(from)) openedFrom.current = from;
+    trackGa4Event("design_your_own_view", { shared: q.has("stone"), link_version: Number(q.get("v") ?? 1), from_design: openedFrom.current ?? undefined });
     for (const [role, g] of Object.entries(gone))
       trackGa4Event("design_your_own_missing_stone", { stone: g.code, role, known: !!g.retired });
   }, []);
@@ -435,16 +456,21 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
     ...(d.gift ? [["Gift", d.message.trim() ? "With a card message" : "Yes"] as [string, string]] : []),
   ];
 
-  const shareUrl = () => {
-    const p = new URLSearchParams({ v: String(DESIGN_LINK_VERSION), stone: d.main, design: d.pattern, size: d.size });
-    if (two) p.set("with", d.second);
-    if (d.spacers) p.set("spacers", "1");
-    if (d.lettersOn && letters) {
-      p.set("letters", letters);
-      p.set("kind", d.letterKind);
-    }
-    if (d.charm) p.set("charm", "1");
-    return `${window.location.origin}/design-your-own?${p}`;
+  const query = () =>
+    designQuery({
+      stone: d.main,
+      with: two ? d.second : null,
+      pattern: d.pattern,
+      size: d.size,
+      spacers: d.spacers,
+      letters: d.lettersOn && letters ? letters : null,
+      kind: d.letterKind,
+      charm: d.charm,
+    });
+  const shareUrl = (id?: string) => {
+    const q = query();
+    if (id) q.set("id", id);
+    return `${window.location.origin}/design-your-own?${q}`;
   };
   const designEvent = (placement: string) => ({
     stone: d.main,
@@ -459,15 +485,30 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
   });
   const send = (placement: "summary" | "bar") => {
     if (blocked) return;
+    // A new id for every send, made here so WhatsApp opens at once (a popup
+    // opened after waiting on the server is blocked on phones).
+    const id = newDesignId();
     const lines = [
-      "Hello BWA, I designed a bracelet on your website:",
+      `Hello BWA, I designed a bracelet on your website (design ${id}):`,
       ...messageRows.map(([a, b]) => `• ${a}: ${b}`),
       ...(d.gift && d.message.trim() ? [`• Gift message: ${d.message.trim()}`] : []),
       "",
-      `Design link: ${shareUrl()}`,
+      `Design link: ${shareUrl(id)}`,
     ];
-    trackGa4Event("design_your_own_send", designEvent(placement));
     window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank", "noopener,noreferrer");
+    trackGa4Event("design_your_own_send", {
+      ...designEvent(placement),
+      design_id: id,
+      changes: changes.current,
+      seconds: Math.round((Date.now() - startedAt.current) / 1000),
+      from_design: openedFrom.current ?? undefined,
+    });
+    // A copy for the owner's list (app/api/design-leads), sent in the background.
+    const lead = JSON.stringify({ id, link: query().toString(), wrist: d.wrist, gift: d.gift, placement, from: openedFrom.current });
+    if (!navigator.sendBeacon?.("/api/design-leads", new Blob([lead], { type: "application/json" })))
+      fetch("/api/design-leads", { method: "POST", body: lead, keepalive: true }).catch(() => {});
+    // And one on this phone, for the account panel.
+    saveDesign({ id, name: previewName, query: query().toString(), bead: main.beads[0] ?? main.colour, savedAt: new Date().toISOString() });
   };
   const share = async () => {
     if (blocked) return;
@@ -497,12 +538,30 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
       ...(slug === prev.second ? { second: otherThan(slug) } : {}),
       gone: { ...prev.gone, main: undefined },
     }));
+    changes.current += 1;
     trackGa4Event("design_your_own_stone", { stone: slug, role: "main", from });
   };
   const pickSecond = (slug: string, from: "grid" | "suggestion" = "grid") => {
     setD((prev) => ({ ...prev, second: slug, gone: { ...prev.gone, second: undefined } }));
     setPickingSecond(false);
+    changes.current += 1;
     trackGa4Event("design_your_own_stone", { stone: slug, role: "second", from });
+  };
+  const ideas = IDEAS.flatMap((idea) => {
+    const a = stones.find((s) => s.slug === idea.main), b = stones.find((s) => s.slug === idea.second);
+    return a && b ? [{ ...idea, a, b }] : [];
+  });
+  const startFrom = (main: string, second: string, pattern: Pattern, from: string, extra: Partial<Design> = {}) => {
+    set({ main, second, pattern, gone: {}, ...extra });
+    setPickingSecond(false);
+    changes.current += 1;
+    trackGa4Event("design_your_own_idea", { idea: from, stone: main, second_stone: pattern === "one" ? undefined : second });
+  };
+  const surprise = () => {
+    const pick = <T,>(list: T[]) => list[Math.floor(Math.random() * list.length)];
+    const main = pick(stones).slug;
+    const pattern = canPair ? pick<Pattern>(["one", "alt", "alt", "accent"]) : "one";
+    startFrom(main, canPair ? pick(stones.filter((s) => s.slug !== main)).slug : main, pattern, "surprise", { spacers: Math.random() < 0.3 });
   };
   const goTo = (step: number) => {
     setOpen(step);
@@ -518,7 +577,7 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
     // Going to two stones for the first time: choose the second one now.
     if (pattern !== "one" && d.pattern === "one") setPickingSecond(true);
     if (pattern === "one") setPickingSecond(false);
-    set({ pattern });
+    choose("pattern", pattern, { pattern });
   };
 
   const swatches = (list: DesignStone[], role: Role) => (
@@ -606,6 +665,24 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
         </aside>
 
         <div className="dyo-steps">
+          <div className="dyo-ideas" role="group" aria-label="Start from an idea">
+            <p className="dyo-label">Start from an idea</p>
+            <div>
+              {ideas.map((idea) => (
+                <button key={idea.name} type="button" onClick={() => startFrom(idea.a.slug, idea.b.slug, idea.pattern, idea.name)}>
+                  <span className="dyo-idea-beads">
+                    <Bead stone={idea.a} ready={ready} />
+                    <Bead stone={idea.b} ready={ready} />
+                  </span>
+                  {idea.name}
+                </button>
+              ))}
+              <button type="button" onClick={surprise}>
+                <span className="dyo-idea-beads dyo-idea-shuffle"><Shuffle size={20} aria-hidden="true" /></span>
+                Surprise me
+              </button>
+            </div>
+          </div>
           {step(
             1,
             "Stones",
@@ -682,11 +759,11 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
               )}
               <div className="dyo-toggles">
                 <label className="dyo-toggle">
-                  <input type="checkbox" checked={d.spacers} onChange={(e) => set({ spacers: e.target.checked })} />
+                  <input type="checkbox" checked={d.spacers} onChange={(e) => choose("spacers", e.target.checked, { spacers: e.target.checked })} />
                   <span><b>Spacer beads</b><small>Small beads between the stones. We show you the colours on WhatsApp.</small></span>
                 </label>
                 <div className="dyo-toggle">
-                  <input type="checkbox" id="dyo-letters-on" checked={d.lettersOn} onChange={(e) => set({ lettersOn: e.target.checked })} />
+                  <input type="checkbox" id="dyo-letters-on" checked={d.lettersOn} onChange={(e) => choose("letters", e.target.checked, { lettersOn: e.target.checked })} />
                   <div>
                     <label htmlFor="dyo-letters-on"><b>Letters</b><small>Initials, a name or a short word.</small></label>
                     {d.lettersOn && (
@@ -698,13 +775,13 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
                         {d.letters.replace(/\s+/g, "").length > LETTERS_COMFORT && (
                           <span className="dyo-warn">Over {LETTERS_COMFORT} letters gets crowded. Shorter reads better.</span>
                         )}
-                        <Segmented label="Letter beads" value={d.letterKind} options={[["metal", "Metal"], ["acrylic", "Acrylic"]]} onChange={(letterKind) => set({ letterKind })} />
+                        <Segmented label="Letter beads" value={d.letterKind} options={[["metal", "Metal"], ["acrylic", "Acrylic"]]} onChange={(letterKind) => choose("letter_kind", letterKind, { letterKind })} />
                       </div>
                     )}
                   </div>
                 </div>
                 <label className="dyo-toggle">
-                  <input type="checkbox" checked={d.charm} onChange={(e) => set({ charm: e.target.checked })} />
+                  <input type="checkbox" checked={d.charm} onChange={(e) => choose("charm", e.target.checked, { charm: e.target.checked })} />
                   <span><b>A charm</b><small>Tell us what you&apos;d like. We show you what we have on WhatsApp.</small></span>
                 </label>
               </div>
@@ -719,14 +796,14 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
             <>
               <div className="dyo-fit">
                 <p className="dyo-label">Bead size</p>
-                <Segmented label="Bead size" value={d.size} options={[["medium", "Medium"], ["large", "Large"]]} onChange={(size) => set({ size })} />
+                <Segmented label="Bead size" value={d.size} options={[["medium", "Medium"], ["large", "Large"]]} onChange={(size) => choose("bead_size", size, { size })} />
               </div>
               <div className="dyo-fit">
                 <p className="dyo-label">Around the wrist</p>
                 <div className="dyo-chips" role="group" aria-label="Wrist size">
-                  <button type="button" aria-pressed={d.wrist === null} onClick={() => set({ wrist: null })}>Not sure</button>
+                  <button type="button" aria-pressed={d.wrist === null} onClick={() => choose("wrist", null, { wrist: null })}>Not sure</button>
                   {WRISTS.map((w) => (
-                    <button key={w} type="button" aria-pressed={d.wrist === w} onClick={() => set({ wrist: w })}>{w} cm</button>
+                    <button key={w} type="button" aria-pressed={d.wrist === w} onClick={() => choose("wrist", w, { wrist: w })}>{w} cm</button>
                   ))}
                 </div>
                 <p className="dyo-note">
@@ -736,7 +813,7 @@ function Designer({ stones, retired }: { stones: DesignStone[]; retired: Retired
                 </p>
               </div>
               <label className="dyo-toggle">
-                <input type="checkbox" checked={d.gift} onChange={(e) => set({ gift: e.target.checked })} />
+                <input type="checkbox" checked={d.gift} onChange={(e) => choose("gift", e.target.checked, { gift: e.target.checked })} />
                 <span><b>It&apos;s a gift</b><small>Add a message for the card.</small></span>
               </label>
               {d.gift && (

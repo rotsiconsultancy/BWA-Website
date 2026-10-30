@@ -463,3 +463,32 @@ do $$ begin
   alter table public.products add constraint products_design_colour_format
     check (design_colour is null or design_colour ~ '^#[0-9a-f]{6}$');
 exception when duplicate_object then null; end $$;
+
+-- Design Your Own leads (2026-10-30): every design sent to WhatsApp, with the
+-- id shown in the message (D-XXXXX), what was chosen and the price range at the
+-- time. No name, phone or gift message: those stay in the WhatsApp chat.
+-- status lets staff mark which designs became orders.
+create table if not exists public.design_leads (
+  id text primary key check (id ~ '^D-[2-9A-HJKMNP-Z]{5}$'),
+  created_at timestamptz not null default now(),
+  main_stone text not null,
+  main_name text not null,
+  second_stone text,
+  second_name text,
+  pattern text not null check (pattern in ('one','alt','accent')),
+  bead_size text not null check (bead_size in ('medium','large')),
+  spacers boolean not null default false,
+  letters text check (char_length(letters) <= 30),
+  letter_kind text check (letter_kind in ('metal','acrylic')),
+  charm boolean not null default false,
+  wrist_cm smallint check (wrist_cm between 10 and 30),
+  gift boolean not null default false,
+  price_kes_from numeric(10,2) not null,
+  price_kes_to numeric(10,2) not null,
+  link text not null,
+  placement text,
+  from_design text,
+  status text not null default 'sent' check (status in ('sent','ordered','no_reply','declined'))
+);
+create index if not exists design_leads_created_at on public.design_leads (created_at desc);
+alter table public.design_leads enable row level security;

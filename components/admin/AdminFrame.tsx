@@ -7,6 +7,7 @@ import {
   Calculator,
   LayoutDashboard,
   Package,
+  Palette,
   Sparkles,
   RefreshCw,
   ShoppingBag,
@@ -21,6 +22,7 @@ const navigation = [
   { href: "/admin/products", label: "Catalogue", icon: Package },
   { href: "/admin/pricing", label: "Pricing", icon: Calculator },
   { href: "/admin/discounts", label: "Offers", icon: TicketPercent },
+  { href: "/admin/designs", label: "Designs", icon: Palette },
   { href: "/admin/discovery", label: "Discovery", icon: Sparkles },
   { href: "/admin/sync", label: "CRM sync", icon: RefreshCw },
 ];

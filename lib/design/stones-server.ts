@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import {
@@ -36,7 +37,8 @@ type Row = {
  * stone is gone. Before the design_* columns exist, falls back to the fixed
  * list of 28 stones matched against the live catalogue.
  */
-export async function getDesignStones(): Promise<{ stones: DesignStone[]; retired: RetiredStone[] }> {
+// Once per request: the page and its metadata both need it.
+export const getDesignStones = cache(async (): Promise<{ stones: DesignStone[]; retired: RetiredStone[] }> => {
   const admin = getSupabaseAdmin();
   if (admin) {
     const { data, error } = await admin
@@ -115,4 +117,4 @@ export async function getDesignStones(): Promise<{ stones: DesignStone[]; retire
     ];
   });
   return { stones, retired: [] };
-}
+});

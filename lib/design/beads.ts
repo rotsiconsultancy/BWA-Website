@@ -61,6 +61,11 @@ const MATS: Record<string, Material> = {
   "waridi-shadow": { base: ["#c97884", "#eaa9b1"], bs: 4, layers: [["vein", "#251d1f", 4.5, 0.91, 0.9]], gloss: 0.7 },
 };
 
+/** A hand-tuned stone's main colour, for places that can't draw it (link pictures). */
+export const materialColour = (slug: string) => {
+  const m = MATS[slug];
+  return m ? (m.base ?? m.multi?.[0])?.[1] ?? null : null;
+};
 /** Width along the cord, in bead diameters. */
 export const widthOf = (shape: BeadShape) =>
   ({ sphere: 1, rondelle: 0.55, tube: 1.3 })[shape];

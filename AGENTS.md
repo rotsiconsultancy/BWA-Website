@@ -32,6 +32,17 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-30 21:00] — Design Your Own: Design Ids, Sent-Design List, Link Pictures, Ideas, Saved Designs
+
+- **Design ids**: every Send makes a new id (`lib/design/design-id.ts`, `D-` + 5 of `2-9A-HJKMNP-Z`), puts it in the WhatsApp message ("design D-XXXXX") and in the message's design link (`&id=`). WhatsApp opens first; the copy is sent with `sendBeacon` (fetch keepalive fallback) to `POST /api/design-leads`, which re-reads the link with `lib/design/design-link.ts`, checks the stones, works out the KES price range and inserts into the new `design_leads` table (no name, phone or gift message; RLS on, no public policies). It always answers 204; missing table (42P01) and repeat ids (23505) are skipped quietly.
+- **Admin → Designs** (`app/admin/designs`): sent designs, newest first, find by id, open the design link, set status sent / became an order / no reply / declined (`setDesignStatus`, audit-logged as `set_design_status`).
+- **Link pictures**: `generateMetadata` on `/design-your-own` gives a shared design link its own title, text and picture (`/api/design-image?…`, `next/og`): a ring of the real bead photos with the stones' names, Cormorant from Google Fonts. Satori can't read WebP, so `cut-beads.py` also writes `.png` copies and `2-upload-beads.mjs` uploads them beside the `.webp` (same address, `.png`); the route fetches those as data URLs and falls back to the stone's colour (`materialColour()` in `beads.ts` for Chuma Link and Maziwa Glow). Canonical stays `/design-your-own`. Link text says "handmade bracelet", never "natural stone" (Nyota Night is glass, Maziwa Glow shell). `getDesignStones` is wrapped in React `cache`.
+- **Ideas**: "Start from an idea" row above the steps (Gold and black, Deep blue, Forest, Earth; named for the look, no best-seller claims; skipped if a stone is off) and "Surprise me".
+- **Saved designs**: each sent design is kept on the phone (`lib/design/saved-designs.ts`, `bwa_saved_designs`, max 10) and listed under "Your designs" in the account panel; "Forget me" clears them too.
+- **GA4**: `design_your_own_change` {field, value} for every choice; `design_your_own_send` gains `design_id`, `changes`, `seconds`, `from_design`; `design_your_own_view` gains `from_design`; new `design_your_own_idea`, `design_your_own_reopen`.
+- **Fix**: `.dyo-steps` gets `grid-template-columns: minmax(0, 1fr)`, or a sideways-scrolling row widens the column past the screen.
+- **Needs**: `Website-data/design-your-own-plan-2026-10-30/3-add-design-leads.sql` run in Supabase before designs are kept; mark `design_your_own_send` as a key event in GA4 (Admin → Events).
+
 ### [2026-10-30 19:00] — Design Your Own: Three Steps, Bead Swatches, Phone Bar
 
 - **Steps**: Stones → Style → Fit (was six). Stones: feeling chips as a filter, then one round bead per stone (`Bead`: photo, else drawing, else colour), then a card for the chosen stone (bracelet photo, "traditionally associated with…", price, "See it" link only when the bracelet is listed: `DesignStone.listed` from `products.active`). Style: pattern, then for two stones a slot row (main / second); the second stone's swatches open from its slot or by tapping its beads on the ring. Fit: bead size, wrist as chips (15–20 cm, "Not sure" by default), "It's a gift" with a card message. "For me / a gift" is gone as a step.
