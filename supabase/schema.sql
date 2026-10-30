@@ -437,3 +437,29 @@ revoke all on function public.create_checkout_order(jsonb, jsonb, text) from pub
 revoke all on function public.release_discount_redemption(uuid, text) from public;
 grant execute on function public.create_checkout_order(jsonb, jsonb, text) to service_role;
 grant execute on function public.release_discount_redemption(uuid, text) to service_role;
+
+-- Design Your Own (2026-10-30): which stones the designer offers, independent of
+-- whether the bracelet listing itself is active. design_slug is the stone's code
+-- in design links; a renamed code keeps working through design_aliases.
+alter table public.products add column if not exists design_enabled boolean not null default false;
+alter table public.products add column if not exists design_slug text;
+alter table public.products add column if not exists design_name text;
+alter table public.products add column if not exists design_bead_shape text not null default 'sphere';
+alter table public.products add column if not exists design_bead_images text[] not null default '{}';
+alter table public.products add column if not exists design_colour text;
+alter table public.products add column if not exists design_aliases text[] not null default '{}';
+do $$ begin
+  alter table public.products add constraint products_design_slug_key unique (design_slug);
+exception when duplicate_object or duplicate_table then null; end $$;
+do $$ begin
+  alter table public.products add constraint products_design_bead_shape_check
+    check (design_bead_shape in ('sphere','rondelle','tube'));
+exception when duplicate_object then null; end $$;
+do $$ begin
+  alter table public.products add constraint products_design_slug_format
+    check (design_slug is null or design_slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$');
+exception when duplicate_object then null; end $$;
+do $$ begin
+  alter table public.products add constraint products_design_colour_format
+    check (design_colour is null or design_colour ~ '^#[0-9a-f]{6}$');
+exception when duplicate_object then null; end $$;

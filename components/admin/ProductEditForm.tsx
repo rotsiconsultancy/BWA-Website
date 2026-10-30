@@ -40,8 +40,11 @@ const initialState: ProductActionState = {};
 
 export default function ProductEditForm({
   product,
+  designReady = false,
 }: {
   product: EditableProduct;
+  /** Whether the Design Your Own columns exist in Supabase yet. */
+  designReady?: boolean;
 }) {
   const primaryVariant = product.product_variants[0];
   const formRef = useRef<HTMLFormElement>(null);
@@ -302,6 +305,76 @@ export default function ProductEditForm({
           </label>
         </div>
       </section>
+      {designReady && (
+        <section className="admin-form-section">
+          <input type="hidden" name="design_fields" value="1" />
+          <div className="admin-form-heading">
+            <div>
+              <h2>Design Your Own</h2>
+              <p>
+                Offer this stone on the Design Your Own page. It stays there even
+                if the bracelet itself is a draft. Changing the stone code keeps
+                the old one working for links already sent.
+              </p>
+            </div>
+            <span>Optional</span>
+          </div>
+          <div className="admin-form-grid">
+            <label className="admin-form-wide">
+              <span>
+                <input
+                  name="design_enabled"
+                  type="checkbox"
+                  defaultChecked={!!product.design_enabled}
+                />{" "}
+                Offer this stone in Design Your Own
+              </span>
+            </label>
+            <label>
+              Stone name{" "}
+              <span className="admin-field-help">e.g. Simba Gold</span>
+              <input name="design_name" defaultValue={product.design_name ?? ""} />
+            </label>
+            <label>
+              Stone code{" "}
+              <span className="admin-field-help">In design links, e.g. simba-gold</span>
+              <input name="design_slug" defaultValue={product.design_slug ?? ""} />
+            </label>
+            <label>
+              Bead shape
+              <select
+                name="design_bead_shape"
+                defaultValue={product.design_bead_shape ?? "sphere"}
+              >
+                <option value="sphere">Round</option>
+                <option value="rondelle">Rondelle (flat disc)</option>
+                <option value="tube">Tube</option>
+              </select>
+            </label>
+            <label>
+              Bead colour{" "}
+              <span className="admin-field-help">Used until bead photos exist, e.g. #8a5a1e</span>
+              <input name="design_colour" defaultValue={product.design_colour ?? ""} />
+            </label>
+            <label className="admin-form-wide">
+              Bead photos{" "}
+              <span className="admin-field-help">
+                One address per line, from cut-beads.py
+              </span>
+              <textarea
+                name="design_bead_images"
+                defaultValue={(product.design_bead_images || []).join("\n")}
+              />
+            </label>
+            {!!product.design_aliases?.length && (
+              <p className="admin-field-help admin-form-wide">
+                Old codes that still open this stone:{" "}
+                {product.design_aliases.join(", ")}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
       <div className="admin-form-actions">
         <div>
           <label>

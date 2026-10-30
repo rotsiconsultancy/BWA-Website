@@ -6648,6 +6648,80 @@ body {
 .dyo-share {
   margin-top: 10px;
 }
+.dyo-send:disabled,
+.dyo-share:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.dyo-summary .dyo-warn {
+  margin: 0 0 10px;
+}
+.dyo-swatch {
+  display: block;
+  aspect-ratio: 1;
+  padding: 0;
+}
+.dyo-gone {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  background: var(--white);
+  border: 1px solid var(--clay);
+  border-radius: var(--radius-md);
+  color: var(--clay);
+}
+.dyo-gone > svg {
+  flex: none;
+  margin-top: 2px;
+}
+.dyo-gone p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--charcoal);
+}
+.dyo-gone small {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.dyo-gone-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.dyo-gone-picks button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 12px 6px 6px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--muted);
+}
+.dyo-gone-picks button:hover {
+  border-color: var(--charcoal);
+}
+.dyo-gone-picks img {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm, 6px);
+}
+.dyo-gone-picks b {
+  display: block;
+  color: var(--charcoal);
+}
+.dyo-resting {
+  padding-bottom: 96px;
+}
+.dyo-resting .btn {
+  margin-top: 20px;
+}
 @media (max-width: 860px) {
   .dyo-intro {
     padding-top: 24px;

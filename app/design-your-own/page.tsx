@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import DesignYourOwn, {
-  type DesignStone,
-} from "@/components/design/DesignYourOwn";
-import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
+import DesignYourOwn from "@/components/design/DesignYourOwn";
 import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
-import { DESIGN_STONES } from "@/lib/design/stones";
+import { getDesignStones } from "@/lib/design/stones-server";
 
 export const dynamic = "force-dynamic";
 
@@ -39,28 +36,8 @@ export const metadata: Metadata = {
 };
 
 export default async function DesignYourOwnPage() {
-  const catalogue = await getStorefrontCatalogue();
-  // Every stone borrows its listed bracelet's photo, name, price and
-  // feelings, so the page never disagrees with the shop.
-  const stones: DesignStone[] = DESIGN_STONES.flatMap(({ stone, product }) => {
-    const listed = catalogue.find((p) => p.slug === product);
-    if (!listed) return [];
-    const name = listed.title.split(" ").slice(0, 2).join(" ");
-    const kind = listed.title
-      .slice(name.length)
-      .replace(/(Stone )?Bracelet$/, "")
-      .trim();
-    return [
-      {
-        slug: stone,
-        name,
-        stone: kind,
-        product: listed.slug,
-        image: listed.images[0],
-        prices: listed.prices,
-        feelings: listed.energy_vibe,
-      },
-    ];
-  });
-  return <DesignYourOwn stones={stones} />;
+  // Each stone's photo, price and feelings come from its product, so the page
+  // never disagrees with the shop; which stones show is set per product in admin.
+  const { stones, retired } = await getDesignStones();
+  return <DesignYourOwn stones={stones} retired={retired} />;
 }

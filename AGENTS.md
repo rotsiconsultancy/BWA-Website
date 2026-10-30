@@ -32,6 +32,17 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-10-30 17:00] — Design Your Own: Stones From Supabase, Safe Links, Bead Photos
+
+- **Stones from Supabase**: new `products` columns `design_enabled`, `design_slug` (the stone's code in design links), `design_name`, `design_bead_shape` (sphere/rondelle/tube), `design_bead_images` (text[]), `design_colour` (#hex), `design_aliases` (old codes) at the end of `supabase/schema.sql`. `lib/design/stones-server.ts` `getDesignStones()` returns the enabled stones (whether or not the bracelet listing is active) plus retired ones for old links. Until the columns exist (PostgREST 42703) it falls back to `LEGACY_DESIGN_STONES` in `lib/design/stones.ts`, matched against the catalogue.
+- **Admin**: Products → Edit has a "Design Your Own" section (only shown once the columns exist): offer toggle, stone name and code, bead shape, colour, bead photo URLs. Changing the code adds the old one to `design_aliases` (`lib/admin/design-fields.ts`), so sent links keep working. Saving revalidates `/design-your-own`.
+- **Drawing**: beads use the stone's photos when it has them; else the hand-tuned material in `lib/design/beads.ts`; else a polished bead built from `design_colour` (neutral grey without one). Shapes now come from the data, not `beads.ts`.
+- **Links**: `v=1` added to shared links (old links read as v1). `?stone=` and `?with=` also match old codes. `?product=<slug>` (used by `designLink()` from the quiz) opens that product's stone and follows `PRODUCT_REDIRECTS`. A stone that is gone shows as dashed empty places on the ring, with a notice offering the 3 most similar stones (same stone type, then colour, then feeling); Send and Share stay disabled until it is replaced. Fixed: when the main stone was gone, the link's second stone could be swapped out.
+- **Edge cases**: no stones at all (catalogue failed or none enabled) shows a "designer is resting" screen with a WhatsApp button instead of crashing; with one stone, the two-stone patterns are hidden.
+- **GA4**: `design_your_own_view` gains `link_version`; new `design_your_own_missing_stone` (stone, role, known) and `design_your_own_unavailable`; `design_your_own_stone` gains `from` (grid/suggestion) and is sent for second stones too.
+- **Bead photos**: `Assets/stones/_product-photo-kit/cut-beads.py` cuts 4 beads (256 px WebP, ~9 KB) plus a colour per round stone from the clean product photo; `Website-data/design-your-own-plan-2026-10-30/2-upload-beads.mjs` uploads them to `product-images/design-beads/<code>/<hash>.webp` and sets the columns (with undo).
+- **Not live yet**: needs `Website-data/design-your-own-plan-2026-10-30/1-add-design-columns.sql` run in Supabase, the bead upload, and a push.
+
 ### [2026-10-28 18:30] — Design Your Own Replaces Bespoke
 
 - **Page**: `/design-your-own` (`app/design-your-own/page.tsx`, `components/design/DesignYourOwn.tsx`). Six steps: for me or a gift, an optional feeling filter (the product's `energy_vibe`), main stone, pattern (one stone, two alternating, main + accents) with a second stone, extras (spacers, letters in metal or acrylic with a soft warning past 10, a charm), bead size (medium or large), wrist size or "not sure". A live preview ring sits beside the steps (pinned under the header on phones). The summary sends the design to WhatsApp (254745474586) with a link that reopens it (`?stone=&design=&with=&size=&spacers=&letters=&kind=&charm=`), and "Share this design" uses the share sheet or copies the link.

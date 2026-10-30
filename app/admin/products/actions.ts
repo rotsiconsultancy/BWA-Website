@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { TAXONOMIES } from "@/lib/commerce/taxonomy";
 import { requireAdmin } from "@/lib/admin/auth";
+import { DESIGN_FIELDS, readDesignFields } from "@/lib/admin/design-fields";
 
 const taxonomies = TAXONOMIES.map((t) => t.name);
 
@@ -283,11 +284,13 @@ export async function updateProduct(
     };
   }
 
+  // The form has the Design Your Own fields only once those columns exist.
+  const withDesign = formData.has("design_fields");
   const { data: previous, error: previousError } = await admin
     .from("products")
-    .select("slug,title,price_kes,price_usd,active")
+    .select(`slug,title,price_kes,price_usd,active${withDesign ? `,${DESIGN_FIELDS}` : ""}`)
     .eq("id", productId)
-    .single();
+    .single<Record<string, any>>();
   const { data: previousVariant, error: previousVariantError } = await admin
     .from("product_variants")
     .select("stock_quantity,reserved_quantity")
@@ -296,6 +299,10 @@ export async function updateProduct(
     .single();
   if (previousError || previousVariantError || !previous || !previousVariant)
     return { error: "This product could not be found. Refresh and try again." };
+  const design = withDesign
+    ? readDesignFields(formData, previous as { design_slug: string | null; design_aliases: string[] | null })
+    : { fields: {} };
+  if ("error" in design) return { error: design.error };
 
   const productPayload = {
     slug,
@@ -318,6 +325,7 @@ export async function updateProduct(
       value(formData, "descriptor") ||
       value(formData, "story"),
     ...tags,
+    ...design.fields,
   };
   const { error: productError } = await admin
     .from("products")
@@ -327,7 +335,9 @@ export async function updateProduct(
     return {
       error:
         productError.code === "23505"
-          ? "That SKU or public URL belongs to another product."
+          ? productError.message.includes("design_slug")
+            ? "That Design Your Own stone code belongs to another product."
+            : "That SKU or public URL belongs to another product."
           : "The product details could not be saved. Nothing has been cleared.",
     };
 
@@ -410,6 +420,7 @@ export async function updateProduct(
   });
   revalidateProduct(previous.slug);
   if (previous.slug !== slug) revalidateProduct(slug);
+  revalidatePath("/design-your-own");
   return { success: "Product, gallery, and primary variant saved." };
 }
 

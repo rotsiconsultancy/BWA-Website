@@ -1,32 +1,28 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, Share2 } from "lucide-react";
+import { Check, Share2, TriangleAlert } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import StoreImage from "@/components/commerce/StoreImage";
 import Money from "@/components/commerce/Money";
-import type { Prices } from "@/lib/commerce/money";
-import { beadImage, SHAPE_BOX, shapeOf, widthOf } from "@/lib/design/beads";
-import type { DesignStoneSlug } from "@/lib/design/stones";
+import { beadImage, SHAPE_BOX, widthOf } from "@/lib/design/beads";
+import {
+  DESIGN_LINK_VERSION,
+  type DesignStone,
+  findStone,
+  findStoneByProduct,
+  type RetiredStone,
+  similarStones,
+} from "@/lib/design/stones";
 import { trackGa4Event } from "@/lib/marketing/ga4";
-
-export type DesignStone = {
-  slug: DesignStoneSlug;
-  name: string;
-  stone: string;
-  product: string;
-  image: string;
-  prices: Prices;
-  feelings: string[];
-};
 
 type Pattern = "one" | "alt" | "accent";
 type Design = {
   forWhom: "me" | "gift";
   feeling: string | null;
-  main: DesignStoneSlug;
+  main: string;
   pattern: Pattern;
-  second: DesignStoneSlug;
+  second: string;
   spacers: boolean;
   lettersOn: boolean;
   letters: string;
@@ -36,7 +32,10 @@ type Design = {
   wrist: string;
   notSure: boolean;
   gift: string;
+  /** Stones a shared link asked for that the page no longer offers, by role. */
+  gone: { main?: Gone; second?: Gone };
 };
+type Gone = { code: string; name: string; retired?: RetiredStone };
 
 const WHATSAPP = "254745474586";
 const FEELINGS = ["calm", "grounding", "focus", "clarity", "vitality", "protection"];
@@ -59,22 +58,21 @@ const R = 200, CX = 300, CY = 280, SPACER = 0.38, CUBE = 0.74;
 // differ in the last digits, which React reports as a hydration mismatch).
 const r2 = (n: number) => Math.round(n * 100) / 100;
 type Item =
-  | { kind: "bead"; slug: DesignStoneSlug; w: number; idx: number }
+  | { kind: "bead"; stone: DesignStone; gone: boolean; w: number; idx: number }
   | { kind: "spacer"; w: number }
   | { kind: "letter"; ch: string; w: number };
 
-function layout(d: Design) {
+function layout(d: Design, main: DesignStone, second: DesignStone) {
   const letters = d.lettersOn ? d.letters.replace(/\s+/g, "").slice(0, 14) : "";
   const target = d.size === "large" ? 16 : 21; // beads around, in diameters
-  const per = widthOf(d.main) + (d.spacers ? SPACER : 0);
+  const per = widthOf(main.shape) + (d.spacers ? SPACER : 0);
   const count = Math.max(4, Math.round((target - letters.length * CUBE) / per));
   const items: Item[] = [...letters].map((ch) => ({ kind: "letter" as const, ch, w: CUBE }));
   for (let i = 0; i < count; i++) {
-    const slug =
-      (d.pattern === "alt" && i % 2 === 1) || (d.pattern === "accent" && i % 4 === 2)
-        ? d.second
-        : d.main;
-    items.push({ kind: "bead", slug, w: widthOf(slug), idx: i });
+    const isSecond = (d.pattern === "alt" && i % 2 === 1) || (d.pattern === "accent" && i % 4 === 2);
+    const stone = isSecond ? second : main;
+    const gone = !!(isSecond ? d.gone.second : d.gone.main);
+    items.push({ kind: "bead", stone, gone, w: widthOf(stone.shape), idx: i });
     if (d.spacers) items.push({ kind: "spacer", w: SPACER });
   }
   const unit = (2 * Math.PI * R) / items.reduce((a, b) => a + b.w, 0);
@@ -102,8 +100,8 @@ function layout(d: Design) {
   return { placed, unit: r2(unit), beadR: r2((unit / 2) * 0.97), charmAt };
 }
 
-function Ring({ design, ready }: { design: Design; ready: boolean }) {
-  const { placed, unit, beadR, charmAt } = useMemo(() => layout(design), [design]);
+function Ring({ design, main, second, ready }: { design: Design; main: DesignStone; second: DesignStone; ready: boolean }) {
+  const { placed, unit, beadR, charmAt } = useMemo(() => layout(design, main, second), [design, main, second]);
   const charm = (() => {
     const ax = r2(CX + R * Math.cos(charmAt)), ay = r2(CY + R * Math.sin(charmAt));
     const jr = beadR * 0.34, cr = beadR * 0.78, jy = ay + beadR * 0.62, cy = jy + jr + cr * 0.95;
@@ -143,18 +141,24 @@ function Ring({ design, ready }: { design: Design; ready: boolean }) {
         <circle cx={CX} cy={CY} r={R} fill="none" stroke="#3a3833" strokeWidth="2" opacity=".5" />
         {placed.map((it, k) => {
           if (it.kind === "bead") {
-            const shape = shapeOf(it.slug);
+            const { shape, beads } = it.stone;
             const [bx, by] = SHAPE_BOX[shape];
             const w = beadR * 2 * bx, h = beadR * 2 * by;
+            // A stone a shared link asked for that is gone: an empty place to fill.
+            if (it.gone)
+              return <circle key={k} cx={it.x} cy={it.y} r={beadR * 0.9} fill="#efe9df" stroke="#a39a8c" strokeWidth="2" strokeDasharray="5 4" />;
+            // Photographed beads first, else the drawn material.
+            const photo = beads.length ? beads[it.idx % beads.length] : null;
             return ready ? (
               <image
                 key={k}
-                href={beadImage(it.slug, it.idx % 4, it.deg, Math.min(160, Math.ceil(beadR * 4.4)))}
+                href={photo ?? beadImage(it.stone, it.idx % 4, it.deg, Math.min(160, Math.ceil(beadR * 4.4)))}
                 x={it.x - w / 2}
                 y={it.y - h / 2}
                 width={w}
                 height={h}
                 transform={shape === "sphere" ? undefined : `rotate(${it.deg} ${it.x} ${it.y})`}
+                preserveAspectRatio="xMidYMid slice"
               />
             ) : (
               <circle key={k} cx={it.x} cy={it.y} r={beadR} fill="#d8d0c2" />
@@ -216,14 +220,44 @@ function Segmented<T extends string>({
   );
 }
 
-export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
+export default function DesignYourOwn({ stones, retired }: { stones: DesignStone[]; retired: RetiredStone[] }) {
+  if (!stones.length) return <Resting />;
+  return <Designer stones={stones} retired={retired} />;
+}
+
+// No stones to offer (the catalogue did not load, or none are switched on).
+function Resting() {
+  useEffect(() => {
+    trackGa4Event("design_your_own_unavailable", {});
+  }, []);
+  return (
+    <main className="dyo-page">
+      <section className="dyo-intro dyo-resting">
+        <p className="eyebrow">Design your own</p>
+        <h1>The designer is resting.</h1>
+        <p>Tell us the stones and the look you have in mind, and we&apos;ll design it with you on WhatsApp.</p>
+        <a
+          className="btn btn-whatsapp"
+          href={`https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Hello BWA, I'd like to design my own bracelet.")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FaWhatsapp size={18} aria-hidden="true" /> Design it with us on WhatsApp
+        </a>
+      </section>
+    </main>
+  );
+}
+
+function Designer({ stones, retired }: { stones: DesignStone[]; retired: RetiredStone[] }) {
   const fallback = stones.find((s) => s.slug === "simba-gold") ?? stones[0];
+  const otherThan = (slug: string) => (stones.find((s) => s.slug !== slug) ?? fallback).slug;
   const [d, setD] = useState<Design>(() => ({
     forWhom: "me",
     feeling: null,
     main: fallback.slug,
     pattern: "one",
-    second: (stones.find((s) => s.slug === "chyulu-black") ?? stones[1] ?? fallback).slug,
+    second: (stones.find((s) => s.slug === "chyulu-black" && s.slug !== fallback.slug) ?? stones.find((s) => s.slug !== fallback.slug) ?? fallback).slug,
     spacers: false,
     lettersOn: false,
     letters: "",
@@ -233,23 +267,44 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
     wrist: "",
     notSure: false,
     gift: "",
+    gone: {},
   }));
   const [ready, setReady] = useState(false);
   const [copied, setCopied] = useState(false);
   const set = (patch: Partial<Design>) => setD((prev) => ({ ...prev, ...patch }));
-  const find = (slug: DesignStoneSlug) => stones.find((s) => s.slug === slug) ?? fallback;
+  const find = (slug: string) => stones.find((s) => s.slug === slug) ?? fallback;
+  const canPair = stones.length > 1;
 
   // Open a shared design, then draw the beads (they need the browser's canvas).
+  // Links carry v=<DESIGN_LINK_VERSION>; links from before versions are v1.
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
-    const known = (v: string | null) => stones.find((s) => s.slug === v)?.slug;
     const patch: Partial<Design> = {};
-    const main = known(q.get("stone"));
-    if (main) patch.main = main;
+    const gone: Design["gone"] = {};
+    // A stone code from the link: offered (maybe under an old code), or gone.
+    const read = (code: string | null): { stone?: DesignStone; gone?: Gone } => {
+      if (!code) return {};
+      const stone = findStone(stones, code);
+      if (stone) return { stone };
+      const was = retired.find((r) => r.slug === code || r.aliases.includes(code));
+      const name = was?.name ?? code.split("-").map((w) => w && w[0].toUpperCase() + w.slice(1)).join(" ");
+      return { gone: { code, name, retired: was } };
+    };
+    const main = read(q.get("stone"));
+    const fromProduct = findStoneByProduct(stones, q.get("product"));
+    if (main.stone ?? fromProduct) patch.main = (main.stone ?? fromProduct)!.slug;
+    if (main.gone) gone.main = main.gone;
     const pattern = q.get("design");
-    if (pattern === "one" || pattern === "alt" || pattern === "accent") patch.pattern = pattern;
-    const second = known(q.get("with"));
-    if (second && second !== (main ?? d.main)) patch.second = second;
+    if (canPair && (pattern === "alt" || pattern === "accent")) {
+      patch.pattern = pattern;
+      const second = read(q.get("with"));
+      // A gone main stone holds a stand-in; keep it clear of the link's second stone.
+      if (main.gone && second.stone && second.stone.slug === d.main) patch.main = otherThan(second.stone.slug);
+      const mainSlug = patch.main ?? d.main;
+      if (second.stone) patch.second = second.stone.slug === mainSlug ? otherThan(mainSlug) : second.stone.slug;
+      else if (patch.main && patch.main === d.second) patch.second = otherThan(patch.main);
+      if (second.gone) gone.second = second.gone;
+    } else if (patch.main && patch.main === d.second) patch.second = otherThan(patch.main);
     if (q.get("size") === "large") patch.size = "large";
     if (q.get("spacers") === "1") patch.spacers = true;
     if (q.get("charm") === "1") patch.charm = true;
@@ -258,17 +313,23 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
       patch.letters = q.get("letters")!.slice(0, 30);
       patch.letterKind = q.get("kind") === "acrylic" ? "acrylic" : "metal";
     }
+    if (gone.main || gone.second) patch.gone = gone;
     if (Object.keys(patch).length) set(patch);
     setReady(true);
-    trackGa4Event("design_your_own_view", { shared: q.has("stone") });
+    trackGa4Event("design_your_own_view", { shared: q.has("stone"), link_version: Number(q.get("v") ?? 1) });
+    for (const [role, g] of Object.entries(gone))
+      trackGa4Event("design_your_own_missing_stone", { stone: g.code, role, known: !!g.retired });
   }, []);
 
   const main = find(d.main), second = find(d.second), two = d.pattern !== "one";
+  // Places still to fill before the design can be sent.
+  const goneMain = d.gone.main, goneSecond = two ? d.gone.second : undefined;
+  const blocked = !!(goneMain || goneSecond);
   const shown = stones.filter((s) => !d.feeling || s.feelings.includes(d.feeling));
   const letters = d.letters.trim();
   const rows: [string, string][] = [
-    ["Main stone", `${main.name} (${main.stone})`],
-    ...(two ? [["Second stone", `${second.name} (${second.stone})`] as [string, string]] : []),
+    ["Main stone", goneMain ? `${goneMain.name} (no longer available)` : `${main.name}${main.stone && ` (${main.stone})`}`],
+    ...(two ? [["Second stone", goneSecond ? `${goneSecond.name} (no longer available)` : `${second.name}${second.stone && ` (${second.stone})`}`] as [string, string]] : []),
     ["Design", PATTERN_NAMES[d.pattern]],
     ["Bead size", d.size === "large" ? "Large" : "Medium"],
     ["Spacers", d.spacers ? "Yes" : "No"],
@@ -279,7 +340,7 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
   ];
 
   const shareUrl = () => {
-    const p = new URLSearchParams({ stone: d.main, design: d.pattern, size: d.size });
+    const p = new URLSearchParams({ v: String(DESIGN_LINK_VERSION), stone: d.main, design: d.pattern, size: d.size });
     if (two) p.set("with", d.second);
     if (d.spacers) p.set("spacers", "1");
     if (d.lettersOn && letters) {
@@ -300,6 +361,7 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
     gift: d.forWhom === "gift",
   });
   const send = () => {
+    if (blocked) return;
     const lines = [
       "Hello BWA, I designed a bracelet on your website:",
       ...rows.map(([a, b]) => `• ${a}: ${b}`),
@@ -311,6 +373,7 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
     window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank", "noopener,noreferrer");
   };
   const share = async () => {
+    if (blocked) return;
     const url = shareUrl();
     if (navigator.share) {
       try {
@@ -330,21 +393,34 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
       window.prompt("Copy this link", url);
     }
   };
-  const pickMain = (slug: DesignStoneSlug) => {
-    set({ main: slug, ...(slug === d.second ? { second: (stones.find((s) => s.slug !== slug) ?? fallback).slug } : {}) });
-    trackGa4Event("design_your_own_stone", { stone: slug, role: "main" });
+  const pickMain = (slug: string, from: "grid" | "suggestion" = "grid") => {
+    setD((prev) => ({
+      ...prev,
+      main: slug,
+      ...(slug === prev.second ? { second: otherThan(slug) } : {}),
+      gone: { ...prev.gone, main: undefined },
+    }));
+    trackGa4Event("design_your_own_stone", { stone: slug, role: "main", from });
+  };
+  const pickSecond = (slug: string, from: "grid" | "suggestion" = "grid") => {
+    setD((prev) => ({ ...prev, second: slug, gone: { ...prev.gone, second: undefined } }));
+    trackGa4Event("design_your_own_stone", { stone: slug, role: "second", from });
   };
   const stoneButton = (s: DesignStone, role: "main" | "second") => {
-    const picked = role === "main" ? d.main === s.slug : d.second === s.slug;
+    const picked = role === "main" ? !goneMain && d.main === s.slug : !goneSecond && d.second === s.slug;
     return (
       <button
         key={s.slug}
         type="button"
         aria-pressed={picked}
         disabled={role === "second" && s.slug === d.main}
-        onClick={() => (role === "main" ? pickMain(s.slug) : set({ second: s.slug }))}
+        onClick={() => (role === "main" ? pickMain(s.slug) : pickSecond(s.slug))}
       >
-        <StoreImage src={s.image} alt="" sizes="(max-width: 860px) 30vw, 140px" width={300} height={300} />
+        {s.image ? (
+          <StoreImage src={s.image} alt="" sizes="(max-width: 860px) 30vw, 140px" width={300} height={300} />
+        ) : (
+          <span className="dyo-swatch" style={{ background: s.colour ?? "#8a8279" }} aria-hidden="true" />
+        )}
         <span>
           <b>{s.name}</b>
           {s.stone}
@@ -353,7 +429,28 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
       </button>
     );
   };
+  // A stone from the link is gone: say so, and offer the closest ones.
+  const goneNotice = (role: "main" | "second", g: Gone) => (
+    <div className="dyo-gone" role="status">
+      <TriangleAlert size={18} aria-hidden="true" />
+      <div>
+        <p>
+          <b>{g.name}</b> from this design isn&apos;t available any more. Pick a {role === "main" ? "stone" : "second stone"} to replace it:
+        </p>
+        <div className="dyo-gone-picks">
+          {similarStones(stones.filter((s) => role === "main" || s.slug !== d.main), g.retired).map((s) => (
+            <button key={s.slug} type="button" onClick={() => (role === "main" ? pickMain(s.slug, "suggestion") : pickSecond(s.slug, "suggestion"))}>
+              {s.image && <StoreImage src={s.image} alt="" sizes="48px" width={96} height={96} />}
+              <span><b>{s.name}</b>{s.stone}</span>
+            </button>
+          ))}
+        </div>
+        <small>Or choose any stone below.</small>
+      </div>
+    </div>
+  );
   const from = (two && (second.prices.KES > main.prices.KES) ? second : main).prices;
+  const previewName = `${goneMain ? goneMain.name : main.name}${two ? ` + ${goneSecond ? goneSecond.name : second.name}` : ""}`;
 
   return (
     <main className="dyo-page">
@@ -367,12 +464,12 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
       </section>
       <div className="dyo-layout">
         <aside className="dyo-preview" aria-label="Your bracelet">
-          <Ring design={d} ready={ready} />
+          <Ring design={d} main={main} second={second} ready={ready} />
           <div className="dyo-preview-meta">
-            <StoreImage src={main.image} alt={`${main.name} ${main.stone} bracelet`} sizes="64px" width={128} height={128} />
+            {main.image && !goneMain && <StoreImage src={main.image} alt={`${main.name} ${main.stone} bracelet`} sizes="64px" width={128} height={128} />}
             <p>
-              <b>{main.name}{two && ` + ${second.name}`}</b>
-              {main.stone}{two && ` with ${second.stone}`} · {d.size === "large" ? "Large" : "Medium"} beads
+              <b>{previewName}</b>
+              {!goneMain && main.stone}{two && !goneSecond && ` with ${second.stone}`} · {d.size === "large" ? "Large" : "Medium"} beads
             </p>
           </div>
           <p className="dyo-note">The ring is a drawing to show the design. The photos are the real stones.</p>
@@ -406,13 +503,14 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
 
           <section className="dyo-step">
             <header><span>03</span><h2>Choose your stone</h2><small>{shown.length} stones</small></header>
+            {goneMain && goneNotice("main", goneMain)}
             <div className="dyo-stones">{shown.map((s) => stoneButton(s, "main"))}</div>
           </section>
 
           <section className="dyo-step">
             <header><span>04</span><h2>Choose the design</h2></header>
             <div className="dyo-patterns" role="group" aria-label="Design">
-              {PATTERNS.map(([v, label]) => (
+              {PATTERNS.filter(([v]) => canPair || v === "one").map(([v, label]) => (
                 <button key={v} type="button" aria-pressed={d.pattern === v} onClick={() => set({ pattern: v })}>
                   <PatternIcon pattern={v} />
                   {label}
@@ -422,6 +520,7 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
             {two && (
               <div className="dyo-sub">
                 <p>Pick your second stone</p>
+                {goneSecond && goneNotice("second", goneSecond)}
                 <div className="dyo-stones">{stones.map((s) => stoneButton(s, "second"))}</div>
               </div>
             )}
@@ -483,7 +582,7 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
 
           <section className="dyo-summary" aria-label="Your design">
             <p className="eyebrow">Your design</p>
-            <h2>{main.name}{two && ` + ${second.name}`}</h2>
+            <h2>{previewName}</h2>
             <ul>
               {rows.map(([a, b]) => (
                 <li key={a}><span>{a}</span><span>{b}</span></li>
@@ -492,10 +591,11 @@ export default function DesignYourOwn({ stones }: { stones: DesignStone[] }) {
             <p className="dyo-price">
               <b>Price depends on your design.</b> Usually the listed price (from <Money prices={from} />) plus KES 100–500. Making time and the final price are confirmed on WhatsApp.
             </p>
-            <button type="button" className="btn btn-whatsapp dyo-send" onClick={send}>
+            {blocked && <p className="dyo-warn">Replace the stone that&apos;s no longer available, then send your design.</p>}
+            <button type="button" className="btn btn-whatsapp dyo-send" onClick={send} disabled={blocked}>
               <FaWhatsapp size={18} aria-hidden="true" /> Send my design on WhatsApp
             </button>
-            <button type="button" className="btn btn-outline dyo-share" onClick={share}>
+            <button type="button" className="btn btn-outline dyo-share" onClick={share} disabled={blocked}>
               <Share2 size={16} aria-hidden="true" /> {copied ? "Link copied" : "Share this design"}
             </button>
           </section>

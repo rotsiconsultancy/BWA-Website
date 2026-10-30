@@ -1,15 +1,16 @@
-import type { DesignStoneSlug } from "./stones";
+import type { BeadShape, DesignStone } from "./stones";
 
 // Draws one bead as a small lit 3D object on a canvas, for the Design Your
 // Own preview. Each stone is a material: two base colours mixed by noise,
 // then pattern layers, then a finish (gloss, metal, pearl). The pattern is
 // sampled on the bead's curved surface, so it wraps around like real stone.
-// Browser only: it needs a canvas.
+// Browser only: it needs a canvas. Stones with bead photos (cut-beads.py)
+// use those instead; a stone with neither photos nor a hand-tuned material
+// here is drawn from its colour.
 
 type LayerKind = "patch" | "vein" | "pore" | "speck" | "band";
 // [kind, colour, scale (higher = finer), threshold, amount, band width]
 type Layer = [LayerKind, string, number, number, number, number?];
-export type BeadShape = "sphere" | "rondelle" | "tube";
 type Material = {
   base?: [string, string];
   /** Some stones vary bead to bead: one base pair per variant. */
@@ -19,7 +20,6 @@ type Material = {
   layers: Layer[];
   /** 0 = matte (lava), 1 = mirror polish. */
   gloss: number;
-  shape?: Exclude<BeadShape, "sphere">;
   metal?: boolean;
   pearl?: boolean;
   /** Tiger's eye: bands brighten in a strip, like its silky sheen. */
@@ -30,15 +30,15 @@ type Material = {
   sparkle?: boolean;
 };
 
-const MATS: Record<DesignStoneSlug, Material> = {
+const MATS: Record<string, Material> = {
   "watamu-deep": { base: ["#13226e", "#2e4fcc"], bs: 3.5, layers: [["patch", "#d6cdb6", 4.2, 0.62, 0.9], ["speck", "#e3bd57", 38, 0.82, 1]], gloss: 0.8 },
-  "maziwa-glow": { base: ["#e9e0d2", "#fffaf2"], bs: 3, layers: [["band", "#fffdf8", 7, 0.55, 0.5, 0.25]], gloss: 0.9, pearl: true, shape: "rondelle" },
+  "maziwa-glow": { base: ["#e9e0d2", "#fffaf2"], bs: 3, layers: [["band", "#fffdf8", 7, 0.55, 0.5, 0.25]], gloss: 0.9, pearl: true },
   "simba-gold": { base: ["#3a230d", "#6b4318"], bs: 2.5, layers: [["band", "#9a6522", 28, 0.4, 0.6, 0.3], ["band", "#cf9a48", 28, 0.7, 0.45, 0.15]], gloss: 0.8, tiger: true },
   "aberdare-pine": { base: ["#173426", "#2f5d46"], bs: 4, layers: [["patch", "#7f9a7b", 5.5, 0.62, 0.7], ["speck", "#c0b78a", 16, 0.76, 0.6]], gloss: 0.65 },
   "anga-blue": { base: ["#6d84c4", "#a3b4e3"], bs: 3.5, layers: [["vein", "#eef1f9", 3.8, 0.92, 0.7]], gloss: 0.7 },
   "bogoria-blush": { base: ["#d9b3b5", "#f2dcdc"], bs: 3, layers: [["patch", "#c29599", 6, 0.64, 0.4]], gloss: 0.8 },
   "chalbi-map": { base: ["#b27a3e", "#e0b77a"], bs: 4, layers: [["vein", "#4a2f18", 5, 0.91, 0.75], ["band", "#efcf95", 8, 0.6, 0.4, 0.2]], gloss: 0.5 },
-  "chuma-link": { base: ["#26272c", "#3a3c42"], bs: 2, layers: [], gloss: 1, metal: true, shape: "tube" },
+  "chuma-link": { base: ["#26272c", "#3a3c42"], bs: 2, layers: [], gloss: 1, metal: true },
   "chyulu-black": { base: ["#1f1f1f", "#2e2e2e"], bs: 6, layers: [["pore", "#060606", 17, 0.4, 1]], gloss: 0.08 },
   "diani-denim": { base: ["#e3e7ef", "#f7f8fb"], bs: 3, layers: [["patch", "#2847b0", 4.2, 0.57, 1], ["patch", "#1a2f80", 8, 0.7, 0.6]], gloss: 0.75 },
   "kerio-earth": { multi: [["#7f6f4f", "#a8946a"], ["#5e3326", "#8a4a35"], ["#6c7a55", "#93a07a"], ["#b39a6e", "#d4bf95"]], bs: 2.4, layers: [["patch", "#4f5b40", 5, 0.62, 0.6], ["vein", "#3a2a1a", 4, 0.93, 0.4]], gloss: 0.6 },
@@ -61,11 +61,9 @@ const MATS: Record<DesignStoneSlug, Material> = {
   "waridi-shadow": { base: ["#c97884", "#eaa9b1"], bs: 4, layers: [["vein", "#251d1f", 4.5, 0.91, 0.9]], gloss: 0.7 },
 };
 
-export const shapeOf = (slug: DesignStoneSlug): BeadShape =>
-  MATS[slug].shape ?? "sphere";
 /** Width along the cord, in bead diameters. */
-export const widthOf = (slug: DesignStoneSlug) =>
-  ({ sphere: 1, rondelle: 0.55, tube: 1.3 })[shapeOf(slug)];
+export const widthOf = (shape: BeadShape) =>
+  ({ sphere: 1, rondelle: 0.55, tube: 1.3 })[shape];
 /** Drawn width and height, in bead diameters, before turning onto the ring. */
 export const SHAPE_BOX: Record<BeadShape, [number, number]> = {
   sphere: [1, 1],
@@ -113,15 +111,32 @@ function fbm(x: number, y: number, z: number, s: number, octaves = 4) {
 
 const cache = new Map<string, string>();
 
+const hex = ([r, g, b]: RGB) =>
+  "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v)) * 255).toString(16).padStart(2, "0")).join("");
+
+/** A plain polished stone in the bead's colour, for stones without a material above. */
+function fromColour(colour: string | null): Material {
+  const c = rgb(colour && /^#[0-9a-f]{6}$/i.test(colour) ? colour : "#8a8279");
+  return {
+    base: [hex(mix(c, [0, 0, 0], 0.3)), hex(mix(c, [1, 1, 1], 0.08))],
+    bs: 3,
+    layers: [["patch", hex(mix(c, [1, 1, 1], 0.25)), 5, 0.62, 0.35]],
+    gloss: 0.7,
+  };
+}
+
+type BeadStone = Pick<DesignStone, "slug" | "shape" | "colour">;
+
 /**
  * A bead as a PNG data URL. `variant` (0–3) turns the pattern so neighbours
  * differ; `angleDeg` is the bead's turn on the ring, so shaped beads stay lit
  * from the top left. `px` is the image size for a plain round bead.
  */
-export function beadImage(slug: DesignStoneSlug, variant: number, angleDeg: number, px: number) {
-  const M = MATS[slug], shape = shapeOf(slug);
+export function beadImage(stone: BeadStone, variant: number, angleDeg: number, px: number) {
+  const { slug, shape } = stone;
+  const M = MATS[slug] ?? fromColour(stone.colour);
   const turned = shape === "sphere" ? 0 : Math.round(angleDeg / 3) * 3;
-  const key = `${slug}|${variant}|${turned}|${px}`;
+  const key = `${slug}|${shape}|${stone.colour}|${variant}|${turned}|${px}`;
   const hit = cache.get(key);
   if (hit) return hit;
 
