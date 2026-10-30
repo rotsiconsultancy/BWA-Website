@@ -41,7 +41,7 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Edge cases**: no stones at all (catalogue failed or none enabled) shows a "designer is resting" screen with a WhatsApp button instead of crashing; with one stone, the two-stone patterns are hidden.
 - **GA4**: `design_your_own_view` gains `link_version`; new `design_your_own_missing_stone` (stone, role, known) and `design_your_own_unavailable`; `design_your_own_stone` gains `from` (grid/suggestion) and is sent for second stones too.
 - **Bead photos**: `Assets/stones/_product-photo-kit/cut-beads.py` cuts 4 beads (256 px WebP, ~9 KB) plus a colour per round stone from the clean product photo; `Website-data/design-your-own-plan-2026-10-30/2-upload-beads.mjs` uploads them to `product-images/design-beads/<code>/<hash>.webp` and sets the columns (with undo).
-- **Not live yet**: needs `Website-data/design-your-own-plan-2026-10-30/1-add-design-columns.sql` run in Supabase, the bead upload, and a push.
+- **Data (2026-10-30)**: owner ran the columns in the SQL editor; the 28 stones were switched on with `1b-enable-stones.mjs on` (the SQL's update step had not applied) and 26 got bead photos with `2-upload-beads.mjs upload` (undo: `undo`; Chuma Link and Maziwa Glow keep their drawings). Live once pushed.
 
 ### [2026-10-28 18:30] — Design Your Own Replaces Bespoke
 
