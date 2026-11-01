@@ -2,6 +2,7 @@
 title: "Lava Stone: The Volcano on Your Wrist"
 description: "What lava stone is, why it is full of tiny holes, and the Kenyan volcanoes behind our lava bracelets: Longonot, Chyulu, Suswa and Menengai."
 date: 2026-11-01
+updated: 2026-11-01
 category: Stone guides
 cover: /journal/lava-stone-the-volcano-on-your-wrist/cover.webp
 coverAlt: "A black lava stone bracelet and a white speckled bracelet on a wrist against a rust-red wall"
@@ -12,7 +13,7 @@ faq:
   - q: "Why is lava stone so light?"
     a: "It is full of tiny holes. They were left by gas bubbles that escaped while the lava cooled, so each bead is part rock and part air."
   - q: "Are red and orange lava beads natural?"
-    a: "Natural lava is black or dark grey. Bright red, orange and other coloured lava beads get their colour from dye, which soaks easily into the pores."
+    a: "Red and orange lava can be natural: iron in the hot rock oxidises when it meets air or steam, much like rust. Our red and orange lava bracelets are not dyed. Other sellers do dye lava, since the pores soak up colour easily, so ask if you are unsure."
   - q: "What is lava stone associated with?"
     a: "Lava stone is traditionally associated with grounding, the idea of feeling steady and connected to the earth. People wear it for that meaning; it is a tradition, not a proven effect."
 ---
@@ -71,9 +72,9 @@ The **Menengai Rust**, a muted red lava bracelet, carries its name.
 
 ## Why some lava is red
 
-Here is something worth knowing: natural lava stone is black or dark grey. The bright red, orange and coloured lava beads you see in shops get their colour from dye. The same pores that make lava so light also soak up colour easily, which is why lava comes in so many shades.
+Most lava cools black or dark grey. But lava is rich in iron, and when that iron meets air or steam while the rock is still hot, it oxidises in minutes, the same chemistry as rust. The rock comes out red, rust or orange. That is why the cinder cones on many volcanoes look red from a distance.
 
-That does not make a coloured bead any less real. It is still volcanic rock, just with a colour added. Our **Suswa Rust**, **Menengai Rust** and **Moto Lava** bring warm colour to the wrist. If you want lava exactly as the volcano left it, choose black.
+Our **Suswa Rust**, **Menengai Rust** and **Moto Lava** carry that colour naturally. They are not dyed. Black or red, every one of them is volcanic rock exactly as it cooled.
 
 {{product: moto-lava-orange-lava-stone-bracelet}}
 

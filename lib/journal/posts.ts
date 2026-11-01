@@ -77,13 +77,32 @@ function readPost(file: string): JournalPost {
   };
 }
 
-/** Newest first. Files starting with "_" are drafts and are not published. */
+/** Today's date in Nairobi, e.g. "2026-11-08". */
+export function nairobiToday(now = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Nairobi" }).format(
+    now,
+  );
+}
+
+/** A post dated in the future stays hidden until that day in Nairobi. */
+export function isReleased(post: JournalPost, today = nairobiToday()) {
+  return post.date <= today;
+}
+
+/**
+ * Newest first. Files starting with "_" are drafts and are not published.
+ * Scheduled posts (dated in the future) appear on their date; pages that list
+ * posts revalidate hourly, so a post shows up within an hour of midnight.
+ * `next dev` shows them early so they can be reviewed.
+ */
 export function getAllPosts(): JournalPost[] {
   if (!fs.existsSync(POSTS_DIR)) return [];
+  const showScheduled = process.env.NODE_ENV === "development";
   return fs
     .readdirSync(POSTS_DIR)
     .filter((file) => file.endsWith(".md") && !file.startsWith("_"))
     .map(readPost)
+    .filter((post) => showScheduled || isReleased(post))
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
