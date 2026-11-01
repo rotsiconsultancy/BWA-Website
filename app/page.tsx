@@ -5,6 +5,11 @@ import StorySection from "@/components/home/StorySection";
 import BWADifference from "@/components/home/BWADifference";
 import SocialProof from "@/components/home/SocialProof";
 import FinalCTA from "@/components/home/FinalCTA";
+import type { Metadata } from "next";
+
+// Title and description come from the root layout.
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
 export default function Home() {
   return (
     <>

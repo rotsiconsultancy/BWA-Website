@@ -32,6 +32,17 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-01 20:00] — Search Titles, Brand Name, Breadcrumbs, Return Policy
+
+From the Search Console export (13 Sep–30 Oct 2026, `../beadsworldafrica.co.ke-Performance-on-Search-2026-11-01.xlsx`): 257 impressions, 13 clicks, avg position ~15; "beads world africa" ranked ~10th, "tiger eye bracelet" ~1.6 with 0 clicks, "stone bracelets" 19th.
+
+- **Homepage**: title "Beads World Africa | Natural Stone Bracelets Handmade in Kenya", new description (stones, men and women, WhatsApp, Nairobi and Kenya delivery), canonical `/` (`app/page.tsx`). New `WebSite` JSON-LD in the layout (name + alternateName BWA, Beads World, beadsworldafrica) so Google uses the brand as the site name.
+- **Stone/feeling hubs**: title adds ", from KES <lowest price in the hub>" (`fromPriceKes()` in `lib/commerce/seo.ts`); description adds `DELIVERY_SNIPPET`. Tiger eye snippet rewritten around "tiger eye stone bracelets for men and women".
+- **/bracelets**: title "Stone Bracelets in Kenya, Handmade | Beads World Africa", H1 "Stone bracelets that move with you.", new description. No "from KES" here: the cheapest pieces (KES 200) are patterned beads, not stone.
+- **Breadcrumbs**: `breadcrumbJsonLd()` on /bracelets, hubs and products.
+- **Products**: each Offer gets `seller` and the 7-day `hasMerchantReturnPolicy`. No `shippingDetails`: delivery has no fixed rate (Uber/Bolt fare, quoted outside Nairobi); set shipping in Merchant Center (roadmap A5).
+- **Next check**: new export around 2026-11-29.
+
 ### [2026-10-30 21:00] — Design Your Own: Design Ids, Sent-Design List, Link Pictures, Ideas, Saved Designs
 
 - **Design ids**: every Send makes a new id (`lib/design/design-id.ts`, `D-` + 5 of `2-9A-HJKMNP-Z`), puts it in the WhatsApp message ("design D-XXXXX") and in the message's design link (`&id=`). WhatsApp opens first; the copy is sent with `sendBeacon` (fetch keepalive fallback) to `POST /api/design-leads`, which re-reads the link with `lib/design/design-link.ts`, checks the stones, works out the KES price range and inserts into the new `design_leads` table (no name, phone or gift message; RLS on, no public policies). It always answers 204; missing table (42P01) and repeat ids (23505) are skipped quietly.

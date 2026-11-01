@@ -7,7 +7,14 @@ import { notFound } from "next/navigation";
 import SeoProductGrid from "@/components/commerce/SeoProductGrid";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { getSeoHub, productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
-import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
+import {
+  absoluteUrl,
+  breadcrumbJsonLd,
+  buildOgImages,
+  DELIVERY_SNIPPET,
+  fromPriceKes,
+  SITE_NAME,
+} from "@/lib/commerce/seo";
 
 type Props = { params: Promise<{ hub: string }> };
 
@@ -17,8 +24,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const hub = getSeoHub((await params).hub);
   if (!hub) return {};
 
-  const title = `${hub.title} | ${SITE_NAME}`;
-  const description = hub.description;
+  const from = fromPriceKes(
+    productsForSeoHub(await getStorefrontCatalogue(), hub),
+  );
+  const title = from
+    ? `${hub.title}, from ${from} | ${SITE_NAME}`
+    : `${hub.title} | ${SITE_NAME}`;
+  const description = `${hub.description} ${DELIVERY_SNIPPET}`;
   const canonicalUrl = absoluteUrl(`/bracelets/${hub.slug}`);
   const ogImages = buildOgImages(
     "/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
@@ -81,7 +93,15 @@ export default async function BraceletHubPage({ params }: Props) {
     <main className="seo-hub-page bracelet-hub-page">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            jsonLd,
+            breadcrumbJsonLd([
+              { name: "Bracelets", path: "/bracelets" },
+              { name: hub.title, path: `/bracelets/${hub.slug}` },
+            ]),
+          ]),
+        }}
       />
       <section className="bracelet-hub-hero">
         <StoreImage

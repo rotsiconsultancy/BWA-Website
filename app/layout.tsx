@@ -40,13 +40,31 @@ const organizationJsonLd = {
     merchantReturnLink: `${SITE_URL}/returns`,
   },
 };
+// Tells Google the site's name, so a search for "Beads World Africa" (or
+// "beads world") shows this site under its own name.
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
+  name: SITE_NAME,
+  alternateName: ["BWA", "Beads World", "beadsworldafrica"],
+  url: `${SITE_URL}/`,
+  publisher: { "@id": `${SITE_URL}/#organization` },
+};
+
+// Search Console (Sep–Oct 2026): brand searches ranked ~10th and the old
+// title never said Kenya. Keep "Kenya" and the brand name in both.
+const HOME_TITLE =
+  "Beads World Africa | Natural Stone Bracelets Handmade in Kenya";
+const HOME_DESCRIPTION =
+  "Handmade natural stone bracelets for men and women in Kenya: tiger eye, lava stone, malachite and more. Order online, confirm on WhatsApp, delivered in Nairobi and across Kenya.";
+
 import GoogleAnalytics from "@/components/marketing/GoogleAnalytics";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Beads World Africa — Natural Stone Bracelets Handmade in Africa",
-  description:
-    "Contemporary bracelets designed around natural materials, personal style, and the stories we choose to wear. Handcrafted with genuine semi-precious stones.",
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
   keywords: [
     "African bracelets",
     "natural stone jewelry",
@@ -59,9 +77,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Beads World Africa" }],
   metadataBase: new URL("https://beadsworldafrica.co.ke"),
   openGraph: {
-    title: "Beads World Africa — Natural Stone Bracelets Handmade in Africa",
-    description:
-      "Contemporary bracelets designed around natural materials, personal style, and the stories we choose to wear.",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     url: "https://beadsworldafrica.co.ke",
     siteName: "Beads World Africa",
     images: [
@@ -77,9 +94,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Beads World Africa — Natural Stone Bracelets",
-    description:
-      "Contemporary bracelets designed around natural materials, personal style, and stories.",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     images: [
       "https://beadsworldafrica.co.ke/images/hero-image-mountain-man-wearing-beads-world-africa-bracelet.webp",
     ],
@@ -106,7 +122,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationJsonLd),
+            __html: JSON.stringify([organizationJsonLd, websiteJsonLd]),
           }}
         />
         <GoogleAnalytics />

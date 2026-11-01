@@ -6,7 +6,13 @@ import {
   getStorefrontProduct,
 } from "@/lib/commerce/catalogue-server";
 import { PRODUCT_REDIRECTS } from "@/lib/commerce/product-redirects";
-import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
+import {
+  absoluteUrl,
+  breadcrumbJsonLd,
+  buildOgImages,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/commerce/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 export const dynamic = "force-dynamic";
@@ -62,6 +68,22 @@ export default async function ProductPage({ params }: Props) {
     .filter((item) => item.id !== product.id)
     .slice(0, 3);
 
+  // Shared by both offers. No shippingDetails: delivery is the Uber/Bolt fare
+  // in Nairobi and quoted on WhatsApp elsewhere, so there is no fixed rate to
+  // state; shipping is set in Merchant Center instead.
+  const offerExtras = {
+    itemCondition: "https://schema.org/NewCondition",
+    url: absoluteUrl(`/product/${product.slug}`),
+    seller: { "@id": `${SITE_URL}/#organization` },
+    hasMerchantReturnPolicy: {
+      "@type": "MerchantReturnPolicy",
+      applicableCountry: "KE",
+      returnPolicyCategory:
+        "https://schema.org/MerchantReturnFiniteReturnWindow",
+      merchantReturnDays: 7,
+      merchantReturnLink: absoluteUrl("/returns"),
+    },
+  };
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -81,8 +103,7 @@ export default async function ProductPage({ params }: Props) {
         availability: product.variants.some((v) => v.available && v.stock > 0)
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
-        itemCondition: "https://schema.org/NewCondition",
-        url: absoluteUrl(`/product/${product.slug}`),
+        ...offerExtras,
       },
       ...(product.prices.USD !== null
         ? [
@@ -95,8 +116,7 @@ export default async function ProductPage({ params }: Props) {
               )
                 ? "https://schema.org/InStock"
                 : "https://schema.org/OutOfStock",
-              itemCondition: "https://schema.org/NewCondition",
-              url: absoluteUrl(`/product/${product.slug}`),
+              ...offerExtras,
             },
           ]
         : []),
@@ -107,7 +127,15 @@ export default async function ProductPage({ params }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            jsonLd,
+            breadcrumbJsonLd([
+              { name: "Bracelets", path: "/bracelets" },
+              { name: product.title, path: `/product/${product.slug}` },
+            ]),
+          ]),
+        }}
       />
       <ProductDetail product={product} related={related} />
     </>

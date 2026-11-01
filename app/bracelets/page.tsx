@@ -10,27 +10,38 @@ import {
   MENS_PAGE_TITLE,
 } from "@/lib/commerce/mens-stone-bracelets";
 import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
-import { absoluteUrl, buildOgImages, SITE_NAME } from "@/lib/commerce/seo";
+import {
+  absoluteUrl,
+  breadcrumbJsonLd,
+  buildOgImages,
+  DELIVERY_SNIPPET,
+  SITE_NAME,
+} from "@/lib/commerce/seo";
 
 export const dynamic = "force-dynamic";
 
-const title =
-  "Natural Stone Bracelets Collection in Kenya | Beads World Africa";
+// "stone bracelets" is the site's biggest search (Search Console, Oct 2026),
+// so the title leads with it.
+const title = "Stone Bracelets in Kenya, Handmade | Beads World Africa";
 const description =
-  "Discover handcrafted natural stone bracelets by Beads World Africa. Shop meaningful everyday pieces, explore natural stone guides, or find your bracelet.";
+  "Shop handmade natural stone bracelets in Kenya: tiger eye, lava stone, malachite, lapis lazuli and more, for men and women.";
 const canonicalUrl = absoluteUrl("/bracelets");
 const ogImages = buildOgImages(
   "/images/hero-image-mountain-woman-wearing-beads-world-africa-bracelet.webp",
   "Beads World Africa natural stone bracelets collection",
 );
 
+// No "from KES" here: the cheapest pieces in the full list are patterned
+// beads, not stone, so the lowest price would mislead a stone search.
+const snippet = `${description} ${DELIVERY_SNIPPET}`;
+
 export const metadata: Metadata = {
   title,
-  description,
+  description: snippet,
   alternates: { canonical: "/bracelets" },
   openGraph: {
     title,
-    description,
+    description: snippet,
     url: canonicalUrl,
     siteName: SITE_NAME,
     locale: "en_US",
@@ -40,7 +51,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title,
-    description,
+    description: snippet,
     images: [ogImages[0].url],
   },
 };
@@ -71,7 +82,12 @@ export default async function BraceletsPage() {
     <main className="seo-hub-page bracelet-collection-page">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            jsonLd,
+            breadcrumbJsonLd([{ name: "Bracelets", path: "/bracelets" }]),
+          ]),
+        }}
       />
       <section className="bracelet-collection-hero">
         <StoreImage
@@ -85,7 +101,7 @@ export default async function BraceletsPage() {
         <div className="bracelet-collection-hero-shade" aria-hidden="true" />
         <div className="bracelet-collection-hero-copy">
           <p>Beads World Africa · The bracelet collection</p>
-          <h1>Wear what moves with you.</h1>
+          <h1>Stone bracelets that move with you.</h1>
           <div>
             <span>
               Natural stone bracelets for every day, every intention, and every

@@ -26,7 +26,7 @@ export const seoHubs: SeoHub[] = [
     title: "Tiger Eye Bracelets in Kenya",
     eyebrow: "Stone guide / Tiger Eye",
     description:
-      "Explore BWA Tiger Eye bracelets: natural stone pieces with warm gold-brown character, handmade for everyday wear in Kenya.",
+      "Natural tiger eye stone bracelets for men and women, handmade in Kenya, with a warm gold-brown grain that shifts in the light.",
     intro:
       "Tiger Eye brings a warm, grounded visual rhythm to the wrist. Explore BWA pieces selected for its rich gold-brown grain and considered everyday presence.",
   },
