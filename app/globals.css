@@ -6112,6 +6112,18 @@ body {
   font-size: 13px;
   font-weight: 700;
 }
+.journal-product--design {
+  background: transparent;
+  border-style: dashed;
+}
+.journal-product-actions a.btn {
+  font-size: 14px;
+}
+.journal-design-note {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 15px;
+}
 .journal-closing {
   margin-top: var(--space-10);
   padding-top: var(--space-8);

@@ -1,10 +1,15 @@
 import { Marked, type Tokens } from "marked";
 
-/** A post body split into Markdown and `{{product: slug}}` card segments. */
+/**
+ * A post body split into Markdown and card segments: `{{product: slug}}` is a
+ * bracelet card, `{{design: slug}}` opens Design Your Own with that
+ * bracelet's stone picked.
+ */
 export type BodySegment =
-  { type: "html"; html: string } | { type: "product"; slug: string };
+  | { type: "html"; html: string }
+  | { type: "product" | "design"; slug: string };
 
-const PRODUCT_CARD = /^\s*\{\{\s*product:\s*([a-z0-9-]+)\s*\}\}\s*$/gm;
+const CARD = /^\s*\{\{\s*(product|design):\s*([a-z0-9-]+)\s*\}\}\s*$/gm;
 
 const escapeAttr = (value: string) =>
   value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
@@ -41,11 +46,11 @@ const marked = new Marked({
 export function renderPostBody(body: string): BodySegment[] {
   const segments: BodySegment[] = [];
   let last = 0;
-  for (const match of body.matchAll(PRODUCT_CARD)) {
+  for (const match of body.matchAll(CARD)) {
     const before = body.slice(last, match.index);
     if (before.trim())
       segments.push({ type: "html", html: marked.parse(before) as string });
-    segments.push({ type: "product", slug: match[1] });
+    segments.push({ type: match[1] as "product" | "design", slug: match[2] });
     last = match.index + match[0].length;
   }
   const rest = body.slice(last);
@@ -55,5 +60,5 @@ export function renderPostBody(body: string): BodySegment[] {
 }
 
 export function productSlugsInBody(body: string) {
-  return [...body.matchAll(PRODUCT_CARD)].map((match) => match[1]);
+  return [...body.matchAll(CARD)].map((match) => match[2]);
 }

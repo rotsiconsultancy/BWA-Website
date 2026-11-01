@@ -32,6 +32,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-01 21:00] — Journal: Stone Stories Start (Lava Stone); Design Card
+
+- **Post**: `content/journal/lava-stone-the-volcano-on-your-wrist.md` (Stone guides): what lava stone is, the four volcanoes behind our lava names (Longonot, Chyulu, Suswa, Menengai), why red/orange lava is dyed, obsidian (Njorowa Ember), how to wear it, 4 FAQs. Photos are the owner's 2026-10-27 shoot (`public/journal/lava-stone-the-volcano-on-your-wrist/cover.webp` from IMG_3237, `pores.webp` from IMG_3220). Sources: `../Website-data/stone-stories-2026-11-01/lava-sources.md`; series plan: `plan.md` there.
+- **Design card**: `{{design: <product-slug>}}` in a post renders `components/journal/JournalDesignCard.tsx` (dashed card, "Make it yours with <stone>", button to `/design-your-own?product=<slug>`). GA4 `journal_design_click` {post_slug, item_id, item_name, placement}. Parsing in `lib/journal/markdown.ts` (`CARD` regex now matches product and design).
+- **Dev server**: the root `.claude/launch.json` "website" config ran `next dev BWA-Website` from the root, so `process.cwd()` missed `content/journal` and every post 404'd locally. It now runs `cd BWA-Website && next dev`. A stale `.next/dev` cache then 404'd every route; it was moved aside.
+
 ### [2026-11-01 20:00] — Search Titles, Brand Name, Breadcrumbs, Return Policy
 
 From the Search Console export (13 Sep–30 Oct 2026, `../beadsworldafrica.co.ke-Performance-on-Search-2026-11-01.xlsx`): 257 impressions, 13 clicks, avg position ~15; "beads world africa" ranked ~10th, "tiger eye bracelet" ~1.6 with 0 clicks, "stone bracelets" 19th.

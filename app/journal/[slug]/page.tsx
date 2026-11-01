@@ -7,6 +7,7 @@ import FaqSection from "@/components/commerce/FaqSection";
 import JournalPostCard, {
   formatPostDate,
 } from "@/components/journal/JournalPostCard";
+import JournalDesignCard from "@/components/journal/JournalDesignCard";
 import JournalProductCard from "@/components/journal/JournalProductCard";
 import JournalShopBar from "@/components/journal/JournalShopBar";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
@@ -144,6 +145,14 @@ export default async function JournalPostPage({
             const product = bySlug.get(segment.slug);
             // An unpublished or renamed product simply drops out of the story.
             if (!product) return null;
+            if (segment.type === "design")
+              return (
+                <JournalDesignCard
+                  key={index}
+                  product={product}
+                  postSlug={post.slug}
+                />
+              );
             return (
               <Fragment key={index}>
                 <JournalProductCard
