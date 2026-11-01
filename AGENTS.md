@@ -32,6 +32,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-01 23:00] — Journal: Scheduled Release Dates; Five Stone Stories Queued
+
+- **Scheduling**: `lib/journal/posts.ts` hides a post until its `date` in Nairobi (`nairobiToday()`, `isReleased()`, tests in `posts.test.ts`). `getAllPosts()` (index, sitemap, llms.txt, men's page, more posts) and `getPost()` both filter, so a future post 404s until its day; post pages and the sitemap revalidate hourly, so it appears within an hour of midnight. `next dev` shows scheduled posts for review. To schedule: set `date` to the release day.
+- **Queued** (owner asked to write the series in one go and release weekly): real-or-fake (2026-11-08), tiger's eye (11-15), obsidian (11-22), malachite (11-29), lapis lazuli (12-06), all "Stone guides" with product cards under each named bracelet and one design card. Sources per post in `../Website-data/stone-stories-2026-11-01/<slug>-sources.md`. Images: shoot crops where BWA has them, otherwise crops of the product renders (AI-made) or catalogue photo.
+- **Lava story**: owner confirmed 2026-11-01 that BWA's red/orange lava is not dyed; the "Why some lava is red" section and FAQ now explain natural iron oxidation.
+
 ### [2026-11-01 21:00] — Journal: Stone Stories Start (Lava Stone); Design Card
 
 - **Post**: `content/journal/lava-stone-the-volcano-on-your-wrist.md` (Stone guides): what lava stone is, the four volcanoes behind our lava names (Longonot, Chyulu, Suswa, Menengai), why red/orange lava is dyed, obsidian (Njorowa Ember), how to wear it, 4 FAQs. Photos are the owner's 2026-10-27 shoot (`public/journal/lava-stone-the-volcano-on-your-wrist/cover.webp` from IMG_3237, `pores.webp` from IMG_3220). Sources: `../Website-data/stone-stories-2026-11-01/lava-sources.md`; series plan: `plan.md` there.
