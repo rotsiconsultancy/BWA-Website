@@ -51,11 +51,15 @@ The Chyulu Hills run along the northern edge of Tsavo West. They look green and 
 
 The **Chyulu Black** takes its name from that flow: larger black lava beads, bolder on the wrist.
 
+{{product: chyulu-black-lava-stone-bracelet}}
+
 ### Suswa
 
 Mount Suswa, between the Nairobi–Narok road and the Rift Valley floor, hides one of Kenya's strangest sights: lava tubes. When a river of lava cools on the outside first, the outer crust hardens into a roof while the molten rock inside keeps flowing out. What is left behind is a tunnel. Suswa has more than 30 cave entrances, and in one of them, known as Baboon Parliament, baboons shelter from the sun.
 
 The **Suswa Rust**, a red lava bracelet, is named after this mountain.
+
+{{product: suswa-rust-red-lava-stone-bracelet}}
 
 ### Menengai
 
@@ -63,11 +67,15 @@ Above Nakuru sits Menengai, a collapsed volcano whose crater, or caldera, is abo
 
 The **Menengai Rust**, a muted red lava bracelet, carries its name.
 
+{{product: menengai-rust-red-lava-stone-bracelet}}
+
 ## Why some lava is red
 
 Here is something worth knowing: natural lava stone is black or dark grey. The bright red, orange and coloured lava beads you see in shops get their colour from dye. The same pores that make lava so light also soak up colour easily, which is why lava comes in so many shades.
 
 That does not make a coloured bead any less real. It is still volcanic rock, just with a colour added. Our **Suswa Rust**, **Menengai Rust** and **Moto Lava** bring warm colour to the wrist. If you want lava exactly as the volcano left it, choose black.
+
+{{product: moto-lava-orange-lava-stone-bracelet}}
 
 ## When lava cools too fast: obsidian
 
@@ -76,6 +84,8 @@ Sometimes lava cools so quickly that it has no time to form crystals or even bub
 The Rift Valley around Naivasha and Nakuru is one of the richest obsidian landscapes in the world. Between about 3,000 and 1,500 years ago, herders in the region quarried obsidian on the slopes of Mount Eburru, shaped it into tools and traded it across the region. Hell's Gate, whose gorge is known as Ol Njorowa, is known for its black volcanic glass too.
 
 Our **Njorowa Ember** is mahogany obsidian: glossy black with red-brown streaks, like embers in a fire. It is lava's polished cousin, and it sits beautifully next to the matte texture of lava stone.
+
+{{product: njorowa-ember-mahogany-obsidian-stone-bracelet}}
 
 ## Wearing lava
 
@@ -87,7 +97,7 @@ Lava is the easy bracelet. It is light, it is dark, and it goes with almost ever
 
 Look again at the photo of the pores above. In the middle of that black lava row there is a single golden-brown bead: tiger's eye. One warm stone in a row of black rock is all it takes to make the bracelet yours.
 
-{{design: chyulu-black-lava-stone-bracelet}}
+{{design: longonot-black-lava-stone-bracelet}}
 
 ## What it is said to mean
 
