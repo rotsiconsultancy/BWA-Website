@@ -1,7 +1,7 @@
 ---
 title: "Obsidian: The Rift Valley's Volcanic Glass"
 description: "What obsidian is, why it is so glossy and sharp, how people in Kenya's Rift Valley used it for a million years, and the difference between mahogany and snowflake obsidian."
-date: 2026-11-22
+date: 2026-11-08
 category: Stone guides
 cover: /journal/obsidian-the-rift-valleys-volcanic-glass/cover.webp
 coverAlt: "A bracelet of round, polished mahogany obsidian beads in red-brown and black on a walnut table"

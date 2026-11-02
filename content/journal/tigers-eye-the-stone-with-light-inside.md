@@ -1,7 +1,7 @@
 ---
 title: "Tiger's Eye: The Stone With Light Inside"
 description: "What tiger's eye is, why a band of light slides across it, where it comes from, how red tiger's eye gets its colour, and how to pick and wear a good one."
-date: 2026-11-15
+date: 2026-11-01
 category: Stone guides
 cover: /journal/tigers-eye-the-stone-with-light-inside/cover.webp
 coverAlt: "A tiger's eye stone bracelet of large gold and brown banded beads on a walnut wood surface"

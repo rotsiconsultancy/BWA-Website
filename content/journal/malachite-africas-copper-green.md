@@ -1,7 +1,7 @@
 ---
 title: "Malachite: Africa's Copper Green"
 description: "What malachite is, why its green bands form, why it points to copper, how to recognise genuine malachite and how to care for a malachite bracelet."
-date: 2026-11-29
+date: 2026-11-15
 category: Stone guides
 cover: /journal/malachite-africas-copper-green/cover.webp
 coverAlt: "A Msitu Malachite bracelet of round, banded green beads on a dark polished wood surface"

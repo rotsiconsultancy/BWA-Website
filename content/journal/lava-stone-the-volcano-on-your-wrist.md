@@ -1,8 +1,7 @@
 ---
 title: "Lava Stone: The Volcano on Your Wrist"
 description: "What lava stone is, why it is full of tiny holes, and the Kenyan volcanoes behind our lava bracelets: Longonot, Chyulu, Suswa and Menengai."
-date: 2026-11-01
-updated: 2026-11-01
+date: 2026-10-18
 category: Stone guides
 cover: /journal/lava-stone-the-volcano-on-your-wrist/cover.webp
 coverAlt: "A black lava stone bracelet and a white speckled bracelet on a wrist against a rust-red wall"

@@ -1,7 +1,7 @@
 ---
 title: "Genuine Stone: How to Know What You're Wearing"
 description: "How to recognise a genuine stone bracelet with your hands and eyes: the cool touch, the weight, and the signs every stone carries, from lava's pores to tiger's eye's moving light."
-date: 2026-11-08
+date: 2026-10-25
 category: Stone guides
 cover: /journal/genuine-stone-how-to-know-what-youre-wearing/cover.webp
 coverAlt: "Three beaded bracelets held across four fingers: white speckled beads, porous black lava beads with one tiger's eye bead, and patterned zigzag beads"
