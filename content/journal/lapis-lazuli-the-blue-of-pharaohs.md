@@ -11,8 +11,8 @@ faq:
     a: "Lapis lazuli is a rock, not a single mineral. Its blue comes mainly from a mineral called lazurite. The white patches are usually calcite, and the gold-coloured flecks are pyrite."
   - q: "How can I tell lapis lazuli from sodalite?"
     a: "Look for gold. Lapis often has small gold-coloured flecks of pyrite; sodalite rarely does. Sodalite tends to be a darker, more violet blue with white veins or patches. Neither test is perfect, so buy from a seller who will tell you what the stone is."
-  - q: "Is lapis lazuli ever dyed?"
-    a: "Yes. Some lapis is dyed to deepen its blue or hide white calcite, and other stones, such as jasper or howlite, are sometimes dyed blue and sold as lapis. If colour treatment matters to you, ask the seller before you buy."
+  - q: "How do I recognise genuine lapis lazuli?"
+    a: "Look for deep blue with soft white or grey patches of calcite and, often, small gold-coloured flecks of pyrite. Every bead mixes them a little differently. If you want to know more about a BWA bracelet, ask us on WhatsApp."
   - q: "What does lapis lazuli mean?"
     a: "Lapis lazuli is traditionally associated with wisdom, truth and royalty, partly because kings and pharaohs wore it. These are beliefs people hold about the stone, not proven effects."
 ---
@@ -77,18 +77,22 @@ The **Anga Blue** is much paler, a soft powder blue. *Anga* means sky in Swahili
 
 {{product: anga-blue-sodalite-stone-bracelet}}
 
-## Dyed lapis and imitations
+## How to recognise genuine lapis
 
-Because good lapis is valued, the market is full of variations. Some lapis is dyed to deepen its blue or to hide white calcite. Some is treated with wax or oil to improve its shine. And other stones, such as jasper or howlite, are sometimes dyed blue and sold as lapis. There is even man-made material designed to look like it.
+Genuine lapis carries its history on its surface. Look for three things:
 
-None of this means a blue bracelet is bad. It just means it is fair to ask. A good seller should be able to tell you what the stone is and whether it has been treated. If you want to know about any of our bracelets, ask us on WhatsApp.
+- **The blue.** A deep, strong blue from lazurite, richer in some beads than others.
+- **The white.** Soft white or grey patches and streaks of calcite, never in the same place twice.
+- **The gold.** Small flecks of pyrite that catch the light as you turn your wrist.
+
+Every bead mixes those three a little differently, and that variety is part of the stone's charm. If you would like to know more about any of our bracelets, ask us on WhatsApp.
 
 ## Wearing and caring for lapis
 
 Lapis is a soft stone. It sits around 5 to 6 on the hardness scale, softer than quartz. It is fine for daily wear, but treat it kindly:
 
 - **Clean it gently.** Warm, soapy water and a soft cloth are all it needs.
-- **Skip the chemicals.** Keep it away from perfume, cleaning products and solvents. Some dyes and wax coatings can come off with harsh chemicals or heat.
+- **Skip the chemicals.** Keep it away from perfume, cleaning products and solvents, which can dull a soft stone's polish.
 - **Store it apart.** Keep it away from harder stones and metal that can scratch it.
 
 On the wrist, lapis is a strong colour. It looks sharp with white, with navy and with gold. One lapis bead in a row of darker stones is enough to catch the eye. If you want to try that, you can start a bracelet with Watamu Deep already picked and add your own stones around it.

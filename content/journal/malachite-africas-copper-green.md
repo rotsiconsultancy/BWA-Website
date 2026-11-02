@@ -1,6 +1,6 @@
 ---
 title: "Malachite: Africa's Copper Green"
-description: "What malachite is, why its green bands form, why it points to copper, how to tell real malachite from imitations and how to care for a malachite bracelet."
+description: "What malachite is, why its green bands form, why it points to copper, how to recognise genuine malachite and how to care for a malachite bracelet."
 date: 2026-11-29
 category: Stone guides
 cover: /journal/malachite-africas-copper-green/cover.webp
@@ -11,8 +11,8 @@ faq:
     a: "Malachite is a green mineral made of copper carbonate. It forms near the surface of copper deposits, where water slowly breaks down copper ore, and it builds up in thin layers. Those layers are the light and dark bands you see on a polished bead."
   - q: "Can I wear a malachite bracelet in the shower or the pool?"
     a: "Better not. Malachite is a soft stone and reacts with acids, and long contact with water can dull its polish. Take it off before swimming, showering or training, and put perfume and lotion on before the bracelet, not after."
-  - q: "How can I tell if malachite is real?"
-    a: "Real malachite is opaque, feels heavy for its size and cool in the hand, and its bands wander unevenly in shades of green. Very light beads, patterns that repeat exactly, or edges that glow when held to a lamp point to plastic, resin or glass. Reconstituted malachite, which is ground malachite bonded with resin, also exists, so ask the seller if you are unsure."
+  - q: "How do I recognise genuine malachite?"
+    a: "Genuine malachite is opaque, feels heavy for its size and cool in the hand, and its light and dark green bands wander and curve so that no two beads match."
   - q: "What is malachite said to mean?"
     a: "Malachite is traditionally associated with protection. In the past, malachite beads were hung on cradles in the belief that they kept babies safe, and in parts of Italy it was worn against the evil eye. These are traditions, not proven effects."
 ---
@@ -57,16 +57,16 @@ Ancient Egyptians ground malachite into a fine powder for green eye paint. The p
 
 Over time, a black eye paint made from galena, a lead ore, became more common. Green malachite stayed in use as a pigment, though. It is one of the oldest green colours known in painting and appears in Egyptian tomb paintings.
 
-## How to tell real malachite from imitations
+## How to recognise genuine malachite
 
-Malachite is popular, so there are plenty of look-alikes. A few simple checks help:
+Malachite is one of the easiest stones to recognise once you know it:
 
-- **Look at the bands.** Natural bands wander. They curve, split and never repeat exactly. If two beads, or two bracelets, carry the very same pattern, it was probably made.
-- **Feel the weight.** Malachite is a dense stone. Plastic and resin copies feel light for their size.
-- **Feel the temperature.** Stone feels cool and warms slowly. Plastic feels warm almost at once.
-- **Hold it to a light.** Malachite is opaque. If the edges glow, it is glass or resin.
+- **Look at the bands.** Natural bands wander. They curve, split and form round "eyes", and no two beads carry the same pattern.
+- **Feel the weight.** Malachite is a dense stone, so even a small bead feels solid.
+- **Feel the temperature.** It starts cool against your skin and warms slowly.
+- **Look at the depth.** Malachite is opaque: the green sits on the surface like polished wood grain, not glowing through.
 
-There is also reconstituted malachite: real malachite ground into powder, bonded with resin and shaped into beads. It can pass the weight test better than plastic, and the giveaway is usually a pattern that looks too regular. It is not a fake stone exactly, but it is not solid malachite either, and a good seller should say which one you are buying. If you are unsure, ask.
+If you would like to know more about any bead, ask us on WhatsApp.
 
 ## Malachite pairs well with: a green stack
 

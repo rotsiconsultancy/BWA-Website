@@ -57,20 +57,20 @@ Red tiger's eye has the same silky band of light, in deep red-brown instead of g
 
 Remember the iron oxides that give tiger's eye its colour? The yellow-brown kind, goethite, turns into red-brown hematite when it is heated, and it does so at a fairly low temperature. Most red tiger's eye sold today is gold or brown tiger's eye that has been gently heated to bring out that red. The change is stable and permanent, and it is a normal, accepted practice in the stone trade. Naturally red tiger's eye exists but is less common.
 
-So if you see red tiger's eye, the honest assumption is that it was probably heated. That does not make it fake. It is real tiger's eye, warmed to a deeper colour. If it matters to you, ask the seller.
+Heated or not, red tiger's eye is genuine tiger's eye, with the same quartz, the same fibres and the same moving light. If you are curious about a particular bracelet, ask us.
 
 Our **Mara Dusk** is a red tiger's eye bracelet, named for evening light over the Maasai Mara.
 
 {{product: mara-dusk-red-tigers-eye-stone-bracelet}}
 
-## How to tell good tiger's eye
+## How to recognise good tiger's eye
 
 You do not need a lab. You need daylight and a little patience.
 
 - **Look for the band.** Turn the bead under one light, like a window or the sun. Good tiger's eye shows a clear, bright band that moves cleanly across the bead. Weaker stone shows a wide, blurry shimmer, or almost nothing.
 - **Look at the colour.** Rich, even gold and brown tones are the most prized. Dull or patchy colour is less striking.
 - **Expect variety.** Natural stone is not printed. Each bead has its own stripes, and some will be darker or lighter than others. A strand where every bead looks exactly the same is worth a question.
-- **Know the imitation.** Fibre-optic glass is a common stand-in for tiger's eye. If the price seems too low for stone, ask what the beads are.
+- **Feel it.** Tiger's eye is quartz, so it feels cool, smooth and solid in the hand.
 
 You will find all our tiger's eye pieces on the [tiger's eye bracelets](/bracelets/tiger-eye-bracelets) page, each with photos so you can look at the bands yourself.
 
