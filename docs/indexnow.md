@@ -2,7 +2,9 @@
 
 `.github/workflows/indexnow.yml` runs after a successful Vercel `Production`
 deployment. Failed builds, preview deployments, and superseded main commits are
-skipped. It reads the public key and sitemap on `https://beadsworldafrica.co.ke`;
+skipped. A deployment event dispatches a main-branch run because GitHub cache
+is unavailable on deployment-status events. That small handoff job has Actions
+write permission; the submission job has only contents-read permission. It reads the public key and sitemap on `https://beadsworldafrica.co.ke`;
 no Supabase or IndexNow secrets need to be configured in GitHub.
 
 The first run submits all URLs in the live sitemap except `/shop`, which is

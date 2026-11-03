@@ -3,6 +3,11 @@ name: Notify IndexNow
 on:
   deployment_status:
   workflow_dispatch:
+    inputs:
+      deployed_sha:
+        description: Production commit supplied by the deployment handoff
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -12,20 +17,40 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  submit:
-    # Vercel labels this site's deployments Production; its production_environment
-    # flag is false even for production, so use the verified environment name.
+  dispatch:
+    # Cache is unavailable on deployment_status events (no branch ref).
+    # Dispatch onto main so submission runs can restore and save their baseline.
     if: >-
-      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'deployment_status' &&
-       github.event.deployment_status.state == 'success' &&
-       github.event.deployment.environment == 'Production')
+      github.event_name == 'deployment_status' &&
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment.environment == 'Production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Start main-branch submission for the deployed commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          DEPLOYED_SHA: ${{ github.event.deployment.sha }}
+        run: |
+          latest=$(gh api "repos/$GH_REPO/git/ref/heads/main" --jq '.object.sha')
+          if [ "$DEPLOYED_SHA" = "$latest" ]; then
+            gh workflow run indexnow.yml --ref main -f "deployed_sha=$DEPLOYED_SHA"
+          else
+            echo "Skipping superseded deployment."
+          fi
+
+  submit:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.deployment.sha || 'main' }}
+          ref: ${{ inputs.deployed_sha || 'main' }}
           fetch-depth: 0
           persist-credentials: false
       - name: Skip superseded deployments
