@@ -32,6 +32,13 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-03] — IndexNow After Production Deployments
+
+- **Agent**: Codex
+- **What**: `.github/workflows/indexnow.yml` runs after successful Vercel `Production` deployments, with a manual main-branch trigger. `scripts/indexnow.py` verifies the live key, reads the live sitemap (excluding noindex `/shop`), compares Git changes and cached sitemap URLs, and submits new/changed/removed URLs. Shared storefront changes notify all public URLs; Journal-only changes target released articles plus indexes. Documentation-only changes skip existing URLs. No credentials beyond the read-only checkout token are needed.
+- **Reliability**: Serial runs, superseded-deployment guard, bounded network retries, 10,000-URL batches, 200/202 reporting, and baseline saved only after successful submission. Cache eviction causes a full submission. Verified actual deployment metadata: environment `Production`, production flag false.
+- **Checks**: Six Python tests cover noindex filtering, foreign hosts, future articles, deleted articles, shared changes, and preserving the baseline on failure; workflow YAML parses. Operational details and limits in `docs/indexnow.md`: existing product content edited in Supabase and scheduled releases without deployments need separate triggers/manual handling.
+
 ### [2026-11-03] — IndexNow Verification File
 
 - **Agent**: Codex
