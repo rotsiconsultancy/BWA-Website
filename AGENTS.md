@@ -32,6 +32,11 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-03 05:20] — Favicon Visible on Dark Browser Tabs
+
+- **Why**: the favicon was `public/brand/bwa-emblem.svg` (dark brown #302014), which disappears on dark browser themes.
+- **What**: new `public/brand/bwa-favicon.svg`, built from the emblem's two visible paths only (the hidden working layers dropped, 302 KB → 114 KB) and cropped square to the emblem so it's bigger in the tab. Its CSS uses `prefers-color-scheme`: brown with cream bead dots on light tabs, white with brown bead dots on dark tabs, so the bead details stay. `app/layout.tsx` `icons.icon` points to it. `bwa-emblem.svg` is unchanged (still the schema logo and the CSS mask in `globals.css`). Safari ignores SVG favicons and uses the apple-touch icon.
+
 ### [2026-11-01 23:00] — Journal: Scheduled Release Dates; Five Stone Stories Queued
 
 - **Scheduling**: `lib/journal/posts.ts` hides a post until its `date` in Nairobi (`nairobiToday()`, `isReleased()`, tests in `posts.test.ts`). `getAllPosts()` (index, sitemap, llms.txt, men's page, more posts) and `getPost()` both filter, so a future post 404s until its day; post pages and the sitemap revalidate hourly, so it appears within an hour of midnight. `next dev` shows scheduled posts for review. To schedule: set `date` to the release day.

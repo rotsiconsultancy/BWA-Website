@@ -101,7 +101,8 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: "/brand/bwa-emblem.svg",
+    // Brown on light browser themes, white on dark ones (see the file's CSS).
+    icon: "/brand/bwa-favicon.svg",
     apple: "/icons/apple-touch-icon.png",
   },
   appleWebApp: { title: "BWA", statusBarStyle: "default" },
