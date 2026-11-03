@@ -32,6 +32,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-03] — IndexNow Verification File
+
+- **Agent**: Codex
+- **Fix**: Moved the owner's `5e0b51cbe8264cc28a4b68f83e625e5f.txt` from the repository root into `public/` so Next.js serves it at `/5e0b51cbe8264cc28a4b68f83e625e5f.txt`. The live URL previously returned 404.
+- **Validation**: Verified the filename matches the exact UTF-8 contents and the key meets IndexNow's format. Owner authorized pushing this fix on 2026-11-03; live verification follows deployment.
+
 ### [2026-11-03 05:20] — Favicon Visible on Dark Browser Tabs
 
 - **Why**: the favicon was `public/brand/bwa-emblem.svg` (dark brown #302014), which disappears on dark browser themes.
