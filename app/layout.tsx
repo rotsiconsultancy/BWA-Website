@@ -7,7 +7,21 @@ import CartDrawer from "@/components/commerce/CartDrawer";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import MetaPixel from "@/components/marketing/MetaPixel";
 import type { Metadata } from "next";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { SITE_NAME, SITE_URL } from "@/lib/commerce/seo";
+
+// Self-hosted by Next, so no render-blocking request to Google Fonts.
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+  variable: "--font-cormorant",
+});
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-manrope",
+});
 
 // Who BWA is, for Google and AI assistants. Stockist branches join this once
 // their addresses are confirmed (roadmap step 5).
@@ -118,7 +132,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" scroll-behavior="smooth" className="scroll-smooth">
+    <html lang="en" scroll-behavior="smooth" className={`scroll-smooth ${cormorant.variable} ${manrope.variable}`}>
       <body>
         <script
           type="application/ld+json"

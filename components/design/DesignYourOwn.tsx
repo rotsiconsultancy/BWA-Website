@@ -218,7 +218,7 @@ function Ring({
             <g key={k} transform={`translate(${it.x} ${it.y}) rotate(${it.deg + 90})`}>
               <rect x={-s / 2} y={-s / 2} width={s} height={s} rx={s * 0.18} fill={letterFill} stroke="rgba(0,0,0,.22)" />
               <rect x={-s / 2 + 2} y={-s / 2 + 2} width={s - 4} height={s * 0.35} rx={s * 0.14} fill="#fff" opacity=".25" />
-              <text y={s * 0.2} textAnchor="middle" fontFamily="Manrope, sans-serif" fontWeight="700" fontSize={s * 0.56} fill="#1f1e1c">
+              <text y={s * 0.2} textAnchor="middle" style={{ fontFamily: "var(--font-manrope), sans-serif" }} fontWeight="700" fontSize={s * 0.56} fill="#1f1e1c">
                 {it.ch.toUpperCase()}
               </text>
             </g>

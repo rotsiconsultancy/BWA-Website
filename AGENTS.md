@@ -32,6 +32,14 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-05] — Homepage Speed; /shop Out of the Sitemap
+
+- **Why**: the new weekly SEO check (`../Website-data/seo/`) found the homepage's largest paint (the hero photo) at 6–9 s on phones, and `/shop` listed in the sitemap while marked noindex.
+- **Hero**: `components/home/Hero.tsx` slides are now `next/image` (`fill`, `sizes="100vw"`); the first is preloaded with `fetchPriority="high"`. Phones get a ~28 KB 750 px WebP instead of the 100 KB 1671 px original, found in the HTML head instead of after hydration. `.hero-bg-layer` uses `object-fit: cover` instead of a background image.
+- **Fonts**: Cormorant Garamond and Manrope now load through `next/font/google` in `app/layout.tsx` (self-hosted, preloaded) instead of an `@import` of Google Fonts in `globals.css`, which blocked rendering. CSS uses `var(--font-cormorant)` / `var(--font-manrope)`; `--font-display` is still undefined as before (left alone).
+- **Sitemap**: `/shop` removed from `app/sitemap.ts` (`/bracelets` is the page meant to rank).
+- **Measured** (Lighthouse mobile, devtools throttling): live homepage LCP 7.6 s; local production build 2.7 s. To be re-measured on the live site after push.
+
 ### [2026-11-03] — IndexNow After Production Deployments
 
 - **Agent**: Codex

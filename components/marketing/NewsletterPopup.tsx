@@ -154,7 +154,7 @@ export default function NewsletterPopup() {
           </div>
           <h4
             style={{
-              fontFamily: "Cormorant Garamond, serif",
+              fontFamily: "var(--font-cormorant), serif",
               fontSize: "22px",
               margin: "0 0 6px",
             }}
@@ -191,7 +191,7 @@ export default function NewsletterPopup() {
 
           <h4
             style={{
-              fontFamily: "Cormorant Garamond, serif",
+              fontFamily: "var(--font-cormorant), serif",
               fontSize: "24px",
               fontWeight: 500,
               margin: "0 0 8px",

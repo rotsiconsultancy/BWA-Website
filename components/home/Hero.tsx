@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -51,10 +52,16 @@ export default function Hero() {
   return (
     <section className="hero">
       {HERO_IMAGES.map((slide, idx) => (
-        <div
+        // The first slide is the homepage's largest paint: preload it, sized for the screen.
+        <Image
           key={slide.url}
+          src={slide.url}
+          alt=""
+          fill
+          sizes="100vw"
+          preload={idx === 0}
+          fetchPriority={idx === 0 ? "high" : "low"}
           className={`hero-bg-layer ${idx === currentIndex ? "active" : ""}`}
-          style={{ backgroundImage: `url(${slide.url})` }}
           aria-hidden="true"
         />
       ))}
