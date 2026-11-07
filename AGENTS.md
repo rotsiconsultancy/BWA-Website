@@ -32,6 +32,40 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-07] — Our Story: a Real Story, Team Gifts Up Front, Scaled Down
+
+- **Agent**: Claude Code
+- **Owner feedback**: "no story, just pretty"; corporate angle missed; scale it down.
+- **Story**: new bone section after the opening, "It started with a bracelet on someone's wrist.", in prose from the owner's own why (approved note as the lead, then handmade in Kenya, the everywhere-you-go idea, matching pairs, families, gifts), signed "— BWA", with a sticky photo. The separate "Why we do this" section is folded into it. "Here's a week of it." now introduces the coloured week.
+- **Team gifts**: hero link "Buying for a team? See team gifts" (`our_story_click` `hero_team_gifts`, jumps to `#team-gifts`); the section lists three occasions (staff appreciation, client thank-yous, events) and how to start ("Tell us the occasion, how many people and when… we'll come back with bracelet options"). Still no minimums, prices or lead times.
+- **Scale**: headings, beads (168 → 112px), moment fields, photos (now square) and spacing reduced; desktop page height ~11,000 → ~7,160px. Checks: tsc, 24 tests, detector clean; viewed at 1440 and 375.
+
+### [2026-11-07] — Our Story Redesigned: A Week on the Wrist
+
+- **Agent**: Claude Code
+- **Why**: owner disliked the layout and the seal; asked for a fresh design, free of the other pages' style.
+- **Design**: the page has its own world. Lava-black opening (Bricolage Grotesque display, loaded in the page via `next/font`, `--font-story`; body stays Manrope), gold "Find Your Bracelet". The six moments are full-width fields, each in one stone's colour (`MOMENTS` in `lib/commerce/our-story.ts`: Kirinyaga Cloud, Kerio Earth, Chuma Mirror, Malindi Sunset, Watamu Deep, Simba Gold), with that stone's real bead photo strung on one thread running down the page; the bead slides down the thread as its field arrives (CSS scroll-driven animation, off under reduced motion, visible without support) and the stone name links to its bracelet. Then the note on lava, matching/gift photos staggered on bone, the 18 place names as a tray of real beads on lava, team gifts on evergreen, a big closing. `KenyaSeal.tsx` removed.
+- **Checks**: tsc, Prettier, 24 tests, Impeccable detector (no findings); viewed at 1440 and 375 (no sideways scroll, no console errors). Copy, GA4 events, metadata and JSON-LD unchanged. Not committed or pushed.
+
+### [2026-11-07] — Our Story Rewritten: "It Goes Where You Go"; Team Gifts
+
+- **Agent**: Claude Code
+- **Concept**: built on the owner's own why: a bracelet goes everywhere with you, through ordinary and big days; matching sets and gifts carry people with them. Wording chosen by the owner (version C, "why" note from A, corporate a mix of A and C). Signed "BWA" only: no founder name or face (owner).
+- **Page** (`app/our-story/page.tsx`, `story.module.css`): opening "With you for all of it."; six "It's there…" moments beside a sticky photo (hidden on phones); "Why we do this" note on forest; matching sets (owner confirmed couples and families buy them) and gifting cards; "Every name is a piece of home": 18 place-named stones from `getDesignStones()` with bead photos, linking to the product (or Design Your Own if unlisted), list in `lib/commerce/our-story.ts` `PLACE_NAMES`, plus the "names honour the places" note; `#team-gifts` band ("The day they were recognised, worn every day after.") with email `beadsworldafrica@outlook.com` and WhatsApp; closing "Where will it take you?" with ManCave Mwanzi and Stock BWA. `revalidate = 3600`. The old materials section is gone (footer link now "Team gifts").
+- **Photos**: two more web copies from the 2026-10-27 shoot, no faces: `matching-pair.webp` (IMG_3225), `handed-over.webp` (IMG_3386).
+- **GA4**: new `components/marketing/TrackedLink.tsx`; events `our_story_click` {placement, link}, `corporate_gift_enquiry_click` {placement, method: email/whatsapp}, `stockist_enquiry_click` {placement: our_story}.
+- **Seal**: `app/our-story/KenyaSeal.tsx`, BWA's own "Handmade in Kenya" seal (ring of beads in forest/clay/ink, text turning once every 48 s, still under reduced motion) stamped on the opening photo's corner. The owner's `public/images/made-in-kenya.png` was not used: it looks like the official Made in Kenya certification mark, which BWA isn't confirmed to hold, and its flag colours clash with the site.
+- **Corporate band promises nothing**: no minimums, prices, lead times or personalisation until the owner confirms them.
+- **Checks**: tsc, Prettier and 24 tests pass; checked at 1024px and 375px in dev (no console errors, no sideways scroll). Not committed or pushed.
+
+### [2026-11-07] — Brand-led Our Story Page
+
+- **Agent**: Codex
+- **What**: Added static `/our-story` (`app/our-story/page.tsx`, scoped `story.module.css`) with BWA's existing palette/type, real wrist and bead photographs, Kenyan-name explanations, materials, gifting and discovery links. Owner requested minimal personal involvement: no founder biography or faces; making-process content deferred until genuine photographs exist. Image sources and copy evidence: `docs/our-story.md`; web-sized derivatives in `public/images/our-story/`, originals untouched.
+- **Navigation / SEO**: Desktop and mobile Our Story links, footer and homepage button now open the page; active-page semantics added. Unique title/description, canonical, Open Graph/Twitter image, AboutPage and BreadcrumbList JSON-LD, sitemap and existing `llms.txt` entry. Existing homepage `#story` remains valid.
+- **Validation**: 24 existing tests, TypeScript and production build pass. Build needed network access for existing Google fonts. Verified rendered metadata and built HTML, sitemap and llms.txt; desktop/mobile visual checks and widths 320/375/414/768/1280/1920 show no horizontal overflow. Mobile menu opens the page and closes; all three photographs load. No live-data changes, commit or push. Pre-existing `public/images/made-in-kenya.png` and generated-file changes are outside this task.
+- **Needs the owner**: Review the local page; publication needs separate approval.
+
 ### [2026-11-05] — Homepage Speed; /shop Out of the Sitemap
 
 - **Why**: the new weekly SEO check (`../Website-data/seo/`) found the homepage's largest paint (the hero photo) at 6–9 s on phones, and `/shop` listed in the sitemap while marked noindex.

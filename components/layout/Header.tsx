@@ -128,7 +128,13 @@ export default function Header() {
             >
               Design Your Own
             </Link>
-            <Link href="/#story">Our Story</Link>
+            <Link
+              href="/our-story"
+              className={pathname === "/our-story" ? "active" : ""}
+              aria-current={pathname === "/our-story" ? "page" : undefined}
+            >
+              Our Story
+            </Link>
             <Link
               href="/journal"
               className={pathname.startsWith("/journal") ? "active" : ""}
@@ -365,7 +371,11 @@ export default function Header() {
           <Link href="/design-your-own" onClick={() => setOpen(false)}>
             Design Your Own
           </Link>
-          <Link href="/#story" onClick={() => setOpen(false)}>
+          <Link
+            href="/our-story"
+            onClick={() => setOpen(false)}
+            aria-current={pathname === "/our-story" ? "page" : undefined}
+          >
             Our Story
           </Link>
           <Link href="/journal" onClick={() => setOpen(false)}>

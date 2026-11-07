@@ -18,6 +18,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 1.0,
     },
+    {
+      url: `${baseUrl}/our-story`,
+      lastModified: new Date("2026-11-07T00:00:00+03:00"),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
     // /shop is noindex (/bracelets is the page meant to rank), so it stays out.
     {
       url: `${baseUrl}/bracelets`,

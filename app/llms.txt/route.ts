@@ -24,6 +24,10 @@ export async function GET() {
 
 > Beads World Africa (BWA) makes handmade bracelets in Kenya from natural stones and other materials, designed around personal style, intention and the stories people choose to wear. Most customers are men in Kenya buying for themselves and women buying gifts for men.
 
+## About BWA
+
+- [Our Story](${SITE_URL}/our-story): handmade bracelets in Kenya, materials, personal style and the Kenyan landscapes behind our bracelet names.
+
 ## How to buy
 
 - Online: choose a bracelet and size at ${SITE_URL}/bracelets, add it to the bag, and place the order. The order is then confirmed with BWA on WhatsApp, where payment (M-Pesa or bank transfer) and delivery are arranged.
