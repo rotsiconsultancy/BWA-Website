@@ -1,11 +1,12 @@
 "use client";
 
 import { Share2, Store } from "lucide-react";
-import { FaInstagram } from "react-icons/fa";
+import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import { STOCKIST_ENQUIRY_URL } from "@/lib/commerce/stockists";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 const INSTAGRAM_URL = "https://instagram.com/beadsworldafrica";
+const LINKEDIN_URL = "https://www.linkedin.com/company/beadsworldafrica";
 const SHARE_TEXT =
   "Natural stone bracelets, handmade in Kenya by Beads World Africa.";
 
@@ -60,6 +61,21 @@ export default function GrowBwaLinks({
           <span>
             <strong>Follow @beadsworldafrica</strong>
             <small>New stones and drops, first on Instagram.</small>
+          </span>
+        </a>
+      </li>
+      {/* linkedin */}
+      <li>
+        <a
+          href={LINKEDIN_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackGa4Event("linkedin_follow_click", { placement })}
+        >
+          <FaLinkedin size={18} aria-hidden="true" />
+          <span>
+            <strong>Follow @beadsworldafrica</strong>
+            <small>New articles, partnership news, stones and drops, first on LinkedIn.</small>
           </span>
         </a>
       </li>

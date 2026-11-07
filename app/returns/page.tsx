@@ -203,6 +203,39 @@ export default function ReturnPolicyPage() {
                 @beadsworldafrica
               </a>
             </li>
+            <li>
+              <strong>TikTok:</strong>{" "}
+              <a
+                href="https://tiktok.com/@beadsworldafrica"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="legal-link"
+              >
+                @beadsworldafrica
+              </a>
+            </li>
+            <li>
+              <strong>Facebook:</strong>{" "}
+              <a
+                href="https://facebook.com/beadsworldafrica"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="legal-link"
+              >
+                Beads World Africa
+              </a>
+            </li>
+            <li>
+              <strong>LinkedIn:</strong>{" "}
+              <a
+                href="https://linkedin.com/company/beadsworldafrica"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="legal-link"
+              >
+                Beads World Africa
+              </a>
+            </li>
           </ul>
         </section>
       </div>

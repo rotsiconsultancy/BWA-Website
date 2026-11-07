@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { FaInstagram, FaFacebook, FaTiktok } from "react-icons/fa";
+import { FaInstagram, FaFacebook, FaTiktok, FaLinkedin } from "react-icons/fa";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 export default function Footer() {
@@ -110,6 +110,13 @@ export default function Footer() {
                 rel="noopener noreferrer"
               >
                 <FaTiktok />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/beadsworldafrica"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin />
               </a>
             </div>
           </div>

@@ -40,6 +40,7 @@ const organizationJsonLd = {
     "https://instagram.com/beadsworldafrica",
     "https://facebook.com/beadsworldafrica",
     "https://tiktok.com/@beadsworldafrica",
+    "https://www.linkedin.com/company/beadsworldafrica"
   ],
   contactPoint: {
     "@type": "ContactPoint",

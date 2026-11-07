@@ -80,6 +80,7 @@ ${getAllPosts()
 - Instagram: https://instagram.com/beadsworldafrica
 - TikTok: https://tiktok.com/@beadsworldafrica
 - Facebook: https://facebook.com/beadsworldafrica
+- LinkedIn: https://www.linkedin.com/company/beadsworldafrica
 `;
 
   return new Response(body, {

@@ -14,3 +14,5 @@ graphify-out
 # Local IndexNow submission baseline and Python test caches
 .indexnow/
 __pycache__/
+.hallmark
+.hallmark/
