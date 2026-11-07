@@ -55,7 +55,7 @@ export default function Footer() {
             <h4>About</h4>
             <div className="footer-links">
               <Link href="/our-story">Our Story</Link>
-              <Link href="/our-story#team-gifts">Team gifts</Link>
+              <Link href="/corporate-gifts">Corporate gifts</Link>
               <Link href="/#contact">Order help</Link>
               <Link href="/returns">Return Policy</Link>
               <Link href="/terms">Terms &amp; Conditions</Link>

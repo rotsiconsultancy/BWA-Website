@@ -32,6 +32,15 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-07] — Corporate Gifts Page (The Appreciation Collection)
+
+- **Agent**: Claude Code
+- **Source**: the owner's `BWA Corporate Gifting Proposal.pdf` (Downloads, 13 slides). Owner chose to turn it into a web page.
+- **Page**: `/corporate-gifts` (`app/corporate-gifts/`), same world as Our Story (lava, bone, evergreen, gold; Bricolage now shared via `lib/story-font.ts`). Sections: opening ("Ask for a quote" email + WhatsApp, packs from KES 2,000), the idea and four reasons, three outside figures with sources, the three packs with prices and an "Ask about <pack>" email each, where a bracelet fits by industry, four steps, close. Data in `lib/commerce/corporate-gifts.ts`.
+- **Left out of the deck**: "a handwritten card in every order" (not recorded anywhere) and the 4.9/5 rating; "each stone has a name and a place" softened to "many stones". The three figures are the deck's; their sources weren't reachable from this machine, so the owner should check them before pushing.
+- **Links**: Our Story team section ("See the packs and prices"), footer "Corporate gifts", sitemap (0.7), `llms.txt`. GA4 `corporate_gift_enquiry_click` {placement: corporate_page, method, pack}.
+- **Checks**: tsc, Prettier, 24 tests, detector clean; viewed at 1440 and ~700px. Not committed.
+
 ### [2026-11-07] — Our Story: a Real Story, Team Gifts Up Front, Scaled Down
 
 - **Agent**: Claude Code

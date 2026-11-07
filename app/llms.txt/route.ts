@@ -27,6 +27,7 @@ export async function GET() {
 ## About BWA
 
 - [Our Story](${SITE_URL}/our-story): handmade bracelets in Kenya, materials, personal style and the Kenyan landscapes behind our bracelet names.
+- [Corporate gifts](${SITE_URL}/corporate-gifts): the Appreciation Collection, handmade bracelet packs for staff, clients and events (Everyday, Signature, Executive), quoted per order.
 
 ## How to buy
 

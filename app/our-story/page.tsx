@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
@@ -21,15 +20,10 @@ import {
 import { STOCKIST_ENQUIRY_URL } from "@/lib/commerce/stockists";
 import { designLink, type DesignStone } from "@/lib/design/stones";
 import { getDesignStones } from "@/lib/design/stones-server";
+import { storyDisplay } from "@/lib/story-font";
 import styles from "./story.module.css";
 
-// This page has its own display face; the rest of the site keeps Cormorant.
-const display = Bricolage_Grotesque({
-  subsets: ["latin"],
-  axes: ["wdth", "opsz"],
-  display: "swap",
-  variable: "--font-story",
-});
+const display = storyDisplay;
 
 // The beads read the live stones; refresh hourly.
 export const revalidate = 3600;
@@ -411,6 +405,14 @@ export default async function OurStoryPage() {
               </TrackedLink>
             </div>
             <p className={styles.email}>{CORPORATE_EMAIL}</p>
+            <TrackedLink
+              className={styles.teamLink}
+              href="/corporate-gifts"
+              event="our_story_click"
+              params={track("corporate_gifts_page")}
+            >
+              See the packs and prices
+            </TrackedLink>
           </div>
           <figure className={styles.teamPhoto}>
             <Image
