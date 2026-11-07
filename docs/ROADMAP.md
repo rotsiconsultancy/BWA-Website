@@ -15,7 +15,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⏭️ skipped
 | A1 | GA4: mark key events (`whatsapp_order_open`, `generate_lead`, `sign_up`), build the checkout funnel, filter internal traffic, link Merchant Center and Ads | ⬜ |
 | A2 | Submit the sitemap to Google Search Console and Bing Webmaster Tools (Bing feeds ChatGPT search) | ⬜ |
 | A3 | Check Cloudflare/Vercel bot settings are not blocking AI crawlers | ⬜ |
-| A4 | Google Business Profile, with ManCave branches listed as places to buy | ⬜ |
+| A4 | Google Business Profile, with ManCave branches listed as places to buy | ✅ Set up by the owner 2026-11-07 |
 | A5 | Merchant Center: set shipping in account settings (the feed no longer sends a fixed KES 250), e.g. a delivery cost range or "Collect" option | ⬜ |
 
 ---
