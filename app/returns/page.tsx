@@ -142,8 +142,10 @@ export default function ReturnPolicyPage() {
           </p>
           <p>
             If it costs less, we keep the balance as{" "}
-            <strong>credit for your next order</strong>. Just mention it on
-            WhatsApp when you order again. Credit isn&apos;t paid out in cash.
+            <strong>credit for your next order</strong>. The credit is valid for{" "}
+            <strong>7 days</strong> from the day we send your new piece; just
+            mention it on WhatsApp when you order again. Credit isn&apos;t paid
+            out in cash.
           </p>
         </section>
 
