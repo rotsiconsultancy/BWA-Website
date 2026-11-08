@@ -30,8 +30,8 @@ export const shoppingFaqs: FaqItem[] = [
   {
     question: "Can I return or exchange my bracelet?",
     answer:
-      "Yes. Contact us within 7 days of delivery to return or exchange an unworn piece.",
-    link: { href: "/returns", label: "Read the returns policy" },
+      "We don't give money back, but you can switch an unworn piece for another bracelet within 7 days of delivery. Delivery for the exchange is paid by you.",
+    link: { href: "/returns", label: "Read the exchange policy" },
   },
   {
     question: "How do I care for my bracelet?",

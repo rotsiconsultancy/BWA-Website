@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Return Policy | Beads World Africa",
+  title: "Exchange Policy | Beads World Africa",
   description:
-    "Beads World Africa return and exchange policy. We stand behind every piece we make — learn how returns and exchanges work.",
+    "Beads World Africa exchange policy: no money back, but you can switch your bracelet for another piece within 7 days of delivery. Delivery for exchanges is paid by the customer.",
   alternates: { canonical: "/returns" },
   robots: { index: true, follow: true },
   openGraph: {
-    title: "Return Policy | Beads World Africa",
+    title: "Exchange Policy | Beads World Africa",
     description:
-      "We stand behind every piece we make. Learn about our return and exchange policy.",
+      "Switch your bracelet for another piece within 7 days of delivery. We don't give money back.",
     url: "https://beadsworldafrica.co.ke/returns",
     siteName: "Beads World Africa",
     locale: "en_US",
@@ -18,7 +18,6 @@ export const metadata: Metadata = {
 };
 
 export default function ReturnPolicyPage() {
-  
   const whatsappNumber = process.env.WHATSAPP_NUMBER;
 
   return (
@@ -26,138 +25,139 @@ export default function ReturnPolicyPage() {
       <div className="legal-container">
         <header className="legal-header">
           <p className="legal-eyebrow">Beads World Africa</p>
-          <h1>Return Policy</h1>
-          <p className="legal-updated">Last updated: October 2026</p>
+          <h1>Exchange Policy</h1>
+          <p className="legal-updated">Last updated: November 2026</p>
         </header>
 
         <section className="legal-section">
           <p className="legal-lead">
-            Every BWA piece is handcrafted and inspected before it leaves us.
-            But we know buying online takes a leap of faith — so we want you to
-            feel fully supported if something isn&apos;t right.
+            Every BWA piece is handcrafted and inspected before it leaves us. If
+            something isn&apos;t right, we&apos;ll help you switch it for a
+            piece you love.
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>1. Our Commitment</h2>
+          <h2>1. Exchanges, Not Refunds</h2>
           <p>
-            We stand behind the quality and craftsmanship of every bracelet we
-            make. If your piece arrives damaged, defective, or significantly
-            different from what was described, we will make it right —
-            no fuss.
+            <strong>We don&apos;t give money back.</strong> Instead, you can
+            switch your bracelet for another piece: a different size, a
+            different stone or a different bracelet altogether, subject to
+            stock.
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>2. Eligibility Window</h2>
+          <h2>2. Exchange Window</h2>
           <p>
             You have <strong>7 days from the date of delivery</strong> to
-            contact us about a return or exchange. After this window we are
-            unable to process a return, so please inspect your order as soon as
-            it arrives.
+            contact us about an exchange. After this window we are unable to
+            exchange an item, so please inspect your order as soon as it
+            arrives.
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>3. What We Accept</h2>
-          <p>We accept returns or exchanges for items that are:</p>
+          <h2>3. What We Exchange</h2>
+          <p>We exchange items that are:</p>
           <ul>
+            <li>The wrong size or simply not the one for you</li>
             <li>Damaged or broken on arrival (with photo evidence)</li>
             <li>Defective in material or craftsmanship</li>
             <li>
               Significantly different from the product description or images
             </li>
-            <li>Unworn, unaltered, and in their original condition</li>
           </ul>
+          <p>
+            Apart from damaged or defective pieces, the item must be unworn,
+            unaltered and in its original condition and packaging.
+          </p>
         </section>
 
         <section className="legal-section">
-          <h2>4. What We Cannot Accept</h2>
+          <h2>4. What We Cannot Exchange</h2>
           <ul>
-            <li>
-              Items returned more than 7 days after delivery confirmation
-            </li>
+            <li>Items we hear about more than 7 days after delivery</li>
             <li>
               Items that have been worn, resized, altered, or show signs of use
             </li>
             <li>
-              Bespoke / custom-made orders — these are crafted uniquely for you
-              and cannot be returned unless they arrive defective
+              Custom-made orders (including Design Your Own), which are crafted
+              uniquely for you and can only be exchanged if they arrive
+              defective
             </li>
             <li>Items purchased during a final sale or clearance promotion</li>
             <li>
-              Items where the original packaging has been discarded or
-              destroyed
+              Items where the original packaging has been discarded or destroyed
             </li>
           </ul>
         </section>
 
         <section className="legal-section">
-          <h2>5. How to Start a Return</h2>
+          <h2>5. How to Exchange</h2>
           <ol>
             <li>
-              <strong>Contact us within 7 days</strong> of delivery via
-              WhatsApp at{" "}
-              <a href={`https://wa.me/${whatsappNumber}`} className="legal-link">
+              <strong>Contact us within 7 days</strong> of delivery via WhatsApp
+              at{" "}
+              <a
+                href={`https://wa.me/${whatsappNumber}`}
+                className="legal-link"
+              >
                 +{whatsappNumber}
               </a>{" "}
               or email{" "}
-              <a href="mailto:beadsworldafrica@outlook.com" className="legal-link">
+              <a
+                href="mailto:beadsworldafrica@outlook.com"
+                className="legal-link"
+              >
                 beadsworldafrica@outlook.com
               </a>
             </li>
             <li>
-              <strong>Share your order reference</strong> and a short
-              description of the issue, along with clear photos of the item and
-              packaging.
+              <strong>Share your order reference</strong>, the reason for the
+              exchange and clear photos of the item and packaging.
             </li>
             <li>
-              <strong>Wait for our confirmation.</strong> Our team will assess
-              your request and respond within 1–2 business days with
+              <strong>Choose your new piece.</strong> We&apos;ll confirm
+              it&apos;s in stock and reply within 1–2 business days with
               instructions.
             </li>
             <li>
-              <strong>Ship the item back</strong> using a tracked courier
-              service once we confirm your return. We recommend you keep the
-              tracking number until the return is resolved.
+              <strong>Send the item back</strong> as we agree on WhatsApp. Once
+              we receive and check it, we send your new piece.
             </li>
           </ol>
         </section>
 
         <section className="legal-section">
-          <h2>6. Return Shipping Costs</h2>
+          <h2>6. Delivery Costs</h2>
           <p>
-            If the return is due to our error (damaged, defective, or
-            wrong item), <strong>we will cover the return shipping cost</strong>{" "}
-            in full.
-          </p>
-          <p>
-            If you are returning an item for a reason other than our error,
-            return shipping costs are the responsibility of the customer.
+            <strong>Delivery for an exchange is paid by the customer</strong>:
+            both sending the item back to us and sending the new piece to you.
+            Within Nairobi this is usually the Uber or Bolt fare; elsewhere we
+            confirm the cost on WhatsApp.
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>7. Exchanges</h2>
+          <h2>7. Choosing a Different Piece</h2>
           <p>
-            We are happy to exchange an eligible item for the same product in a
-            different size, or for a store credit of equal value if the original
-            item is no longer available. Exchanges are subject to stock
-            availability.
+            If the piece you switch to costs more than the one you bought, you
+            pay the difference before we send it.
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>8. Refunds</h2>
+          <h2>8. No Cash Refunds</h2>
           <p>
-            Once we receive and inspect your returned item, we will notify you
-            of the approval or rejection of your refund. Approved refunds will
-            be processed within <strong>5–10 business days</strong> to your
-            original payment method, or as store credit if preferred.
-          </p>
-          <p>
-            Shipping fees are non-refundable unless the return is due to our
-            error.
+            Exchanged items are not refunded in cash, M-Pesa or to a card, and
+            delivery fees are not refunded. If we ever have to cancel an order
+            you have already paid for, we refund the full amount you paid (see
+            our{" "}
+            <a href="/terms" className="legal-link">
+              Terms
+            </a>
+            ).
           </p>
         </section>
 
@@ -179,7 +179,10 @@ export default function ReturnPolicyPage() {
           <ul>
             <li>
               <strong>WhatsApp:</strong>{" "}
-              <a href={`https://wa.me/${whatsappNumber}`} className="legal-link">
+              <a
+                href={`https://wa.me/${whatsappNumber}`}
+                className="legal-link"
+              >
                 +{whatsappNumber}
               </a>
             </li>

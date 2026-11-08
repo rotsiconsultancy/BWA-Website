@@ -121,9 +121,9 @@ export default function TermsPage() {
           <h2>7. Discount Codes &amp; Offers</h2>
           <p>
             Discount codes are valid for one use per customer unless otherwise
-            stated. Codes cannot be combined with other offers, cannot be applied
-            retrospectively to completed orders, and have no cash value. We
-            reserve the right to withdraw or amend promotional offers at any
+            stated. Codes cannot be combined with other offers, cannot be
+            applied retrospectively to completed orders, and have no cash value.
+            We reserve the right to withdraw or amend promotional offers at any
             time.
           </p>
         </section>
@@ -144,11 +144,14 @@ export default function TermsPage() {
         </section>
 
         <section className="legal-section">
-          <h2>9. Returns &amp; Exchanges</h2>
+          <h2>9. Exchanges (No Refunds)</h2>
           <p>
-            Returns and exchanges are governed by our{" "}
+            We do not give money back for items you have received. You can
+            switch an eligible item for another piece within 7 days of delivery,
+            and the delivery costs of an exchange are paid by you. Exchanges are
+            governed by our{" "}
             <a href="/returns" className="legal-link">
-              Return Policy
+              Exchange Policy
             </a>
             , which forms part of these Terms and Conditions. By placing an
             order you confirm you have read and understood it.
@@ -159,9 +162,10 @@ export default function TermsPage() {
           <h2>10. Bespoke Orders</h2>
           <p>
             Custom and bespoke orders are made to your specification. By
-            requesting a bespoke piece you agree that the order is non-refundable
-            except in the case of a material defect or error on our part.
-            Bespoke orders may take up to 14 business days to complete.
+            requesting a bespoke piece you agree that the order is
+            non-refundable and can only be exchanged in the case of a material
+            defect or error on our part. Bespoke orders may take up to 14
+            business days to complete.
           </p>
         </section>
 
@@ -218,8 +222,8 @@ export default function TermsPage() {
           <h2>15. Third-Party Links</h2>
           <p>
             This Site may contain links to third-party websites (such as social
-            media platforms or payment providers). We are not responsible for the
-            content, privacy practices, or availability of those sites.
+            media platforms or payment providers). We are not responsible for
+            the content, privacy practices, or availability of those sites.
           </p>
         </section>
 
@@ -244,9 +248,7 @@ export default function TermsPage() {
 
         <section className="legal-section">
           <h2>18. Contact Us</h2>
-          <p>
-            Questions about these Terms? Reach our team through:
-          </p>
+          <p>Questions about these Terms? Reach our team through:</p>
           <ul>
             <li>
               <strong>Email:</strong>{" "}
@@ -259,7 +261,10 @@ export default function TermsPage() {
             </li>
             <li>
               <strong>WhatsApp:</strong>{" "}
-              <a href={`https://wa.me/${whatsappNumber}`} className="legal-link">
+              <a
+                href={`https://wa.me/${whatsappNumber}`}
+                className="legal-link"
+              >
                 +{whatsappNumber}
               </a>
             </li>

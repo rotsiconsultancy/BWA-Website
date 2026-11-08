@@ -32,6 +32,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-08] — Exchange Policy: No Refunds, Customer Pays Delivery
+
+- **Owner, 2026-11-08**: BWA does not give money back; customers can switch for another piece and still pay the delivery costs.
+- **Changes**: `/returns` is now the "Exchange Policy" (same URL): exchanges only within 7 days of delivery, for another size, stone or bracelet subject to stock; customer pays delivery both ways; pays the difference if the new piece costs more; no cash/M-Pesa/card refunds or delivery refunds; a paid order BWA cancels is still refunded in full (Terms §5). Terms §9 renamed "Exchanges (No Refunds)", bespoke clause says exchange only on defect. FAQ answer, `llms.txt`, footer link label updated. `MerchantReturnPolicy` JSON-LD (layout + products) gains `refundType: ExchangeRefund`, `returnFees: ReturnShippingFees`, `returnMethod: ReturnByMail`.
+- **Review flow verified live (read-only)**: owner ran the review SQL and tested one review on BWA-2026-1FEDF0D5; request, review (pending), feedback and personal code THANKS-6SQRP8 (customer-bound, 1 use, KES 200 / USD 2, 60 days) all saved as designed.
+
 ### [2026-11-08] — Review & Reward: Review Link After Delivery, One-Time Thank-You Code
 
 - **What**: a delivered order gets one review link (`/review/<token>`, valid 30 days, noindex). Three steps, "Takes under a minute": stars per bracelet (with its photo), chips + one optional line + permission to show (name, town), then a private "One thing we could do better next time?" (chips + note). On send the client gets `THANKS-XXXXXX`: KES 200 / USD 2 off (shown as "KES 200 (USD 2)" on the page and in messages, `REWARD_LABEL`), one use, 60 days, given whatever the rating. Opening the link again shows the same code (used/expired state).

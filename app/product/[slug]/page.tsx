@@ -82,6 +82,9 @@ export default async function ProductPage({ params }: Props) {
       returnPolicyCategory:
         "https://schema.org/MerchantReturnFiniteReturnWindow",
       merchantReturnDays: 7,
+      refundType: "https://schema.org/ExchangeRefund",
+      returnFees: "https://schema.org/ReturnShippingFees",
+      returnMethod: "https://schema.org/ReturnByMail",
       merchantReturnLink: absoluteUrl("/returns"),
     },
   };

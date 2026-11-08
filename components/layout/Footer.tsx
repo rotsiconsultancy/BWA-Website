@@ -57,7 +57,7 @@ export default function Footer() {
               <Link href="/our-story">Our Story</Link>
               <Link href="/corporate-gifts">Corporate gifts</Link>
               <Link href="/#contact">Order help</Link>
-              <Link href="/returns">Return Policy</Link>
+              <Link href="/returns">Exchange Policy</Link>
               <Link href="/terms">Terms &amp; Conditions</Link>
               <Link href="/admin/login">BWA team login</Link>
             </div>
@@ -125,7 +125,7 @@ export default function Footer() {
         <div className="footer-bottom">
           <span>© {currentYear} Beads World Africa. All rights reserved.</span>
           <span className="footer-legal-links">
-            <Link href="/returns">Return Policy</Link>
+            <Link href="/returns">Exchange Policy</Link>
             <span aria-hidden="true">·</span>
             <Link href="/terms">Terms &amp; Conditions</Link>
           </span>

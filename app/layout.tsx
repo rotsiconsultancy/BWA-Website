@@ -40,7 +40,7 @@ const organizationJsonLd = {
     "https://instagram.com/beadsworldafrica",
     "https://facebook.com/beadsworldafrica",
     "https://tiktok.com/@beadsworldafrica",
-    "https://www.linkedin.com/company/beadsworldafrica"
+    "https://www.linkedin.com/company/beadsworldafrica",
   ],
   contactPoint: {
     "@type": "ContactPoint",
@@ -52,6 +52,9 @@ const organizationJsonLd = {
     applicableCountry: "KE",
     returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
     merchantReturnDays: 7,
+    refundType: "https://schema.org/ExchangeRefund",
+    returnFees: "https://schema.org/ReturnShippingFees",
+    returnMethod: "https://schema.org/ReturnByMail",
     merchantReturnLink: `${SITE_URL}/returns`,
   },
 };
@@ -133,7 +136,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" scroll-behavior="smooth" className={`scroll-smooth ${cormorant.variable} ${manrope.variable}`}>
+    <html
+      lang="en"
+      scroll-behavior="smooth"
+      className={`scroll-smooth ${cormorant.variable} ${manrope.variable}`}
+    >
       <body>
         <script
           type="application/ld+json"
