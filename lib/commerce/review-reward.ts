@@ -11,6 +11,9 @@ export const REVIEW_REWARD = {
   linkValidDays: 30,
 } as const;
 
+/** The reward in both currencies, e.g. "KES 200 (USD 2)". */
+export const REWARD_LABEL = `KES ${REVIEW_REWARD.amountKes} (USD ${REVIEW_REWARD.amountUsd})`;
+
 /** What the client can tap about their bracelet (shown publicly). */
 export const REVIEW_TAGS = [
   { id: "like_photos", label: "Looks like the photos" },
@@ -23,13 +26,12 @@ export const REVIEW_TAGS = [
 
 /** "One thing we could do better next time?" (private, admin only). */
 export const IMPROVEMENT_OPTIONS = [
-  { id: "faster_delivery", label: "Faster delivery" },
-  { id: "easier_ordering", label: "Easier ordering" },
-  { id: "more_sizes", label: "More sizes" },
-  { id: "better_packaging", label: "Better packaging" },
-  { id: "more_stones", label: "More stone choices" },
-  { id: "clearer_photos", label: "Clearer photos" },
-  { id: "nothing", label: "Nothing, keep it up" },
+  { id: "faster_delivery", label: "We should improve delivery" },
+  { id: "easier_ordering", label: "We should make ordering easier" },
+  { id: "more_sizes", label: "Add more bead size variations" },
+  { id: "better_packaging", label: "We should improve packaging" },
+  { id: "more_stones", label: "We should add more stone choices" },
+  { id: "nothing", label: "Nothing, we're doing great!" },
 ] as const;
 
 export const reviewTagLabel = (id: string) =>
@@ -128,9 +130,7 @@ export function reviewLinkMessage(firstName: string | null, link: string) {
     `Hello ${firstName || "there"}, this is Beads World Africa.`,
     "We hope your bracelet arrived well and you're enjoying it.",
     "",
-    "Would you tell us how it went? It takes under a minute, and as a thank-you you'll get KES " +
-      REVIEW_REWARD.amountKes +
-      " off your next order:",
+    `Would you tell us how it went? It takes under a minute, and as a thank-you you'll get ${REWARD_LABEL} off your next order:`,
     link,
   ].join("\n");
 }

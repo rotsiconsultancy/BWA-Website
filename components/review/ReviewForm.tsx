@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import StoreImage from "@/components/commerce/StoreImage";
 import { trackGa4Event } from "@/lib/marketing/ga4";
-import { IMPROVEMENT_OPTIONS, REVIEW_TAGS } from "@/lib/commerce/review-reward";
+import {
+  IMPROVEMENT_OPTIONS,
+  REVIEW_TAGS,
+  REWARD_LABEL,
+} from "@/lib/commerce/review-reward";
 import type { ReviewBracelet } from "@/lib/commerce/review-request";
 
 const STEPS = ["Your bracelet", "What stood out", "Next time"] as const;
@@ -113,7 +117,7 @@ export function ReviewThanks({
       /* the code stays on screen to copy by hand */
     }
   };
-  const keepMessage = `My Beads World Africa thank-you code: ${code} (KES ${amountKes} off, until ${until}). Use it at beadsworldafrica.co.ke with this phone number.`;
+  const keepMessage = `My Beads World Africa thank-you code: ${code} (${REWARD_LABEL} off, until ${until}). Use it at beadsworldafrica.co.ke with this phone number.`;
   return (
     <section className="review-card review-thanks">
       <p className="eyebrow">{again ? "Already reviewed" : "Thank you"}</p>
@@ -129,7 +133,7 @@ export function ReviewThanks({
               ? "Your thank-you code has been used. Enjoy the bracelet."
               : expired
                 ? "Your thank-you code has expired."
-                : `Here's KES ${amountKes} off your next order.`}
+                : `Here's ${REWARD_LABEL} off your next order.`}
           </p>
           <div className={`review-code${used || expired ? " is-spent" : ""}`}>
             <span>Your code</span>
@@ -289,7 +293,7 @@ export default function ReviewForm({
           {step === 2 && "One thing we could do better next time?"}
         </h1>
         <p className="review-gift">
-          As a thank-you: <strong>KES {amountKes} off</strong> your next order,
+          We are working to improve to be become a big brand, and how we do that is taking in reviews. From what we can improve to what you liked about us. <br/> As a thank-you: <strong>{REWARD_LABEL} off</strong> your next order,
           whatever you rate us.
         </p>
         <div
@@ -353,7 +357,7 @@ export default function ReviewForm({
 
       {step === 1 && (
         <div className="review-step">
-          <p className="review-hint">Tap any that fit.</p>
+          <p className="review-hint">What did you like about it ?</p>
           <Chips
             label="What stood out"
             options={REVIEW_TAGS}
@@ -375,7 +379,7 @@ export default function ReviewForm({
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
             />
-            <span>BWA may show this review on the website.</span>
+            <span>Check the box, if you would like to display your review along with your name.</span>
           </label>
           {consent && (
             <div className="review-pair">
@@ -421,7 +425,7 @@ export default function ReviewForm({
       {step === 2 && (
         <div className="review-step">
           <p className="review-hint">
-            Optional, and only we see it. It never goes on the website.
+            Optional, and only we see it. What did you not like about the product? How can we improve in our process?
           </p>
           <Chips
             label="What we could do better"
