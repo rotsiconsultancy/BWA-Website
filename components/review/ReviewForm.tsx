@@ -293,7 +293,7 @@ export default function ReviewForm({
           {step === 2 && "One thing we could do better next time?"}
         </h1>
         <p className="review-gift">
-          We are working to improve to be become a big brand, and how we do that is taking in reviews. From what we can improve to what you liked about us. <br/> As a thank-you: <strong>{REWARD_LABEL} off</strong> your next order,
+          We are working to improve to become a big brand, and how we do that is taking in reviews. From what we can improve to what you liked about us. <br/> As a thank-you: <strong>{REWARD_LABEL} off</strong> your next order,
           whatever you rate us.
         </p>
         <div
