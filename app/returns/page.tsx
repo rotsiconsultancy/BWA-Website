@@ -140,6 +140,11 @@ export default function ReturnPolicyPage() {
             If the piece you switch to costs more than the one you bought, you
             pay the difference before we send it.
           </p>
+          <p>
+            If it costs less, we keep the balance as{" "}
+            <strong>credit for your next order</strong>. Just mention it on
+            WhatsApp when you order again. Credit isn&apos;t paid out in cash.
+          </p>
         </section>
 
         <section className="legal-section">
