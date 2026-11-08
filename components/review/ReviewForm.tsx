@@ -123,7 +123,7 @@ export function ReviewThanks({
       <p className="eyebrow">{again ? "Already reviewed" : "Thank you"}</p>
       <h1>
         {again
-          ? "You've already told us. Thank you."
+          ? "Your have already done the review, we appreciate it. Thank you."
           : "Thank you. This helps a lot."}
       </h1>
       {code && (
