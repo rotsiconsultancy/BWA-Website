@@ -44,7 +44,7 @@ export async function GET() {
     .join(" and ")}. Directions: ${SITE_URL}/stockists
 - Not sure which bracelet? The Find Your Bracelet quiz recommends one: ${SITE_URL}/find-your-bracelet
 - Design your own bracelet (stones, pattern, spacers, letters or a charm, bead size), sent to us on WhatsApp: ${SITE_URL}/design-your-own
-- No refunds; exchanges for another piece within 7 days of delivery, delivery paid by the customer: ${SITE_URL}/returns
+- No refunds; if the size or fit isn't right, exchanges for another piece within 7 days of delivery, delivery paid by the customer: ${SITE_URL}/returns
 
 ## Collections
 

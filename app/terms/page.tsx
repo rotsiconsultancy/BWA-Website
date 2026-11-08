@@ -146,10 +146,10 @@ export default function TermsPage() {
         <section className="legal-section">
           <h2>9. Exchanges (No Refunds)</h2>
           <p>
-            We do not give money back for items you have received. You can
-            switch an eligible item for another piece within 7 days of delivery,
-            and the delivery costs of an exchange are paid by you. Exchanges are
-            governed by our{" "}
+            We do not give money back for items you have received. If the size
+            or fit isn&apos;t right, you can switch an eligible item for another
+            piece within 7 days of delivery, and the delivery costs of an
+            exchange are paid by you. Exchanges are governed by our{" "}
             <a href="/returns" className="legal-link">
               Exchange Policy
             </a>
@@ -163,9 +163,8 @@ export default function TermsPage() {
           <p>
             Custom and bespoke orders are made to your specification. By
             requesting a bespoke piece you agree that the order is
-            non-refundable and can only be exchanged in the case of a material
-            defect or error on our part. Bespoke orders may take up to 14
-            business days to complete.
+            non-refundable and cannot be exchanged. Bespoke orders may take up
+            to 14 business days to complete.
           </p>
         </section>
 

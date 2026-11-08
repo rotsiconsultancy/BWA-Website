@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Exchange Policy | Beads World Africa",
   description:
-    "Beads World Africa exchange policy: no money back, but you can switch your bracelet for another piece within 7 days of delivery. Delivery for exchanges is paid by the customer.",
+    "Beads World Africa exchange policy: no money back, but if the size or fit isn't right you can switch your bracelet for another piece within 7 days of delivery. Delivery for exchanges is paid by the customer.",
   alternates: { canonical: "/returns" },
   robots: { index: true, follow: true },
   openGraph: {
@@ -31,9 +31,9 @@ export default function ReturnPolicyPage() {
 
         <section className="legal-section">
           <p className="legal-lead">
-            Every BWA piece is handcrafted and inspected before it leaves us. If
-            something isn&apos;t right, we&apos;ll help you switch it for a
-            piece you love.
+            Every BWA piece is handcrafted and checked by hand before it leaves
+            us. If the size or fit isn&apos;t right, we&apos;ll help you switch
+            it for a piece that fits.
           </p>
         </section>
 
@@ -59,18 +59,14 @@ export default function ReturnPolicyPage() {
 
         <section className="legal-section">
           <h2>3. What We Exchange</h2>
-          <p>We exchange items that are:</p>
+          <p>We exchange a bracelet when:</p>
           <ul>
-            <li>The wrong size or simply not the one for you</li>
-            <li>Damaged or broken on arrival (with photo evidence)</li>
-            <li>Defective in material or craftsmanship</li>
-            <li>
-              Significantly different from the product description or images
-            </li>
+            <li>It&apos;s the wrong size for your wrist</li>
+            <li>It doesn&apos;t fit well</li>
           </ul>
           <p>
-            Apart from damaged or defective pieces, the item must be unworn,
-            unaltered and in its original condition and packaging.
+            The bracelet must be unworn, unaltered and in its original condition
+            and packaging.
           </p>
         </section>
 
@@ -82,9 +78,8 @@ export default function ReturnPolicyPage() {
               Items that have been worn, resized, altered, or show signs of use
             </li>
             <li>
-              Custom-made orders (including Design Your Own), which are crafted
-              uniquely for you and can only be exchanged if they arrive
-              defective
+              Custom-made orders (including Design Your Own), which are made to
+              your own choices
             </li>
             <li>Items purchased during a final sale or clearance promotion</li>
             <li>
@@ -114,8 +109,8 @@ export default function ReturnPolicyPage() {
               </a>
             </li>
             <li>
-              <strong>Share your order reference</strong>, the reason for the
-              exchange and clear photos of the item and packaging.
+              <strong>Share your order reference</strong>, what&apos;s wrong
+              with the size or fit and clear photos of the item and packaging.
             </li>
             <li>
               <strong>Choose your new piece.</strong> We&apos;ll confirm
@@ -162,16 +157,7 @@ export default function ReturnPolicyPage() {
         </section>
 
         <section className="legal-section">
-          <h2>9. Damaged in Transit</h2>
-          <p>
-            If your package was visibly damaged upon delivery, please photograph
-            the outer packaging before opening it and contact us immediately.
-            This helps us file a claim with the courier on your behalf.
-          </p>
-        </section>
-
-        <section className="legal-section">
-          <h2>10. Contact Us</h2>
+          <h2>9. Contact Us</h2>
           <p>
             Our team is always happy to help. Reach us through any of these
             channels:
