@@ -32,6 +32,15 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-08] — Review & Reward: Review Link After Delivery, One-Time Thank-You Code
+
+- **What**: a delivered order gets one review link (`/review/<token>`, valid 30 days, noindex). Three steps, "Takes under a minute": stars per bracelet (with its photo), chips + one optional line + permission to show (name, town), then a private "One thing we could do better next time?" (chips + note). On send the client gets `THANKS-XXXXXX`: KES 200 / USD 2 off, one use, 60 days, given whatever the rating. Opening the link again shows the same code (used/expired state).
+- **Code tied to the client**: `discount_codes.customer_id`; `/api/discounts/quote` now takes the checkout phone and `create_checkout_order` raises `DISCOUNT_NOT_YOURS` for anyone else. Quote falls back if the column doesn't exist yet.
+- **Admin**: order page → "Review & reward" panel (Create review link once Delivered; Send on WhatsApp with a ready message; status, code, stars, private feedback). New `/admin/reviews`: links made/opened/reviewed, ranked "could do better" bars, feedback list with Reply on WhatsApp and New/Replied/Done, reviews with Waiting/On the website/Hidden (only when the client allowed showing).
+- **Site**: approved reviews show under the product (`components/product/ProductReviews.tsx`) marked "Verified buyer · received a thank-you code". No rating structured data yet. Optional `NEXT_PUBLIC_GOOGLE_REVIEW_URL` adds an unrewarded "Review us on Google" link on the thank-you screen (Google bans rewarded reviews).
+- **Files**: `lib/commerce/review-reward.ts` (terms, chips, parsing; tests in `review-reward.test.ts`), `lib/commerce/review-request.ts`, `app/review/[token]/page.tsx`, `components/review/ReviewForm.tsx`, `app/api/reviews/route.ts` (calls `submit_order_review`, one transaction), `app/admin/reviews/`, `components/admin/OrderReviewPanel.tsx`; SQL appended to `supabase/schema.sql`.
+- **Needs**: run `Website-data/review-rewards-2026-11-08/1-add-review-rewards.sql` in Supabase (until then admin shows the instruction and checkout is unchanged). Only website orders get links; WhatsApp-only sales aren't in `orders`.
+
 ### [2026-11-07] — Corporate Gifts Page (The Appreciation Collection)
 
 - **Agent**: Claude Code

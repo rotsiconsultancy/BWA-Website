@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import ProductDetail from "@/components/product/ProductDetail";
+import ProductReviews from "@/components/product/ProductReviews";
 import {
   getStorefrontCatalogue,
   getStorefrontProduct,
@@ -138,6 +139,7 @@ export default async function ProductPage({ params }: Props) {
         }}
       />
       <ProductDetail product={product} related={related} />
+      <ProductReviews productId={product.id} />
     </>
   );
 }

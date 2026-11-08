@@ -149,6 +149,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           code,
           currency,
+          phone: form.phone,
           lines: items.map((line) => ({
             variantId: line.variantId,
             quantity: line.quantity,

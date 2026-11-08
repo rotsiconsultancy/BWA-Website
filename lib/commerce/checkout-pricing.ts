@@ -209,41 +209,69 @@ export async function calculateCheckout(
   return { ok: true, subtotal: fromMinor(subtotalMinor, currency), items };
 }
 
+export const PERSONAL_CODE_NEEDS_PHONE =
+  "This code is linked to the phone number it was sent to. Enter that number above, then apply the code.";
+export const PERSONAL_CODE_WRONG_PHONE =
+  "This code is linked to a different phone number. Use the number the code was sent to.";
+
+/** Kenyan numbers as stored on customers.phone (2547XXXXXXXX). */
+export const normaliseKenyanPhone = (value: unknown) => {
+  const digits = String(value || "").replace(/\D/g, "");
+  if (digits.startsWith("0")) return "254" + digits.slice(1);
+  if (digits.startsWith("7") || digits.startsWith("1")) return "254" + digits;
+  return digits;
+};
+
+const campaignColumns =
+  "id,code,discount_type,percentage_basis_points,fixed_amount_kes,fixed_amount_usd,minimum_subtotal_kes,minimum_subtotal_usd,max_redemptions,starts_at,ends_at,active";
+
 export async function loadDiscountQuote(
   supabase: SupabaseClient,
   codeInput: unknown,
   subtotal: number,
   currency: StoreCurrency,
+  phoneInput?: unknown,
 ): Promise<DiscountQuote> {
   const code = normaliseDiscountCode(codeInput);
-  if (!isDiscountCodeShapeValid(code))
-    return {
-      valid: false,
-      discountAmount: 0,
-      discountedSubtotal: subtotal,
-      error: customerSafeDiscountError,
-    };
-  const { data: campaign } = await supabase
+  const unavailable = (error = customerSafeDiscountError) => ({
+    valid: false,
+    discountAmount: 0,
+    discountedSubtotal: subtotal,
+    error,
+  });
+  if (!isDiscountCodeShapeValid(code)) return unavailable();
+  let { data: campaign, error } = await supabase
     .from("discount_codes")
-    .select(
-      "id,code,discount_type,percentage_basis_points,fixed_amount_kes,fixed_amount_usd,minimum_subtotal_kes,minimum_subtotal_usd,max_redemptions,starts_at,ends_at,active",
-    )
+    .select(campaignColumns + ",customer_id")
     .eq("code", code)
     .maybeSingle();
-  if (!campaign)
-    return {
-      valid: false,
-      discountAmount: 0,
-      discountedSubtotal: subtotal,
-      error: customerSafeDiscountError,
-    };
+  // Before the review-rewards SQL is run there is no customer_id column.
+  if (error?.code === "42703")
+    ({ data: campaign } = await supabase
+      .from("discount_codes")
+      .select(campaignColumns)
+      .eq("code", code)
+      .maybeSingle());
+  if (!campaign) return unavailable();
+  const ownerId = (campaign as any).customer_id as string | null | undefined;
+  if (ownerId) {
+    const phone = normaliseKenyanPhone(phoneInput);
+    if (!/^254[17]\d{8}$/.test(phone))
+      return unavailable(PERSONAL_CODE_NEEDS_PHONE);
+    const { data: customer } = await supabase
+      .from("customers")
+      .select("id")
+      .eq("phone", phone)
+      .maybeSingle();
+    if (customer?.id !== ownerId) return unavailable(PERSONAL_CODE_WRONG_PHONE);
+  }
   const { count } = await supabase
     .from("discount_redemptions")
     .select("id", { count: "exact", head: true })
-    .eq("discount_code_id", campaign.id)
+    .eq("discount_code_id", (campaign as any).id)
     .is("released_at", null);
   return quoteCampaignDiscount(
-    campaign as DiscountCampaign,
+    campaign as unknown as DiscountCampaign,
     count || 0,
     subtotal,
     currency,

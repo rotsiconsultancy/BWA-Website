@@ -13,6 +13,7 @@ import {
   ShoppingBag,
   TicketPercent,
   Users,
+  Star,
 } from "lucide-react";
 
 const navigation = [
@@ -23,6 +24,7 @@ const navigation = [
   { href: "/admin/pricing", label: "Pricing", icon: Calculator },
   { href: "/admin/discounts", label: "Offers", icon: TicketPercent },
   { href: "/admin/designs", label: "Designs", icon: Palette },
+  { href: "/admin/reviews", label: "Reviews", icon: Star },
   { href: "/admin/discovery", label: "Discovery", icon: Sparkles },
   { href: "/admin/sync", label: "CRM sync", icon: RefreshCw },
 ];

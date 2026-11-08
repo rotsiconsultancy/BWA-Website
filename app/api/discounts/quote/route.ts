@@ -23,6 +23,7 @@ export async function POST(request: Request) {
       body.code,
       checkout.subtotal,
       currency,
+      body.phone,
     );
     return NextResponse.json({ subtotal: checkout.subtotal, ...quote });
   } catch {

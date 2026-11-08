@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import OrderFulfilmentForm from "@/components/admin/OrderFulfilmentForm";
+import OrderReviewPanel from "@/components/admin/OrderReviewPanel";
 import { requireAdmin } from "@/lib/admin/auth";
 import { toWhatsAppNumber, whatsAppLink } from "@/lib/commerce/whatsapp";
 
@@ -70,7 +71,9 @@ export default async function AdminOrderDetail({
       )}
       {query.error && (
         <p className="admin-form-notice is-error">
-          We could not save that update. Please try again.
+          {query.error === "review"
+            ? "A review link can only be made for a delivered order."
+            : "We could not save that update. Please try again."}
         </p>
       )}
       <div className="admin-order-grid">
@@ -197,6 +200,12 @@ export default async function AdminOrderDetail({
             </span>
           </div>
         </section>
+        <OrderReviewPanel
+          admin={admin}
+          order={order}
+          firstName={customer?.first_name || null}
+          whatsAppNumber={customerWhatsApp}
+        />
         <section className="admin-panel admin-order-history">
           <p className="admin-kicker">Status history</p>
           {history.length ? (

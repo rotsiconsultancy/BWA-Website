@@ -354,6 +354,11 @@ begin
       or (v_campaign.ends_at is not null and v_campaign.ends_at <= now()) then
       raise exception 'DISCOUNT_UNAVAILABLE';
     end if;
+    -- Personal codes (review thank-you) belong to one customer.
+    if v_campaign.customer_id is not null
+      and v_campaign.customer_id <> (p_order->>'customer_id')::uuid then
+      raise exception 'DISCOUNT_NOT_YOURS';
+    end if;
     select count(*) into v_active_redemptions
     from public.discount_redemptions
     where discount_code_id = v_campaign.id and released_at is null;
@@ -492,3 +497,138 @@ create table if not exists public.design_leads (
 );
 create index if not exists design_leads_created_at on public.design_leads (created_at desc);
 alter table public.design_leads enable row level security;
+
+-- Review & reward (2026-11-08): one review link per delivered order, a
+-- personal one-time thank-you code, private "do better" feedback.
+-- discount_codes.customer_id is checked in create_checkout_order above.
+-- 1. Personal discount codes: a code with a customer only works for them.
+alter table public.discount_codes add column if not exists customer_id uuid references public.customers(id) on delete cascade;
+alter table public.discount_codes add column if not exists source text not null default 'campaign';
+do $$ begin
+  alter table public.discount_codes add constraint discount_codes_source_check
+    check (source in ('campaign','review_reward'));
+exception when duplicate_object then null; end $$;
+
+-- 2. One review link per order.
+create table if not exists public.review_requests (
+  id uuid primary key default gen_random_uuid(),
+  order_id uuid not null unique references public.orders(id) on delete cascade,
+  customer_id uuid not null references public.customers(id) on delete cascade,
+  token text not null unique check (token ~ '^[A-Za-z0-9_-]{20,64}$'),
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null,
+  opened_at timestamptz,
+  completed_at timestamptz,
+  discount_code_id uuid references public.discount_codes(id) on delete set null
+);
+alter table public.review_requests enable row level security;
+
+-- 3. Reviews (table already existed, unused): link them to the order and request.
+alter table public.reviews add column if not exists order_id uuid references public.orders(id) on delete set null;
+alter table public.reviews add column if not exists review_request_id uuid references public.review_requests(id) on delete set null;
+alter table public.reviews add column if not exists tags text[] not null default '{}';
+alter table public.reviews add column if not exists display_name text;
+alter table public.reviews add column if not exists town text;
+alter table public.reviews add column if not exists publication_consent boolean not null default false;
+alter table public.reviews add column if not exists incentivised boolean not null default false;
+alter table public.reviews alter column body set default '';
+create index if not exists reviews_product_published_idx on public.reviews (product_id, created_at desc) where publish_status = 'published';
+alter table public.reviews enable row level security;
+drop policy if exists "Public can read published consented reviews" on public.reviews;
+create policy "Public can read published consented reviews" on public.reviews
+  for select using (publish_status = 'published' and publication_consent);
+
+-- 4. "One thing we could do better next time?" Private, never shown on the site.
+create table if not exists public.review_feedback (
+  id uuid primary key default gen_random_uuid(),
+  review_request_id uuid not null unique references public.review_requests(id) on delete cascade,
+  order_id uuid not null references public.orders(id) on delete cascade,
+  improvements text[] not null default '{}',
+  note text check (char_length(note) <= 500),
+  status text not null default 'new' check (status in ('new','replied','done')),
+  created_at timestamptz not null default now()
+);
+alter table public.review_feedback enable row level security;
+
+-- 5. Submit a review in one transaction: claim the link, save reviews and
+-- feedback, create the personal one-time code. A second submit returns the
+-- code from the first one instead of a new one.
+create or replace function public.submit_order_review(
+  p_token text,
+  p_reviews jsonb,
+  p_feedback jsonb,
+  p_display_name text,
+  p_town text,
+  p_consent boolean,
+  p_code text,
+  p_code_name text,
+  p_amount_kes numeric,
+  p_amount_usd numeric,
+  p_valid_days integer
+)
+returns table (code text, ends_at timestamptz, already boolean)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_request public.review_requests%rowtype;
+  v_code public.discount_codes%rowtype;
+  v_review jsonb;
+begin
+  select * into v_request from public.review_requests where token = p_token for update;
+  if not found then raise exception 'REVIEW_NOT_FOUND'; end if;
+  if v_request.completed_at is not null then
+    select * into v_code from public.discount_codes where id = v_request.discount_code_id;
+    return query select v_code.code, v_code.ends_at, true;
+    return;
+  end if;
+  if v_request.expires_at <= now() then raise exception 'REVIEW_EXPIRED'; end if;
+  if jsonb_array_length(coalesce(p_reviews, '[]'::jsonb)) = 0 then raise exception 'REVIEW_INVALID'; end if;
+
+  insert into public.discount_codes (
+    code, name, discount_type, fixed_amount_kes, fixed_amount_usd,
+    max_redemptions, starts_at, ends_at, active, customer_id, source
+  ) values (
+    p_code, p_code_name, 'fixed', p_amount_kes, p_amount_usd,
+    1, now(), now() + make_interval(days => p_valid_days), true,
+    v_request.customer_id, 'review_reward'
+  ) returning * into v_code;
+
+  for v_review in select * from jsonb_array_elements(p_reviews) loop
+    insert into public.reviews (
+      product_id, customer_id, order_id, review_request_id, rating, body, tags,
+      display_name, town, publication_consent, verified_purchase, incentivised
+    ) values (
+      nullif(v_review->>'product_id', '')::uuid, v_request.customer_id,
+      v_request.order_id, v_request.id, (v_review->>'rating')::integer,
+      left(coalesce(v_review->>'body', ''), 500),
+      coalesce(array(select jsonb_array_elements_text(v_review->'tags')), '{}'),
+      nullif(left(trim(coalesce(p_display_name, '')), 40), ''),
+      nullif(left(trim(coalesce(p_town, '')), 40), ''),
+      coalesce(p_consent, false), true, true
+    );
+  end loop;
+
+  if p_feedback is not null and (
+    jsonb_array_length(coalesce(p_feedback->'improvements', '[]'::jsonb)) > 0
+    or coalesce(trim(p_feedback->>'note'), '') <> ''
+  ) then
+    insert into public.review_feedback (review_request_id, order_id, improvements, note)
+    values (
+      v_request.id, v_request.order_id,
+      coalesce(array(select jsonb_array_elements_text(p_feedback->'improvements')), '{}'),
+      nullif(left(trim(coalesce(p_feedback->>'note', '')), 500), '')
+    );
+  end if;
+
+  update public.review_requests
+  set completed_at = now(), discount_code_id = v_code.id
+  where id = v_request.id;
+
+  return query select v_code.code, v_code.ends_at, false;
+end;
+$$;
+revoke all on function public.submit_order_review(text, jsonb, jsonb, text, text, boolean, text, text, numeric, numeric, integer) from public;
+grant execute on function public.submit_order_review(text, jsonb, jsonb, text, text, boolean, text, text, numeric, numeric, integer) to service_role;
+

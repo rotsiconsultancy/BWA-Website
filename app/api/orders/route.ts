@@ -2,6 +2,7 @@ import { after, NextResponse } from "next/server";
 import {
   calculateCheckout,
   normaliseDiscountCode,
+  PERSONAL_CODE_WRONG_PHONE,
 } from "@/lib/commerce/checkout-pricing";
 import { sendOrderAlert } from "@/lib/commerce/order-alert";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
@@ -116,6 +117,11 @@ export async function POST(request: Request) {
       },
     );
     if (orderError) {
+      if (String(orderError.message).includes("DISCOUNT_NOT_YOURS"))
+        return NextResponse.json(
+          { error: PERSONAL_CODE_WRONG_PHONE },
+          { status: 409 },
+        );
       if (String(orderError.message).includes("DISCOUNT_UNAVAILABLE"))
         return NextResponse.json(
           {
