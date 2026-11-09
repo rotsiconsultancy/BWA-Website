@@ -48,7 +48,7 @@ export const newWelcomeCode = () => `WELCOME-${randomFrom(CODE_ALPHABET, 6)}`;
 
 /** Stored with every yes, so we know exactly what the customer agreed to. */
 export const CONSENT_TEXT =
-  "Tell me first about new collections on WhatsApp. I can say stop at any time.";
+  "Tell me first about new offers, collections, discounts. You can unsubscribe any time.";
 
 export const BWA_WHATSAPP = "254745474586";
 
