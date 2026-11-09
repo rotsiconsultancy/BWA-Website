@@ -189,7 +189,7 @@ export default async function QrLinkDetail({
           <span
             className={`admin-status ${link.active ? "admin-status-live" : ""}`}
           >
-            {link.active ? "Live" : "Paused: no new codes"}
+            {link.active ? "Live" : "Paused"}
           </span>{" "}
           <button type="submit" className="admin-secondary-action">
             {link.active ? "Pause" : "Resume"}

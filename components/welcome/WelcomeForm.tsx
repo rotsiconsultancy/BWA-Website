@@ -11,6 +11,8 @@ import { whatsAppLink } from "@/lib/commerce/whatsapp";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 const VISITOR_KEY = "bwa_visitor";
+// One scan per page load, even if React runs the effect twice.
+const loggedScans = new Set<string>();
 const WELCOME_KEY = "bwa_welcome";
 
 type Result = {
@@ -76,13 +78,16 @@ export default function WelcomeForm({
 
   useEffect(() => {
     visitor.current = visitorId();
-    fetch("/api/qr/scan", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slug, visitorId: visitor.current }),
-      keepalive: true,
-    }).catch(() => undefined);
-    trackGa4Event("welcome_view", { link: slug });
+    if (!loggedScans.has(slug)) {
+      loggedScans.add(slug);
+      fetch("/api/qr/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, visitorId: visitor.current }),
+        keepalive: true,
+      }).catch(() => undefined);
+      trackGa4Event("welcome_view", { link: slug });
+    }
     const saved = read(WELCOME_KEY);
     if (saved)
       try {

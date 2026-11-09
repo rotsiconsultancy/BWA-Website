@@ -1,13 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { X, Mail, Sparkles, Check } from "lucide-react";
 import { trackGa4Event } from "@/lib/marketing/ga4";
 
 const STORAGE_KEY = "bwa_newsletter_dismissed_until";
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+// Pages with a job of their own (registering a bracelet, leaving a review,
+// running the shop) never get the email pop-up on top.
+const QUIET_PATHS = ["/welcome", "/review", "/admin"];
 
 export default function NewsletterPopup() {
+  const pathname = usePathname() || "";
+  const quiet = QUIET_PATHS.some((p) => pathname.startsWith(p));
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<
@@ -16,6 +22,7 @@ export default function NewsletterPopup() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+    if (quiet) return;
     // Check if user has dismissed within the last 7 days
     try {
       const savedExpiration = localStorage.getItem(STORAGE_KEY);
@@ -51,7 +58,7 @@ export default function NewsletterPopup() {
       window.removeEventListener("scroll", handleScroll);
       if (timer) clearTimeout(timer);
     };
-  }, []);
+  }, [quiet]);
 
   const saveDismissal = () => {
     try {
@@ -98,7 +105,7 @@ export default function NewsletterPopup() {
     }
   };
 
-  if (!visible) return null;
+  if (!visible || quiet) return null;
 
   return (
     <div

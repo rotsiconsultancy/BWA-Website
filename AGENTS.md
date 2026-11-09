@@ -43,7 +43,8 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 - **Also**: welcome codes hidden from Offers (`/admin/discounts`); customer profile gets a "Packaging card (QR)" panel; new dependency `qrcode` 1.5.4 (pnpm).
 - **Files**: `lib/commerce/qr-welcome.ts` (+ tests), `app/welcome/[slug]/page.tsx`, `components/welcome/WelcomeForm.tsx`, `app/api/qr/{scan,register}/route.ts`, `app/admin/qr/`; SQL appended to `supabase/schema.sql`.
 - **Checks**: tsc, 37 tests, production build. SQL tested on a throwaway Postgres 16 with the full schema: runs twice cleanly; new code, same code on re-register, bad phone, unknown link, paused link, 10% at checkout (KES 1,500 → 1,350), reuse refused, other phone refused, stats correct, anon denied, spam limit. Customer screens checked at 375 px with a temporary preview (deleted). Admin pages not viewed (needs login and the SQL live).
-- **Needs**: run `Website-data/qr-links-2026-11-09/1-add-qr-links.sql` in Supabase; push.
+- **Live test (owner OK, same day)**: owner ran the SQL. Created "Test – delete me" (`/welcome/mancave-qdu7`) from the admin form, registered with 0700 000 001: got `WELCOME-MT9ZRX`; registering again returned the same code ("Given earlier"); link page showed the right funnel, people list and QR. Fixed two things found: one phone counted as 2 scans (effect ran twice in dev; now one scan per page load), and the site's email pop-up covered the welcome page (now hidden on `/welcome`, `/review` and `/admin`). Test link paused; `Website-data/qr-links-2026-11-09/2-delete-test-link.sql` removes it.
+- **Needs**: run `2-delete-test-link.sql` when done looking; push.
 
 ### [2026-11-08] — Exchange Policy: No Refunds, Customer Pays Delivery
 
