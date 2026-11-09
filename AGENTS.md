@@ -32,6 +32,13 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-09] — Admin: Record an Order by Hand (Backdated)
+
+- **Why**: owner sells outside the website checkout (Instagram, WhatsApp, in person, stockists) and wants those sales in the system, dated when they happened.
+- **What**: `/admin/orders/new` ("Record an order" button on Orders, owner and commerce_manager only). Customer (phone required; an existing phone joins that customer and only fills blanks), date and time in Nairobi (no future dates), channel, KES/USD, any number of lines, each a catalogue bracelet (price prefilled, editable) or a named custom piece, with its own quantity; delivery fee, discount, status (default Delivered) and payment (default Paid), note. Saves `orders.created_at`, the customer's `created_at` (new customers) and the first status-history row at the order date; `orders.source` = channel. No SQL needed (existing columns). No order email alert, no stock change (the website checkout doesn't decrement stock either), no discount-code redemption. Double submits are caught by an idempotency key. Review links work as usual once Delivered.
+- **Files**: `lib/commerce/manual-order.ts` (+ test), `components/admin/ManualOrderForm.tsx`, `app/admin/orders/new/page.tsx`, `createManualOrder` in `app/admin/orders/actions.ts`; order list and detail now show date and channel.
+- **Checked**: 3 new tests (40 pass), type-check, build; the form in the browser (desktop and phone) via a temporary preview route, since admin needs the owner's login. Saving a real order not tested (would write to live Supabase).
+
 ### [2026-11-09] — QR Links: Packaging-Card Welcome Page, One-Time Welcome Codes, Admin Dashboard
 
 - **Agent**: Claude Code

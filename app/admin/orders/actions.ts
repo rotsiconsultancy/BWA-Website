@@ -4,6 +4,11 @@ import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/auth";
+import {
+  manualOrderTotals,
+  orderSourceLabel,
+  parseManualOrder,
+} from "@/lib/commerce/manual-order";
 
 const statuses = [
   "order_received",
@@ -117,4 +122,170 @@ export async function updateOrder(formData: FormData) {
   revalidatePath(`/admin/orders/${orderNumber}`);
   revalidatePath(`/order/${orderNumber}`);
   redirect(`/admin/orders/${orderNumber}?updated=1`);
+}
+
+/** Record an order that happened outside the website (can be backdated). */
+export async function createManualOrder(formData: FormData) {
+  const { admin, profile, user } = await requireAdmin();
+  if (!["owner", "commerce_manager"].includes(profile.role))
+    redirect(
+      "/admin/orders/new?error=" +
+        encodeURIComponent(
+          "Only the owner or a commerce manager can record orders.",
+        ),
+    );
+  const get = (name: string) => String(formData.get(name) ?? "");
+  const back = (error: string) =>
+    redirect("/admin/orders/new?error=" + encodeURIComponent(error));
+  const parsed = parseManualOrder(get);
+  if (!parsed.ok) return back(parsed.error);
+  const order = parsed.order;
+
+  // A double-click on Save must not record the order twice.
+  const idempotencyKey = "manual-" + (get("idempotency_key") || randomUUID());
+  const { data: existing } = await admin
+    .from("orders")
+    .select("order_number")
+    .eq("idempotency_key", idempotencyKey)
+    .maybeSingle();
+  if (existing) redirect(`/admin/orders/${existing.order_number}?created=1`);
+
+  // Catalogue lines: titles, SKU and photo come from the catalogue, the price
+  // is what the customer actually paid.
+  const variantIds = [
+    ...new Set(order.lines.map((l) => l.variantId).filter(Boolean)),
+  ] as string[];
+  const { data: variants } = variantIds.length
+    ? await admin
+        .from("product_variants")
+        .select(
+          "id,title,sku,product_id,products(title,product_images(url,sort_order))",
+        )
+        .in("id", variantIds)
+    : { data: [] as any[] };
+  const byId = new Map((variants || []).map((v: any) => [v.id, v]));
+  if (byId.size !== variantIds.length)
+    return back("One of the bracelets is no longer in the catalogue.");
+  const items = order.lines.map((line) => {
+    const variant: any = line.variantId ? byId.get(line.variantId) : null;
+    const image = variant
+      ? [...(variant.products?.product_images || [])].sort(
+          (a: any, b: any) => a.sort_order - b.sort_order,
+        )[0]?.url || null
+      : null;
+    return {
+      product_id: variant?.product_id ?? null,
+      variant_id: variant?.id ?? null,
+      product_title_snapshot: variant?.products?.title ?? line.title,
+      variant_title_snapshot: variant?.title ?? "Custom piece",
+      image_snapshot: image,
+      sku_snapshot: variant?.sku ?? null,
+      unit_price: line.unitPrice,
+      quantity: line.quantity,
+      line_total: Math.round(line.unitPrice * line.quantity * 100) / 100,
+    };
+  });
+  const { subtotal, total } = manualOrderTotals(order);
+
+  // Existing customers keep their details; only blanks are filled in.
+  const { data: known } = await admin
+    .from("customers")
+    .select("id,email,last_name")
+    .eq("phone", order.customer.phone)
+    .maybeSingle();
+  let customerId = known?.id as string | undefined;
+  if (known) {
+    const fill: Record<string, string> = {};
+    if (!known.email && order.customer.email) fill.email = order.customer.email;
+    if (!known.last_name && order.customer.lastName)
+      fill.last_name = order.customer.lastName;
+    if (Object.keys(fill).length)
+      await admin.from("customers").update(fill).eq("id", known.id);
+  } else {
+    const { data: created, error } = await admin
+      .from("customers")
+      .insert({
+        first_name: order.customer.firstName,
+        last_name: order.customer.lastName || null,
+        email: order.customer.email || null,
+        phone: order.customer.phone,
+        whatsapp_opt_in: true,
+        marketing_opt_in: false,
+        source: order.channel,
+        created_at: order.orderedAt,
+      })
+      .select("id")
+      .single();
+    if (error || !created) return back("Could not save the customer.");
+    customerId = created.id;
+  }
+
+  const orderNumber =
+    "BWA-" +
+    new Date(order.orderedAt).getFullYear() +
+    "-" +
+    randomUUID().slice(0, 8).toUpperCase();
+  const { data: saved, error: orderError } = await admin
+    .from("orders")
+    .insert({
+      order_number: orderNumber,
+      idempotency_key: idempotencyKey,
+      customer_id: customerId,
+      status: order.status,
+      payment_status: order.paymentStatus,
+      delivery_method: order.deliveryMethod,
+      delivery_address: order.address || null,
+      city: order.city || null,
+      subtotal,
+      delivery_fee: order.deliveryFee,
+      discount_amount: order.discount,
+      total_amount: total,
+      currency: order.currency,
+      source: order.channel,
+      created_at: order.orderedAt,
+    })
+    .select("id,order_number")
+    .single();
+  if (orderError || !saved) return back("Could not save the order.");
+  const { error: itemsError } = await admin
+    .from("order_items")
+    .insert(items.map((item) => ({ ...item, order_id: saved.id })));
+  if (itemsError) {
+    await admin.from("orders").delete().eq("id", saved.id);
+    return back("Could not save the bracelets on the order.");
+  }
+
+  const channel = orderSourceLabel(order.channel);
+  await admin.from("order_status_history").insert({
+    order_id: saved.id,
+    status: order.status,
+    note: [`Recorded in admin (ordered via ${channel}).`, order.note]
+      .filter(Boolean)
+      .join(" "),
+    actor_id: user.id,
+    created_at: order.orderedAt,
+  });
+  await admin.from("crm_sync_outbox").insert({
+    entity_type: "order",
+    entity_id: saved.id,
+    operation: "create",
+    idempotency_key: "order-" + saved.id,
+    payload: { order_number: saved.order_number, source: order.channel, items },
+  });
+  await admin.from("admin_audit_log").insert({
+    actor_id: user.id,
+    entity_type: "order",
+    entity_id: saved.id,
+    action: "created_manual_order",
+    after_value: {
+      order_number: saved.order_number,
+      ordered_at: order.orderedAt,
+      channel: order.channel,
+      total,
+      currency: order.currency,
+    },
+    reason: order.note || null,
+  });
+  revalidatePath("/admin/orders");
+  redirect(`/admin/orders/${saved.order_number}?created=1`);
 }

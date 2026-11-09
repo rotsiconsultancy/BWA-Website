@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import OrderFulfilmentForm from "@/components/admin/OrderFulfilmentForm";
 import OrderReviewPanel from "@/components/admin/OrderReviewPanel";
 import { requireAdmin } from "@/lib/admin/auth";
+import { orderSourceLabel } from "@/lib/commerce/manual-order";
 import { toWhatsAppNumber, whatsAppLink } from "@/lib/commerce/whatsapp";
 
 export default async function AdminOrderDetail({
@@ -10,7 +11,7 @@ export default async function AdminOrderDetail({
   searchParams,
 }: {
   params: Promise<{ orderNumber: string }>;
-  searchParams: Promise<{ updated?: string; error?: string }>;
+  searchParams: Promise<{ updated?: string; error?: string; created?: string }>;
 }) {
   const { admin } = await requireAdmin();
   const { orderNumber } = await params;
@@ -18,7 +19,7 @@ export default async function AdminOrderDetail({
   const { data: order } = await admin
     .from("orders")
     .select(
-      "id,order_number,status,payment_status,subtotal,discount_amount,discount_code_snapshot,delivery_fee,total_amount,currency,delivery_method,delivery_address,city,county,delivery_note,courier_name,tracking_reference,created_at,customers(first_name,last_name,email,phone,whatsapp_opt_in,marketing_opt_in),order_items(product_title_snapshot,variant_title_snapshot,quantity,unit_price,line_total,image_snapshot),order_status_history(status,note,created_at)",
+      "id,order_number,status,payment_status,subtotal,discount_amount,discount_code_snapshot,delivery_fee,total_amount,currency,delivery_method,delivery_address,city,county,delivery_note,courier_name,tracking_reference,created_at,source,customers(first_name,last_name,email,phone,whatsapp_opt_in,marketing_opt_in),order_items(product_title_snapshot,variant_title_snapshot,quantity,unit_price,line_total,image_snapshot),order_status_history(status,note,created_at)",
     )
     .eq("order_number", orderNumber.toUpperCase())
     .maybeSingle();
@@ -28,7 +29,7 @@ export default async function AdminOrderDetail({
   // For orders the customer created but never sent on WhatsApp.
   const followUpMessage = [
     `Hello ${customer?.first_name || "there"}, this is Beads World Africa.`,
-    `Thank you for your website order ${order.order_number}:`,
+    `Thank you for your ${order.source === "website" ? "website " : ""}order ${order.order_number}:`,
     ...(order.order_items || []).map(
       (item: any) =>
         `• ${item.product_title_snapshot} (${item.variant_title_snapshot}) × ${item.quantity}`,
@@ -56,13 +57,22 @@ export default async function AdminOrderDetail({
             {new Date(order.created_at).toLocaleString("en-KE", {
               dateStyle: "medium",
               timeStyle: "short",
+              timeZone: "Africa/Nairobi",
             })}
+            {" · "}
+            {orderSourceLabel(order.source)}
           </p>
         </div>
         <span className={`admin-status admin-status-${order.status}`}>
           {order.status.replaceAll("_", " ")}
         </span>
       </header>
+      {query.created && (
+        <p className="admin-form-notice is-success">
+          Order recorded. Once it&apos;s delivered you can send a review link
+          from this page.
+        </p>
+      )}
       {query.updated && (
         <p className="admin-form-notice is-success">
           Fulfilment update saved. The customer tracking page now reflects the

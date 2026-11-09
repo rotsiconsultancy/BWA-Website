@@ -2,6 +2,7 @@ import PageHeader from "@/components/admin/PageHeader";
 import AdminPagination from "@/components/admin/AdminPagination";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/auth";
+import { orderSourceLabel } from "@/lib/commerce/manual-order";
 
 const PAGE_SIZE = 10;
 
@@ -19,7 +20,7 @@ export default async function AdminOrders({
   const { data: orders, count: totalCount } = await admin
     .from("orders")
     .select(
-      "order_number,status,payment_status,total_amount,currency,created_at,customers(first_name,last_name,phone)",
+      "order_number,status,payment_status,total_amount,currency,created_at,source,customers(first_name,last_name,phone)",
       { count: "exact" },
     )
     .order("created_at", { ascending: false })
@@ -33,6 +34,7 @@ export default async function AdminOrders({
         eyebrow="Fulfilment"
         title="Orders"
         description="Every customer order begins here, in BWA—not in the CRM."
+        action={{ href: "/admin/orders/new", label: "Record an order" }}
       />
       <div className="admin-list-toolbar">
         <p>
@@ -55,7 +57,17 @@ export default async function AdminOrders({
             href={`/admin/orders/${order.order_number}`}
             key={order.order_number}
           >
-            <strong>{order.order_number}</strong>
+            <strong>
+              {order.order_number}
+              <small>
+                {new Date(order.created_at).toLocaleDateString("en-KE", {
+                  dateStyle: "medium",
+                  timeZone: "Africa/Nairobi",
+                })}
+                {" · "}
+                {orderSourceLabel(order.source)}
+              </small>
+            </strong>
             <span>
               {order.customers?.first_name || "—"}{" "}
               {order.customers?.last_name || ""}
