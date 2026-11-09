@@ -32,6 +32,19 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-09] — QR Links: Packaging-Card Welcome Page, One-Time Welcome Codes, Admin Dashboard
+
+- **Agent**: Claude Code
+- **What**: the packaging card's QR opens `/welcome/<slug>` (noindex). Admin → **QR links** (`/admin/qr`) creates one link per channel or print run; the slug is made on the server (channel + 4 random characters, e.g. `mancave-7k2p`), with reward per link (default 10% off, 60 days, optional minimum in KES). List shows scans, phones, registered, orders after and revenue per link; **View** (`/admin/qr/[id]`) has the QR as SVG (print) and PNG downloads, a funnel (scans → registered → codes used → orders after), scans per day for 30 days, and everyone who registered (bracelet, code status, later orders, WhatsApp button). Links can be paused (page still opens, no new codes), not deleted.
+- **Customer side**: one screen (first name, WhatsApp number, optional bracelet, unticked "new collections" consent, hidden honeypot). Success shows `WELCOME-XXXXXX`, rules, "Save it on WhatsApp" (opens a chat with BWA's number) and "Request resizing" (WhatsApp). The device remembers the code (localStorage) and shows it on the next scan. Unknown slug → friendly page with WhatsApp, never a dead end.
+- **Rules (in `register_qr_welcome`, one transaction)**: customer saved by phone in `customers` (source `qr`, name never overwritten, marketing consent only ever switched on); one welcome code per phone number ever (re-registering returns the same code); code is percentage, 1 use, tied to `customer_id`, so checkout's existing `DISCOUNT_NOT_YOURS` and redemption cap stop reuse; at most 5 registrations per device per hour and per phone per day. Consent wording stored with every yes (`CONSENT_TEXT`).
+- **Scans**: logged by the page in the browser (`/api/qr/scan`), so link previews aren't counted; same device within 10 minutes counts once; random device id, no IP stored.
+- **Attribution**: `qr_link_stats` view; an order counts for the link a customer first registered through, if placed on the site after registering, not cancelled/refunded. The shop sale itself isn't visible.
+- **Also**: welcome codes hidden from Offers (`/admin/discounts`); customer profile gets a "Packaging card (QR)" panel; new dependency `qrcode` 1.5.4 (pnpm).
+- **Files**: `lib/commerce/qr-welcome.ts` (+ tests), `app/welcome/[slug]/page.tsx`, `components/welcome/WelcomeForm.tsx`, `app/api/qr/{scan,register}/route.ts`, `app/admin/qr/`; SQL appended to `supabase/schema.sql`.
+- **Checks**: tsc, 37 tests, production build. SQL tested on a throwaway Postgres 16 with the full schema: runs twice cleanly; new code, same code on re-register, bad phone, unknown link, paused link, 10% at checkout (KES 1,500 → 1,350), reuse refused, other phone refused, stats correct, anon denied, spam limit. Customer screens checked at 375 px with a temporary preview (deleted). Admin pages not viewed (needs login and the SQL live).
+- **Needs**: run `Website-data/qr-links-2026-11-09/1-add-qr-links.sql` in Supabase; push.
+
 ### [2026-11-08] — Exchange Policy: No Refunds, Customer Pays Delivery
 
 - **Owner, 2026-11-08**: BWA does not give money back; customers can switch for another piece and still pay the delivery costs.

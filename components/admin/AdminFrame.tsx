@@ -14,6 +14,7 @@ import {
   TicketPercent,
   Users,
   Star,
+  QrCode,
 } from "lucide-react";
 
 const navigation = [
@@ -25,6 +26,7 @@ const navigation = [
   { href: "/admin/discounts", label: "Offers", icon: TicketPercent },
   { href: "/admin/designs", label: "Designs", icon: Palette },
   { href: "/admin/reviews", label: "Reviews", icon: Star },
+  { href: "/admin/qr", label: "QR links", icon: QrCode },
   { href: "/admin/discovery", label: "Discovery", icon: Sparkles },
   { href: "/admin/sync", label: "CRM sync", icon: RefreshCw },
 ];

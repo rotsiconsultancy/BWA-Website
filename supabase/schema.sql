@@ -632,3 +632,193 @@ $$;
 revoke all on function public.submit_order_review(text, jsonb, jsonb, text, text, boolean, text, text, numeric, numeric, integer) from public;
 grant execute on function public.submit_order_review(text, jsonb, jsonb, text, text, boolean, text, text, numeric, numeric, integer) to service_role;
 
+
+
+-- QR links & welcome codes (2026-11-09). Run once in the Supabase SQL editor.
+-- Safe to run again: every step is "if not exists" or "create or replace".
+--
+-- Admin makes one QR link per channel or print run (e.g. /welcome/mancave-7k2p).
+-- A scan opens the welcome page; the customer leaves their WhatsApp number and
+-- first name and gets a one-time welcome code tied to that number. One welcome
+-- code per phone number, ever: registering again returns the same code.
+
+-- 1. Welcome codes are personal discount codes with their own source.
+alter table public.discount_codes drop constraint if exists discount_codes_source_check;
+alter table public.discount_codes add constraint discount_codes_source_check
+  check (source in ('campaign','review_reward','qr_welcome'));
+
+-- 2. One row per printed QR link.
+create table if not exists public.qr_links (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique check (slug ~ '^[a-z0-9][a-z0-9-]{2,47}$'),
+  name text not null check (char_length(name) between 2 and 80),
+  channel text not null check (channel in ('online','mancave','stockist','event','other')),
+  reward_percent integer not null default 10 check (reward_percent between 1 and 50),
+  reward_valid_days integer not null default 60 check (reward_valid_days between 7 and 365),
+  minimum_subtotal_kes numeric(10,2) check (minimum_subtotal_kes >= 0),
+  active boolean not null default true,
+  created_by uuid,
+  created_at timestamptz not null default now()
+);
+alter table public.qr_links enable row level security;
+
+-- 3. Scans. visitor_id is a random id kept on the visitor's phone; no IP stored.
+create table if not exists public.qr_scans (
+  id bigint generated always as identity primary key,
+  link_id uuid not null references public.qr_links(id) on delete cascade,
+  visitor_id text not null check (visitor_id ~ '^[A-Za-z0-9_-]{8,64}$'),
+  device text not null default 'mobile' check (device in ('mobile','desktop')),
+  scanned_at timestamptz not null default now()
+);
+create index if not exists qr_scans_link_idx on public.qr_scans (link_id, scanned_at desc);
+create index if not exists qr_scans_visitor_idx on public.qr_scans (visitor_id, link_id, scanned_at desc);
+alter table public.qr_scans enable row level security;
+
+-- 4. Registrations: one row per form sent (a customer can register more bracelets).
+create table if not exists public.qr_registrations (
+  id uuid primary key default gen_random_uuid(),
+  link_id uuid not null references public.qr_links(id) on delete restrict,
+  customer_id uuid not null references public.customers(id) on delete cascade,
+  first_name text not null,
+  phone text not null,
+  product_id uuid references public.products(id) on delete set null,
+  marketing_consent boolean not null default false,
+  consent_text text,
+  discount_code_id uuid references public.discount_codes(id) on delete set null,
+  issued_code boolean not null default false,
+  visitor_id text,
+  created_at timestamptz not null default now()
+);
+create index if not exists qr_registrations_link_idx on public.qr_registrations (link_id, created_at desc);
+create index if not exists qr_registrations_customer_idx on public.qr_registrations (customer_id, created_at);
+create index if not exists qr_registrations_visitor_idx on public.qr_registrations (visitor_id, created_at desc);
+alter table public.qr_registrations enable row level security;
+
+-- 5. Register in one transaction: save the customer (never overwriting their
+-- name), give the welcome code once per phone number, log the registration.
+create or replace function public.register_qr_welcome(
+  p_slug text,
+  p_first_name text,
+  p_phone text,
+  p_product_id uuid,
+  p_consent boolean,
+  p_consent_text text,
+  p_visitor_id text,
+  p_code text
+)
+returns table (code text, ends_at timestamptz, percent integer, minimum_kes numeric, already boolean, used boolean, paused boolean)
+language plpgsql
+security definer
+set search_path = public
+as $$
+#variable_conflict use_column
+declare
+  v_link public.qr_links%rowtype;
+  v_customer public.customers%rowtype;
+  v_code public.discount_codes%rowtype;
+  v_already boolean := false;
+  v_issued boolean := false;
+  v_recent integer;
+begin
+  select * into v_link from public.qr_links where slug = p_slug;
+  if not found then raise exception 'QR_NOT_FOUND'; end if;
+  if p_phone !~ '^254[17][0-9]{8}$' or char_length(trim(coalesce(p_first_name, ''))) < 1 then
+    raise exception 'QR_INVALID';
+  end if;
+
+  -- Spam guard: at most 5 registrations from one phone (the device) per hour.
+  if p_visitor_id is not null then
+    select count(*) into v_recent from public.qr_registrations
+    where visitor_id = p_visitor_id and created_at > now() - interval '1 hour';
+    if v_recent >= 5 then raise exception 'QR_TOO_MANY'; end if;
+  end if;
+
+  insert into public.customers as c (first_name, phone, source, marketing_opt_in)
+  values (left(trim(p_first_name), 60), p_phone, 'qr', coalesce(p_consent, false))
+  on conflict (phone) do update
+    set marketing_opt_in = c.marketing_opt_in or coalesce(p_consent, false),
+        updated_at = now()
+  returning * into v_customer;
+
+  -- Lock the customer so two quick submits can't create two codes.
+  perform 1 from public.customers where id = v_customer.id for update;
+
+  select count(*) into v_recent from public.qr_registrations
+  where customer_id = v_customer.id and created_at > now() - interval '1 day';
+  if v_recent >= 5 then raise exception 'QR_TOO_MANY'; end if;
+
+  select * into v_code from public.discount_codes
+  where customer_id = v_customer.id and source = 'qr_welcome'
+  order by created_at limit 1;
+  if found then
+    v_already := true;
+  elsif v_link.active then
+    insert into public.discount_codes (
+      code, name, discount_type, percentage_basis_points,
+      minimum_subtotal_kes, max_redemptions, starts_at, ends_at, active,
+      customer_id, source
+    ) values (
+      p_code, 'Welcome · ' || v_link.name, 'percentage', v_link.reward_percent * 100,
+      v_link.minimum_subtotal_kes, 1, now(),
+      now() + make_interval(days => v_link.reward_valid_days), true,
+      v_customer.id, 'qr_welcome'
+    ) returning * into v_code;
+    v_issued := true;
+  end if;
+
+  insert into public.qr_registrations (
+    link_id, customer_id, first_name, phone, product_id, marketing_consent,
+    consent_text, discount_code_id, issued_code, visitor_id
+  ) values (
+    v_link.id, v_customer.id, left(trim(p_first_name), 60), p_phone, p_product_id,
+    coalesce(p_consent, false), case when p_consent then p_consent_text end,
+    v_code.id, v_issued, p_visitor_id
+  );
+
+  return query select
+    v_code.code,
+    v_code.ends_at,
+    (v_code.percentage_basis_points / 100)::integer,
+    v_code.minimum_subtotal_kes,
+    v_already,
+    coalesce(v_code.id is not null and exists (
+      select 1 from public.discount_redemptions d
+      where d.discount_code_id = v_code.id and d.released_at is null
+    ), false),
+    v_code.id is null;
+end;
+$$;
+revoke all on function public.register_qr_welcome(text, text, text, uuid, boolean, text, text, text) from public;
+grant execute on function public.register_qr_welcome(text, text, text, uuid, boolean, text, text, text) to service_role;
+
+-- 6. Numbers per link for the admin list. An order counts for the link the
+-- customer FIRST registered through, and only if placed after that.
+create or replace view public.qr_link_stats with (security_invoker = true) as
+with first_reg as (
+  select distinct on (customer_id) customer_id, link_id, created_at
+  from public.qr_registrations
+  order by customer_id, created_at
+),
+attributed as (
+  select f.link_id, o.id, o.total_amount, o.currency
+  from first_reg f
+  join public.orders o on o.customer_id = f.customer_id
+    and o.created_at > f.created_at
+    and o.status not in ('cancelled','refunded')
+)
+select
+  l.id as link_id,
+  (select count(*) from public.qr_scans s where s.link_id = l.id) as scans,
+  (select count(distinct s.visitor_id) from public.qr_scans s where s.link_id = l.id) as visitors,
+  (select count(*) from public.qr_registrations r where r.link_id = l.id) as registrations,
+  (select count(distinct r.customer_id) from public.qr_registrations r where r.link_id = l.id) as people,
+  (select count(*) from public.qr_registrations r where r.link_id = l.id and r.issued_code) as codes_issued,
+  (select count(*) from public.qr_registrations r
+     join public.discount_redemptions d on d.discount_code_id = r.discount_code_id and d.released_at is null
+     where r.link_id = l.id and r.issued_code) as codes_used,
+  (select count(*) from attributed a where a.link_id = l.id) as orders,
+  (select coalesce(sum(a.total_amount), 0) from attributed a where a.link_id = l.id and a.currency = 'KES') as revenue_kes,
+  (select coalesce(sum(a.total_amount), 0) from attributed a where a.link_id = l.id and a.currency = 'USD') as revenue_usd
+from public.qr_links l;
+revoke all on public.qr_link_stats from anon, authenticated;
+grant select on public.qr_link_stats to service_role;

@@ -17,6 +17,14 @@ export default async function CustomerDetail({
     .eq("id", customerId)
     .maybeSingle();
   if (!customer) notFound();
+  // Separate query: if the QR tables aren't set up yet the profile still loads.
+  const { data: qrRegistrations } = await admin
+    .from("qr_registrations")
+    .select(
+      "id,created_at,marketing_consent,qr_links(id,name),products(title),discount_codes(code)",
+    )
+    .eq("customer_id", customerId)
+    .order("created_at", { ascending: false });
   return (
     <div className="admin-page">
       <Link href="/admin/customers" className="admin-back-link">
@@ -119,6 +127,36 @@ export default async function CustomerDetail({
               ))
             ) : (
               <p>No orders yet.</p>
+            )}
+          </div>
+        </section>
+        <section className="admin-panel">
+          <p className="admin-kicker">Packaging card (QR)</p>
+          <div className="admin-data-list">
+            {qrRegistrations?.length ? (
+              qrRegistrations.map((r: any) => (
+                <span key={r.id}>
+                  <strong>
+                    {r.products?.title || "Bracelet not given"}
+                    {r.discount_codes?.code
+                      ? ` · ${r.discount_codes.code}`
+                      : ""}
+                  </strong>
+                  <em>
+                    {r.qr_links ? (
+                      <Link href={`/admin/qr/${r.qr_links.id}`}>
+                        {r.qr_links.name}
+                      </Link>
+                    ) : (
+                      "QR link"
+                    )}{" "}
+                    · {new Date(r.created_at).toLocaleDateString("en-KE")}
+                    {r.marketing_consent ? " · wants new collections" : ""}
+                  </em>
+                </span>
+              ))
+            ) : (
+              <p>Hasn&apos;t registered a bracelet.</p>
             )}
           </div>
         </section>

@@ -26,6 +26,8 @@ export default async function AdminDiscounts({
       "id,code,name,discount_type,percentage_basis_points,fixed_amount_kes,fixed_amount_usd,max_redemptions,starts_at,ends_at,active,created_at",
       { count: "exact" },
     )
+    // Personal welcome codes (QR links) live under QR links, not here.
+    .neq("source", "qr_welcome")
     .order("created_at", { ascending: false })
     .range(from, to);
 

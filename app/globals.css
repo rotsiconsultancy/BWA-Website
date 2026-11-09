@@ -7555,3 +7555,216 @@ body {
   color: var(--muted);
   font-size: 12px;
 }
+
+/* Welcome (/welcome/[slug]): the packaging card's QR */
+.welcome-head h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+.welcome-head > p:last-child {
+  margin: 0 0 20px;
+  color: var(--muted);
+}
+.welcome-perks {
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 16px 20px;
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid var(--brass);
+  border-bottom: 1px solid var(--brass);
+  font-size: 15px;
+}
+.welcome-perks li {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+.welcome-perks li::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brass);
+  transform: translateY(-1px);
+}
+.welcome-card select {
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  font: inherit;
+  font-weight: 400;
+  font-size: 16px;
+}
+.welcome-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.welcome-submit {
+  width: 100%;
+}
+.welcome-card .review-fine a {
+  color: inherit;
+  text-decoration: underline;
+}
+.welcome-resize {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 24px;
+  padding: 16px 18px;
+  background: var(--soft);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+}
+.welcome-resize a {
+  width: fit-content;
+  margin-top: 4px;
+  color: var(--forest);
+  font-weight: 700;
+  text-decoration: underline;
+}
+.welcome-another {
+  margin: 24px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.welcome-another a,
+.welcome-another button {
+  color: var(--charcoal);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Admin: QR links */
+.admin-qr-create {
+  margin-top: var(--space-6);
+}
+.admin-qr-create-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr repeat(3, 1fr) auto;
+  gap: var(--space-3);
+  align-items: end;
+  margin: var(--space-3) 0;
+}
+.admin-qr-create-grid label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.admin-qr-create-grid input,
+.admin-qr-create-grid select {
+  min-height: 40px;
+  padding: 0 10px;
+  border: var(--rule) solid var(--color-line);
+  background: var(--color-paper);
+  font: inherit;
+  font-weight: 400;
+}
+.admin-qr-table > div {
+  grid-template-columns:
+    minmax(180px, 2fr) repeat(3, minmax(80px, 0.7fr)) minmax(80px, 0.6fr)
+    max-content;
+}
+.admin-qr-top {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  gap: var(--space-4);
+  margin: var(--space-6) 0 var(--space-4);
+}
+.admin-qr-image svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.admin-qr-downloads {
+  display: grid;
+  gap: 6px;
+  margin-top: var(--space-3);
+  font-size: 12px;
+  font-weight: 700;
+}
+.admin-qr-downloads a {
+  color: var(--color-forest);
+}
+.admin-qr-funnel {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+.admin-qr-funnel li {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-3);
+  border: var(--rule) solid var(--color-line);
+}
+.admin-qr-funnel span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+.admin-qr-funnel strong {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 500;
+  line-height: 1;
+}
+.admin-qr-funnel small {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+.admin-qr-days-title {
+  margin-top: var(--space-5);
+}
+.admin-qr-days {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 90px;
+  margin: var(--space-2) 0 var(--space-3);
+  border-bottom: var(--rule) solid var(--color-line);
+}
+.admin-qr-days span {
+  flex: 1;
+  background: var(--color-line);
+}
+.admin-qr-days span.has-scans {
+  background: var(--color-forest);
+}
+.admin-qr-people > div {
+  grid-template-columns:
+    minmax(160px, 1.4fr) minmax(120px, 1fr) minmax(130px, 1fr)
+    minmax(110px, 0.9fr) max-content;
+}
+.admin-qr-people a {
+  color: inherit;
+}
+@media (max-width: 60rem) {
+  .admin-qr-create-grid,
+  .admin-qr-top,
+  .admin-qr-funnel {
+    grid-template-columns: 1fr 1fr;
+  }
+  .admin-qr-table > div,
+  .admin-qr-people > div {
+    grid-template-columns: 1fr 1fr;
+  }
+  .admin-qr-table .admin-table-head,
+  .admin-qr-people .admin-table-head {
+    display: none;
+  }
+}
