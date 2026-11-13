@@ -98,6 +98,6 @@ Malachite also contains copper, so it should not be cut, sanded or ground at hom
 
 ## What malachite is said to mean
 
-Malachite is traditionally associated with protection. In the past, malachite beads were hung on babies' cradles in the belief that they kept the child safe and helped it sleep. In parts of Italy, eye-shaped pieces set in silver were worn against the evil eye. It was even believed that malachite would warn its wearer of danger by breaking.
+Malachite is traditionally associated with protection. In the past, malachite beads were hung on babies' cradles in the belief that they kept the child safe and helped it sleep. In parts of Italy, eye-shaped pieces set in silver were worn against the evil eye. Much earlier, in ancient Rome, malachite was worn as an amulet in the belief that it guarded children.
 
 Those are beliefs, not proven effects. But it is easy to see why the stone collected them. It is a green that grew slowly, layer by layer, out of copper and water. Whatever you wear it for, you are wearing one of the oldest colours people have ever loved.

@@ -32,6 +32,10 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-14] — Journal: Malachite Belief Corrected
+
+- Removed "malachite was believed to warn its wearer of danger by breaking" from `content/journal/malachite-africas-copper-green.md` (releases 2026-11-15). Research found no source for malachite; that lore belongs to coral. Replaced it with a sourced belief: in ancient Rome malachite was worn as an amulet to guard children (Pliny, Natural History 37). Sources file updated in `../Website-data/stone-stories-2026-11-01/`.
+
 ### [2026-11-09] — Admin: Record an Order by Hand (Backdated)
 
 - **Why**: owner sells outside the website checkout (Instagram, WhatsApp, in person, stockists) and wants those sales in the system, dated when they happened.
