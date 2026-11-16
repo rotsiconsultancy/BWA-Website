@@ -1,7 +1,7 @@
 ---
 title: "The Stone Worn Against the Evil Eye"
 description: "Why people across the Mediterranean, the Middle East, South Asia and East Africa wear eye-like stones against envy, which stones they chose, and how tiger's eye became one of them."
-date: 2026-11-29
+date: 2026-11-09
 category: Stone guides
 cover: /journal/the-stone-worn-against-the-evil-eye/cover.webp
 coverAlt: "A man's hand in a navy suit sleeve, wearing a gold-brown tiger's eye bracelet, with the Nairobi skyline at sunset behind"

@@ -6,6 +6,9 @@
  * Never remove an entry: old links live on in Google, Instagram and WhatsApp.
  */
 export const PRODUCT_REDIRECTS: Record<string, string> = {
+  // 2026-11-16: Usiku is chipped black obsidian, not onyx (owner).
+  "usiku-black-onyx-stone-chip-bracelet": "usiku-black-obsidian-stone-chip-bracelet",
+
   // 2026-10-28: the new stone bracelets gained "stone" in their address.
   "watamu-deep-lapis-lazuli-bracelet": "watamu-deep-lapis-lazuli-stone-bracelet",
   "simba-gold-tigers-eye-bracelet": "simba-gold-tigers-eye-stone-bracelet",
@@ -31,7 +34,7 @@ export const PRODUCT_REDIRECTS: Record<string, string> = {
 
   // 2026-10-28: older stone bracelets renamed onto the same pattern.
   "black-lava-stone-bracelet": "longonot-black-lava-stone-bracelet",
-  "black-onyx-chipped": "usiku-black-onyx-stone-chip-bracelet",
+  "black-onyx-chipped": "usiku-black-obsidian-stone-chip-bracelet",
   "clear-quartz-bracelet": "maji-clear-quartz-stone-bracelet",
   "cracked-quartz-bracelet": "barafu-crackle-quartz-stone-bracelet",
   "dalmatian-jasper-bracelet": "chui-spots-dalmatian-jasper-stone-chip-bracelet",

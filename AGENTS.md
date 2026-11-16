@@ -32,6 +32,14 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-16] — All Journal Posts Live (Last Date 2026-11-11); Matte Onyx → Black Obsidian; Pinterest Code
+
+- **Journal (owner directive)**: nothing is scheduled any more; every post is dated 2026-11-11 or earlier. Legends published (dropped `_`): evil eye 2026-11-09, bloodstone 11-10, rhodonite 11-11. Backdated: malachite 11-15 → 11-04, lapis 11-22 → 11-06.
+- **Matte onyx is chipped black obsidian (owner)**: matte onyx stone page removed, `/bracelets/matte-onyx-bracelets` redirects to `/bracelets/obsidian-bracelets` (`SEO_HUB_REDIRECTS`); `matte_onyx` tag removed from the taxonomy and seed data; Usiku's new slug `usiku-black-obsidian-stone-chip-bracelet` (old slug redirects, `product-redirects.ts`), listed under obsidian in Stone Meanings and on the men's page as Black Obsidian; watch story links to obsidian.
+- **Pinterest**: claim code built into `app/layout.tsx` (env var still overrides).
+- **Supabase (prepared, not applied)**: `../Website-data/older-listings-2026-11-16/` (`build.py` → `payload.json`, `apply.mjs` snapshot/apply/revert, `live-before.json`): Usiku renamed to black obsidian; hematite named in Midnight Forge, Spotted Contrast, Forest Forge, Midnight Terrain (+ unakite); matte_onyx tag off Crimson Night and Ebony Matte Black. Apply after this push is live.
+- **Checked**: tsc, 40 tests, production build; local: legends 200, matte onyx hub 308 → obsidian, Pinterest meta tag present.
+
 ### [2026-11-16] — A Page for Each Stone: `/stone-meanings/<stone>`
 
 - **New** `app/stone-meanings/[stone]/page.tsx`: one page per stone (19), e.g. `/stone-meanings/tigers-eye`. Product photo hero with "<Stone> meaning", headline, pitch and a shop button with the live price; "What people have believed" (place-by-place list + Today); "How to wear"; "Wear the story" close with lead bracelet and price; bracelet grid + link to the stone's `/bracelets/` page; Journal stories about the stone (`stoneStories` in `lib/commerce/stone-meanings.ts`, shown once published); stones from the same feeling group; follow ask; per-stone FAQ (incl. "Does <stone> have healing powers?" → no). Article + Breadcrumb + FAQ JSON-LD. Unknown stone or no listed bracelet → 404.

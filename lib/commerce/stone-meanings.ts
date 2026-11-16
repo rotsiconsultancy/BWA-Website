@@ -132,7 +132,7 @@ export const stoneMeanings: StoneMeaning[] = [
     material: "Genuine obsidian",
     headline: "Glass, made by a volcano.",
     pitch:
-      "Obsidian is natural volcanic glass, and Kenya's Rift Valley is one of the richest obsidian landscapes on Earth. People here were shaping it a million years ago. Mahogany obsidian mixes glossy black with warm red-brown; snowflake obsidian is black with white flecks.",
+      "Obsidian is natural volcanic glass, and Kenya's Rift Valley is one of the richest obsidian landscapes on Earth. People here were shaping it a million years ago. Mahogany obsidian mixes glossy black with warm red-brown; snowflake obsidian is black with white flecks; black obsidian chips are pure, glossy black.",
     wear: "Rich browns, cream, gold jewellery, evening wear. It shines like a polished watch face.",
     beliefs: [
       {
@@ -153,6 +153,7 @@ export const stoneMeanings: StoneMeaning[] = [
       "kahawa-ember-mahogany-obsidian-stone-bracelet",
       "nelion-snow-snowflake-obsidian-stone-bracelet",
       "kinangop-frost-snowflake-obsidian-stone-chip-bracelet",
+      "usiku-black-obsidian-stone-chip-bracelet",
     ],
   },
   {

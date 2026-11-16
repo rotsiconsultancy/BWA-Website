@@ -43,7 +43,7 @@ If your watch has a black strap or a dark face, go monochrome. The **Midnight Rh
 
 {{product: midnight-rhythm-bracelet}}
 
-For more dark, quiet options, see our [matte onyx bracelets](/bracelets/matte-onyx-bracelets).
+For more dark, quiet options, see our [obsidian bracelets](/bracelets/obsidian-bracelets).
 
 ### A steel or silver watch
 

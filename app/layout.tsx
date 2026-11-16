@@ -124,15 +124,13 @@ export const metadata: Metadata = {
     apple: "/icons/apple-touch-icon.png",
   },
   appleWebApp: { title: "BWA", statusBarStyle: "default" },
-  // Pinterest site claim: set NEXT_PUBLIC_PINTEREST_DOMAIN_VERIFY in Vercel to
-  // the code Pinterest gives (the content="..." value of its meta tag).
-  ...(process.env.NEXT_PUBLIC_PINTEREST_DOMAIN_VERIFY
-    ? {
-        other: {
-          "p:domain_verify": process.env.NEXT_PUBLIC_PINTEREST_DOMAIN_VERIFY,
-        },
-      }
-    : {}),
+  // Pinterest site claim: the owner's code (2026-11-16, public by design).
+  // NEXT_PUBLIC_PINTEREST_DOMAIN_VERIFY in Vercel overrides it if ever needed.
+  other: {
+    "p:domain_verify":
+      process.env.NEXT_PUBLIC_PINTEREST_DOMAIN_VERIFY ||
+      "a9145f8118ef9a12db9a11466eaadcd0",
+  },
   robots: {
     index: true,
     follow: true,

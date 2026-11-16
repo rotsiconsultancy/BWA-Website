@@ -1,7 +1,7 @@
 ---
 title: "Rhodonite: The Tsars' Rose Stone"
 description: "How a rose-pink stone from Russia's Ural Mountains became a stone for palaces and an empress's tomb, what its black veins are, and why it is now called the stone of compassion."
-date: 2026-12-13
+date: 2026-11-11
 category: Stone guides
 cover: /journal/rhodonite-the-tsars-rose-stone/cover.webp
 coverAlt: "A bracelet of rose-brown rhodonite beads on a walnut table"

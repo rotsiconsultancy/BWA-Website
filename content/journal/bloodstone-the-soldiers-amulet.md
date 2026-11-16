@@ -1,7 +1,7 @@
 ---
 title: "Bloodstone: The Soldier's Amulet"
 description: "The story of bloodstone, from Roman tales of a stone that turned the sun red, to the drops of red Christians saw in it, to a soldier who carried one into the First World War."
-date: 2026-12-06
+date: 2026-11-10
 category: Stone guides
 cover: /journal/bloodstone-the-soldiers-amulet/cover.webp
 coverAlt: "Round dark-green bloodstone beads with small red flecks, on dark cloth"

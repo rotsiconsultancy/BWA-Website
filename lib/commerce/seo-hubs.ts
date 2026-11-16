@@ -25,6 +25,8 @@ export type SeoHub = {
 export const SEO_HUB_REDIRECTS: Record<string, string> = {
   // 2026-11-16: "Ukalite" was a misspelling of unakite.
   "ukalite-bracelets": "unakite-bracelets",
+  // 2026-11-16: the "matte onyx" bracelet is chipped black obsidian (owner).
+  "matte-onyx-bracelets": "obsidian-bracelets",
 };
 
 export const seoHubs: SeoHub[] = [
@@ -60,17 +62,6 @@ export const seoHubs: SeoHub[] = [
       "Natural unakite stone bracelets by Beads World Africa, mottled moss green and salmon pink, handmade in Kenya for everyday wear.",
     intro:
       "Unakite mixes moss green and salmon pink in one stone, so no two beads look alike. Explore BWA bracelets that bring a soft, earthy colour to the wrist.",
-  },
-  {
-    slug: "matte-onyx-bracelets",
-    field: "stone_type",
-    value: "matte_onyx",
-    title: "Matte Onyx Bracelets in Kenya",
-    eyebrow: "Stone guide / Matte Onyx",
-    description:
-      "Discover matte Onyx bracelets by Beads World Africa: dark, minimal natural stone pieces made for considered daily wear.",
-    intro:
-      "Matte Onyx is for a dark, understated palette. Explore BWA bracelets with a clean, minimal profile that fits naturally into an everyday uniform.",
   },
   {
     slug: "lapis-lazuli-bracelets",
@@ -134,9 +125,9 @@ export const seoHubs: SeoHub[] = [
     title: "Obsidian Bracelets in Kenya",
     eyebrow: "Stone guide / Obsidian",
     description:
-      "Mahogany and snowflake obsidian bracelets by Beads World Africa: natural volcanic glass, glossy and smooth, handmade into bracelets in Kenya.",
+      "Black, mahogany and snowflake obsidian bracelets by Beads World Africa: natural volcanic glass, polished beads and chips, handmade in Kenya.",
     intro:
-      "Obsidian is natural volcanic glass, and Kenya's Rift Valley is one of the richest obsidian landscapes on Earth. Glossy black, warm mahogany or flecked with snow.",
+      "Obsidian is natural volcanic glass, and Kenya's Rift Valley is one of the richest obsidian landscapes on Earth. Glossy black chips, warm mahogany or flecked with snow.",
   },
   {
     slug: "hematite-bracelets",

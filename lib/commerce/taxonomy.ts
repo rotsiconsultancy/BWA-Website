@@ -42,7 +42,6 @@ export const TAXONOMIES: TaxonomyGroup[] = [
     options: [
       { value: "tiger_eye", label: "Tiger Eye" },
       { value: "lava_stone", label: "Lava Stone" },
-      { value: "matte_onyx", label: "Matte Onyx" },
       { value: "lapis_lazuli", label: "Lapis Lazuli" },
       { value: "turquoise", label: "Turquoise" },
       { value: "red_jasper", label: "Red Jasper" },

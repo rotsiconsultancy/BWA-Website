@@ -1,7 +1,7 @@
 ---
 title: "Lapis Lazuli: The Blue of Pharaohs"
 description: "What lapis lazuli is, why it has gold flecks, how it reached Tutankhamun's mask and Renaissance paintings, and how to tell lapis from sodalite."
-date: 2026-11-22
+date: 2026-11-06
 category: Stone guides
 cover: /journal/lapis-lazuli-the-blue-of-pharaohs/cover.webp
 coverAlt: "Round lapis lazuli beads in deep blue and grey-white on a walnut wood surface"

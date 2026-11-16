@@ -33,10 +33,10 @@ export const mensStones: MensStone[] = [
     tradition: "Traditionally associated with grounding.",
   },
   {
-    name: "Black Onyx",
-    productSlug: "usiku-black-onyx-stone-chip-bracelet",
-    look: "Solid black stone that pairs with any watch or outfit.",
-    tradition: "Traditionally associated with strength and protection.",
+    name: "Black Obsidian",
+    productSlug: "usiku-black-obsidian-stone-chip-bracelet",
+    look: "Glossy chips of black volcanic glass that pair with any watch or outfit.",
+    tradition: "Traditionally associated with protection.",
   },
   {
     name: "Hematite",
