@@ -32,6 +32,15 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-16] — Stone Meanings Page, Stone Pages, Follow Ask, Legend Drafts, Pinterest Claim
+
+- **`/stone-meanings`** (new): feeling picker ("What do you want to carry?"), one section per stone with what it is, what people believed (place and time), today's meaning, "wear it with", and a style + belief close naming the lead bracelet with its live price; bracelet grid per stone; "Shell & starlight" for Maziwa Glow and Nyota Night (not stone, said plainly); disclaimer; follow ask; FAQ. Content in `lib/commerce/stone-meanings.ts`, from the owner's guide (`../Assets/stones/guides/build_sales.py`) minus its health lines and the aqeeq line. In the sitemap and footer.
+- **Stone pages**: every stone page now has an "About the stone" section (from the same file) and the follow ask. Seven new stone pages: howlite, sodalite, obsidian, hematite, rhodonite, jasper (four jaspers), agate (carnelian + moss). Matte onyx has no About section yet (owner to confirm the stone).
+- **Follow ask**: `components/marketing/FollowBwa.tsx`, Instagram always, LinkedIn on gift guides; GA4 `instagram_follow_click` / `linkedin_follow_click` with `placement` and `page`. At the end of every Journal post.
+- **Journal**: the six stone stories end with "Wear the story" (style + belief close) and a link to `/stone-meanings`. Three legend drafts (`_` prefix, unpublished): evil eye / tiger's eye (2026-11-29), bloodstone (12-06), rhodonite (12-13). Covers in `public/journal/<slug>/`. Sources: `../Website-data/stone-stories-2026-11-01/legends-sources.md`. To release one, drop the `_`.
+- **Pinterest claim**: `NEXT_PUBLIC_PINTEREST_DOMAIN_VERIFY` (Vercel env) adds the `p:domain_verify` meta tag site-wide.
+- **Checked**: tsc, 40 tests, production build; local server against live data: all new pages 200, sections and follow blocks present, drafts render (tested under temporary names, removed), no horizontal scroll at 375 px.
+
 ### [2026-11-16] — Journal: Links to Stone Pages
 
 - **Why**: Search Console showed the lava, lapis, red jasper and matte onyx stone pages "discovered, not indexed"; few pages linked to them.
