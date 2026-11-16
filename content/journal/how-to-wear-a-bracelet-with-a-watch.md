@@ -43,6 +43,8 @@ If your watch has a black strap or a dark face, go monochrome. The **Midnight Rh
 
 {{product: midnight-rhythm-bracelet}}
 
+For more dark, quiet options, see our [matte onyx bracelets](/bracelets/matte-onyx-bracelets).
+
 ### A steel or silver watch
 
 A metal watch already brings shine, so pick a bracelet that echoes it without competing. The **Forest Forge** has a run of polished dark cylinders with small metallic-looking separators where the sections meet. Those small details pick up the steel of your watch, while the earthy round beads on the other side keep it from looking too polished.
@@ -51,7 +53,7 @@ A metal watch already brings shine, so pick a bracelet that echoes it without co
 
 ### A leather strap
 
-Leather is warm and relaxed. Pair it with earthy, natural-looking beads in browns and greens rather than anything glossy. The rounded side of the Forest Forge works here too.
+Leather is warm and relaxed. Pair it with earthy, natural-looking beads in browns and greens rather than anything glossy. The rounded side of the Forest Forge works here too, and so do earthy stones like [red jasper](/bracelets/red-jasper-bracelets) and [unakite](/bracelets/unakite-bracelets).
 
 ![A brown leather watch strap worn with an earthy beaded bracelet](/journal/how-to-wear-a-bracelet-with-a-watch/leather-strap.webp "Leather is warm. Earthy beads keep it that way.")
 

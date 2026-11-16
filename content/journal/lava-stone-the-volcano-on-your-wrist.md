@@ -104,3 +104,5 @@ Look again at the photo of the pores above. In the middle of that black lava row
 Lava stone is traditionally associated with grounding: feeling steady, calm and connected to the earth. It makes sense. This is rock that came from deep inside the planet and cooled under an open sky. Whether you wear it for that meaning or simply for the look, you are carrying a piece of a volcano on your wrist.
 
 Next time you drive past Longonot, look up at the crater. Then look down at your wrist.
+
+See all our [lava stone bracelets](/bracelets/lava-stone-bracelets).

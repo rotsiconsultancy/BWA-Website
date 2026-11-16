@@ -87,7 +87,7 @@ The **Kinangop Frost** is our chip bracelet, named after the high Kinangop plate
 
 {{product: kinangop-frost-snowflake-obsidian-stone-chip-bracelet}}
 
-If one stone is not enough, you can build your own. Obsidian sits well beside the matte texture of lava stone (we wrote about lava in [Lava Stone: The Volcano on Your Wrist](/journal/lava-stone-the-volcano-on-your-wrist)), and its gloss sets off golden or white stones too. Start from Njorowa Ember, add a second stone and see it come together.
+If one stone is not enough, you can build your own. Obsidian sits well beside the matte texture of [lava stone](/bracelets/lava-stone-bracelets) (we wrote about lava in [Lava Stone: The Volcano on Your Wrist](/journal/lava-stone-the-volcano-on-your-wrist)), and its gloss sets off golden or white stones too. Start from Njorowa Ember, add a second stone and see it come together.
 
 {{design: njorowa-ember-mahogany-obsidian-stone-bracelet}}
 

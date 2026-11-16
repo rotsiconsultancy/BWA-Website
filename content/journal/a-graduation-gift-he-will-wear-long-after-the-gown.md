@@ -29,7 +29,7 @@ A graduation is a turning point. The years of lectures, deadlines and late night
 
 A bracelet goes with him. To the first interview, the first day in the office, the first time someone calls him "sir". Every time he notices it on his wrist, he will remember who was cheering at the gate.
 
-The right one depends on who you are to him. So let's start there.
+The right one depends on who you are to him. So let's start there. (If you'd rather browse first, all our [men's stone bracelets](/bracelets/mens-stone-bracelets) are in one place.)
 
 ## If you are his girlfriend
 

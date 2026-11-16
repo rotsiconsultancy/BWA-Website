@@ -32,6 +32,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-16] — Journal: Links to Stone Pages
+
+- **Why**: Search Console showed the lava, lapis, red jasper and matte onyx stone pages "discovered, not indexed"; few pages linked to them.
+- **What**: one natural link line in seven stories: lava story → lava stone page; genuine stone → lava, tiger's eye, lapis; watch story → matte onyx, red jasper, unakite; gift and graduation stories → men's stone bracelets; malachite → unakite; obsidian → lava stone. Every stone page is now linked from at least one story.
+- **Checked**: all links render on the local server and every target answers 200.
+
 ### [2026-11-16] — Stone Pages: "Ukalite" Renamed to Unakite; Empty Stone Pages 404
 
 - **Why**: Search Console (owner's export 2026-11-16) listed `/bracelets/ukalite-bracelets` as crawled, not indexed. "Ukalite" was a misspelling of unakite; the page was live, indexable, out of the sitemap and showed no bracelets. `/bracelets/turquoise-bracelets` was the same (no bracelet carries the tag).

@@ -57,6 +57,8 @@ The **Spotted Contrast** has bright rounded beads covered in irregular black spo
 
 {{product: spotted-contrast-bracelet}}
 
+Want more to choose from? All our [men's stone bracelets](/bracelets/mens-stone-bracelets) are in one place.
+
 ## How to get his size without asking
 
 Asking "what is your wrist size?" ruins the surprise. Here is how to find it quietly.

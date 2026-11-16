@@ -62,7 +62,7 @@ Our **Njorowa Ember** is mahogany obsidian: glossy black with red-brown streaks,
 
 {{product: njorowa-ember-mahogany-obsidian-stone-bracelet}}
 
-Once you know these signatures, you start to see them everywhere, and you start to have favourites.
+Once you know these signatures, you start to see them everywhere, and you start to have favourites. Try it on our [lava stone](/bracelets/lava-stone-bracelets), [tiger's eye](/bracelets/tiger-eye-bracelets) and [lapis lazuli](/bracelets/lapis-lazuli-bracelets) bracelets: every one has close-up photos.
 
 ## Choose the stones yourself
 

@@ -76,7 +76,7 @@ The **Mau Evergreen** is moss agate in dark green, named after the evergreen Mau
 
 {{product: mau-evergreen-moss-agate-stone-bracelet}}
 
-The **Aberdare Pine** is fancy jasper in a deep forest green, named after the Aberdare highlands. Wear all three for a full green stack, or just two for something simpler.
+The **Aberdare Pine** is fancy jasper in a deep forest green, named after the Aberdare highlands. Wear all three for a full green stack, or just two for something simpler. For a softer green with flecks of pink, look at our [unakite bracelets](/bracelets/unakite-bracelets).
 
 {{product: aberdare-pine-fancy-jasper-stone-bracelet}}
 
