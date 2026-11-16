@@ -105,4 +105,8 @@ Lapis lazuli is traditionally associated with wisdom, truth and royalty. Part of
 
 These are beliefs, not proven effects. Wear lapis for the meaning, or simply for that deep blue with its specks of gold. Either way, you are wearing the same colour that once looked out from Tutankhamun's mask.
 
-See all our [lapis lazuli bracelets](/bracelets/lapis-lazuli-bracelets).
+## Wear the story
+
+Picture it: a navy suit, a white shirt, and **Watamu Deep** on your wrist: the same deep blue that frames Tutankhamun's golden mask. A stone for kings, worn on an ordinary Tuesday.
+
+What does your stone mean? Read our [stone meanings](/stone-meanings). See all our [lapis lazuli bracelets](/bracelets/lapis-lazuli-bracelets).

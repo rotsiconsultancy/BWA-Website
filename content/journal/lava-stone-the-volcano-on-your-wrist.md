@@ -105,4 +105,8 @@ Lava stone is traditionally associated with grounding: feeling steady, calm and 
 
 Next time you drive past Longonot, look up at the crater. Then look down at your wrist.
 
-See all our [lava stone bracelets](/bracelets/lava-stone-bracelets).
+## Wear the story
+
+Picture it: a charcoal suit, a white shirt, and **Chyulu Black** on your wrist: rock that came up from deep inside the earth, worn for grounding when the day moves fast.
+
+What does your stone mean? Read our [stone meanings](/stone-meanings). See all our [lava stone bracelets](/bracelets/lava-stone-bracelets).

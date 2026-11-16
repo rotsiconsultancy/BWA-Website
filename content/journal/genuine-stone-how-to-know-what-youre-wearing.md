@@ -75,3 +75,9 @@ Knowing your stones makes choosing them more fun. With Design Your Own you can p
 The simplest way to know what you are wearing is to ask the people who made it. Every BWA bracelet is named on our site for the stone it is made from, and if you want to know more about any bead, message us on WhatsApp. We are always happy to talk stones.
 
 Next time you put your bracelet on, hold it for a moment first. Feel it cool against your skin, turn it in the light, and look at how each bead is a little different from the last. That is genuine stone, and now you know how to read it.
+
+## Wear the story
+
+Picture it: a navy suit, and a stone you can read. Cool on the skin, a band of light moving as you turn your wrist. **Simba Gold**, genuine tiger's eye, the stone people wear for confidence.
+
+What does your stone mean? Read our [stone meanings](/stone-meanings).

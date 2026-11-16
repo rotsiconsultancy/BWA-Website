@@ -103,3 +103,9 @@ Tiger's eye is traditionally associated with focus and confidence. In some place
 These are beliefs, passed down over time, not proven effects. But it is easy to see why people gave this stone a strong meaning. It looks alive. It holds a line of light that follows you as you move.
 
 Next time you are out in the sun, turn your wrist slowly and watch the light slide across the beads.
+
+## Wear the story
+
+Picture it: a navy suit, a crisp white shirt, and a band of gold light sliding across your wrist every time you reach for your pen. That is **Simba Gold**: the stone people wear for courage, worn the way you dress on your best days.
+
+What does your stone mean? Read our [stone meanings](/stone-meanings).

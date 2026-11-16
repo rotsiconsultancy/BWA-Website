@@ -105,3 +105,9 @@ Remember: it is glass. Treat it the way you would treat a good watch face.
 Obsidian is traditionally associated with protection. Mahogany obsidian is often linked with strength and steadiness, and snowflake obsidian with clarity and balance. These are beliefs passed down in crystal lore, not proven effects. Many people simply like the idea of wearing a stone born in a volcano.
 
 Either way, the next time you drive along the Rift Valley floor past Naivasha, look at the dark rock by the road. Some of it is glass, and people here knew what to do with it long before anyone made a bracelet.
+
+## Wear the story
+
+Picture it: a dinner jacket, a gold watch, and **Njorowa Ember** on your wrist: glass made by a volcano, glossy as the watch face beside it, and kept close for protection.
+
+What does your stone mean? Read our [stone meanings](/stone-meanings). See all our [obsidian bracelets](/bracelets/obsidian-bracelets).
