@@ -216,7 +216,18 @@ export default function CheckoutPage() {
           "Idempotency-Key": idempotencyKey,
         },
         body: JSON.stringify({
-          customer: form,
+          customer: {
+            ...form,
+            // Made-to-fit sizes reach the order record, not only WhatsApp.
+            note: [
+              form.note,
+              ...items
+                .filter((line) => line.wristCm)
+                .map((line) => `${line.title}: ${line.variantName}`),
+            ]
+              .filter(Boolean)
+              .join(" | "),
+          },
           deliveryMethod,
           currency,
           lines: items.map((line) => ({

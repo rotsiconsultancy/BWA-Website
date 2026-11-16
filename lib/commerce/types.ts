@@ -47,5 +47,7 @@ export type CartLine = {
   image: string;
   unitPrices: import("@/lib/commerce/money").Prices;
   variantName: string;
+  /** Wrist size in cm when the customer asked for a made-to-fit bracelet. */
+  wristCm?: number;
   quantity: number;
 };

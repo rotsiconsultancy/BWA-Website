@@ -25,13 +25,23 @@ export const shoppingFaqs: FaqItem[] = [
   {
     question: "Which size should I choose?",
     answer:
-      "Wrap a tape measure or a piece of string snugly around your wrist and add 1 to 2 cm for a comfortable fit. Our sizes are Small (16 cm), Medium (18 cm) and Large (20 cm), and some pieces are adjustable. Not sure? Message us on WhatsApp and we will help.",
+      "Every bracelet can be made to your wrist. Wrap a tape measure or a piece of string snugly around your wrist, then choose that wrist size on the bracelet's page and we make it to fit. Our standard size is Medium (18 cm). Not sure? Message us on WhatsApp and we will help.",
   },
   {
     question: "Can I return or exchange my bracelet?",
     answer:
       "We don't give money back, but if the size or fit isn't right you can switch an unworn piece for another bracelet within 7 days of delivery. Delivery for the exchange is paid by you.",
     link: { href: "/returns", label: "Read the exchange policy" },
+  },
+  {
+    question: "Does my order come gift-ready?",
+    answer:
+      "Yes. Every order comes in a complimentary gift bag with a card.",
+  },
+  {
+    question: "What if my bracelet breaks?",
+    answer:
+      "If it breaks within 7 days of delivery, we restring it for free. You cover the delivery cost.",
   },
   {
     question: "How do I care for my bracelet?",

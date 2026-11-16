@@ -70,6 +70,9 @@ function restoreCart(value: unknown): CartLine[] {
         subtitle: line.subtitle,
         image: line.image,
         variantName: line.variantName,
+        ...(typeof line.wristCm === "number" && line.wristCm > 0
+          ? { wristCm: line.wristCm }
+          : {}),
         quantity:
           typeof line.quantity === "number" && line.quantity > 0
             ? line.quantity
@@ -138,7 +141,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (!existing) return [...current, { ...newLine, quantity }];
       return current.map((line) =>
         line === existing
-          ? { ...line, quantity: line.quantity + quantity }
+          ? {
+              ...line,
+              // One fit per bracelet in the bag: the latest choice wins.
+              variantName: newLine.variantName,
+              wristCm: newLine.wristCm,
+              quantity: line.quantity + quantity,
+            }
           : line,
       );
     });

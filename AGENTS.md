@@ -679,3 +679,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - **Assets**: Added 13 generated editorial WebP photos in `public/journal/<slug>/`, using the prompts in `docs/journal-image-brief.md` and the supplied product photos as references for Forest Forge, Midnight Rhythm and Spotted Contrast. Covers are 1600×900; inline images are 1600×1067; all files are below 180 KB.
 - **Posts**: Updated only the three posts' cover paths/alt text and requested inline photos/captions, preserving body copy, headings and product embeds. Every new asset has exactly one source reference, with paragraph separation from product cards.
 - **Validation**: 22 tests pass; TypeScript and production build pass. Reviewed the journal listing and all three article layouts at desktop and 375px phone width. Named-product scenes retain the reference designs; real product photography remains the catalogue source of truth.
+
+### 2026-11-16 — Made to Your Wrist, Gift Bag and Restring on Product Pages
+
+- **Agent**: Claude Code
+- **What**: `components/product/ProductDetail.tsx` has a wrist-size select (14–22 cm; default is the standard variant). A chosen size becomes the cart line's `variantName` ("Made to fit a 17 cm wrist") and optional `wristCm` (`lib/commerce/types.ts`, restored in `context/CartContext.tsx`; one fit per bracelet in the bag, latest wins). The server still receives only `variantId`; checkout appends the sizes to the customer note so they reach the order record. Two new assurances (gift bag with a card; free restring within 7 days) and FAQ changes in `lib/commerce/faq.ts`. Facts from the owner, 2026-11-16.
+- **Checked**: tsc, 40 tests, product page and bag at 375 px.

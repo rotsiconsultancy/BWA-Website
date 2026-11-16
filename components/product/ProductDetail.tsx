@@ -1,6 +1,14 @@
 "use client";
 import Link from "next/link";
-import { MapPin, Minus, Plus, ShieldCheck, Truck } from "lucide-react";
+import {
+  Gift,
+  MapPin,
+  Minus,
+  Plus,
+  ShieldCheck,
+  Truck,
+  Wrench,
+} from "lucide-react";
 import { useState } from "react";
 import type { CommerceProduct } from "@/lib/commerce/types";
 import { useCart } from "@/context/CartContext";
@@ -13,6 +21,9 @@ import { shoppingFaqs } from "@/lib/commerce/faq";
 import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
 import { productToGa4Item, trackGa4Event } from "@/lib/marketing/ga4";
 import { useEffect, useRef } from "react";
+
+// Wrist sizes we make to order (owner, 2026-11-16: any size, about 30 minutes).
+const WRIST_SIZES = [14, 15, 16, 17, 18, 19, 20, 21, 22];
 
 export default function ProductDetail({
   product,
@@ -28,6 +39,7 @@ export default function ProductDetail({
     product.variants.find((v) => v.available)?.id ?? "",
   );
   const [quantity, setQuantity] = useState(1);
+  const [wristCm, setWristCm] = useState(0);
   const variant =
     product.variants.find((v) => v.id === variantId) ?? product.variants[0];
   const prices = {
@@ -135,6 +147,29 @@ export default function ProductDetail({
                 </button>
               ))}
             </div>
+            <label className="product-wrist">
+              <span>
+                <b>Made to your wrist.</b> Tell us your wrist size and we make
+                this bracelet to fit before it leaves us.
+              </span>
+              <select
+                value={wristCm}
+                onChange={(event) => setWristCm(Number(event.target.value))}
+                aria-label="Your wrist size"
+              >
+                <option value={0}>Standard size ({variant.name})</option>
+                {WRIST_SIZES.map((cm) => (
+                  <option key={cm} value={cm}>
+                    My wrist is {cm} cm
+                  </option>
+                ))}
+              </select>
+              <small>
+                Measure snugly around your wrist with a tape or a piece of
+                string. Not sure? Choose the standard size, or ask us on
+                WhatsApp.
+              </small>
+            </label>
           </fieldset>
           <div className="product-order-row">
             <div className="product-quantity">
@@ -166,7 +201,10 @@ export default function ProductDetail({
                   subtitle: product.subtitle,
                   image: product.images[0],
                   unitPrices: prices,
-                  variantName: variant.name,
+                  variantName: wristCm
+                    ? `Made to fit a ${wristCm} cm wrist`
+                    : variant.name,
+                  ...(wristCm ? { wristCm } : {}),
                   quantity,
                 })
               }
@@ -180,6 +218,12 @@ export default function ProductDetail({
             </span>
             <span>
               <Truck size={17} /> Delivery confirmed with you
+            </span>
+            <span>
+              <Gift size={17} /> Comes in a gift bag with a card
+            </span>
+            <span>
+              <Wrench size={17} /> Free restring within 7 days
             </span>
             <span>
               <MapPin size={17} />{" "}

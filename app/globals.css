@@ -8232,3 +8232,24 @@ body {
     gap: var(--space-1);
   }
 }
+
+/* Product page: made-to-fit wrist size */
+.product-wrist {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.product-wrist select {
+  min-height: 44px;
+  border: var(--rule) solid var(--color-line);
+  background: transparent;
+  padding: 0 var(--space-2);
+  font: inherit;
+  color: inherit;
+}
+.product-wrist small {
+  color: var(--color-muted);
+  font-size: 11px;
+}
