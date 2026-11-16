@@ -5,6 +5,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import SeoProductGrid from "@/components/commerce/SeoProductGrid";
+import FollowBwa from "@/components/marketing/FollowBwa";
+import {
+  STONE_DISCLAIMER,
+  STONE_MEANINGS_PATH,
+  stoneMeaningsForType,
+} from "@/lib/commerce/stone-meanings";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import {
   getSeoHub,
@@ -78,6 +84,8 @@ export default async function BraceletHubPage({ params }: Props) {
   // An empty stone page is a thin page to Google; it is also left out of the
   // sitemap (app/sitemap.ts), so answer 404 until a bracelet carries the tag.
   if (products.length === 0) notFound();
+  const about =
+    hub.field === "stone_type" ? stoneMeaningsForType(hub.value) : [];
   const relatedHubs = seoHubs
     .filter(
       (candidate) =>
@@ -171,6 +179,54 @@ export default async function BraceletHubPage({ params }: Props) {
           </div>
         )}
       </section>
+
+      {about.length > 0 && (
+        <section className="container seo-hub-section stone-about">
+          <div className="seo-hub-heading">
+            <div>
+              <p className="eyebrow">About the stone</p>
+              <h2>{about.length > 1 ? "The stones" : about[0].name}</h2>
+            </div>
+            <p>
+              What it is, what people have believed about it, and how to wear
+              it. More in our{" "}
+              <Link href={STONE_MEANINGS_PATH}>stone meanings</Link>.
+            </p>
+          </div>
+          {about.map((stone) => (
+            <article key={stone.id} className="stone-meaning">
+              {about.length > 1 && (
+                <header>
+                  <h2>{stone.name}</h2>
+                </header>
+              )}
+              <div className="stone-meaning-body">
+                <p className="stone-meaning-headline">{stone.headline}</p>
+                <p>{stone.pitch}</p>
+                <div className="stone-meaning-beliefs">
+                  <h3>What people believe</h3>
+                  <ul>
+                    {stone.beliefs.map((belief) => (
+                      <li key={belief.where}>
+                        <b>{belief.where}:</b> {belief.what}
+                      </li>
+                    ))}
+                    <li>
+                      <b>Today,</b> {stone.today}
+                    </li>
+                  </ul>
+                </div>
+                <p>
+                  <b>Wear it with:</b> {stone.wear}
+                </p>
+                <p className="stone-meaning-close">{stone.close}</p>
+              </div>
+            </article>
+          ))}
+          <p className="stone-meanings-disclaimer">{STONE_DISCLAIMER}</p>
+          <FollowBwa placement="stone_page" page={`/bracelets/${hub.slug}`} />
+        </section>
+      )}
 
       {relatedHubs.length > 0 && (
         <section className="container seo-hub-related">

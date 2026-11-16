@@ -10,6 +10,7 @@ import JournalPostCard, {
 import JournalDesignCard from "@/components/journal/JournalDesignCard";
 import JournalProductCard from "@/components/journal/JournalProductCard";
 import JournalShopBar from "@/components/journal/JournalShopBar";
+import FollowBwa from "@/components/marketing/FollowBwa";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { PRODUCT_REDIRECTS } from "@/lib/commerce/product-redirects";
 import {
@@ -179,6 +180,16 @@ export default async function JournalPostPage({
             <Link href="/find-your-bracelet">Find your bracelet</Link> in a few
             questions, or <Link href="/stockists">try one on at ManCave</Link>.
           </p>
+          <FollowBwa
+            placement="journal"
+            page={`/journal/${post.slug}`}
+            linkedin={post.category === "Gift guides"}
+            title={
+              post.category === "Gift guides"
+                ? "Gifting for more than one?"
+                : "Like the stories behind the stones?"
+            }
+          />
         </section>
       </article>
 

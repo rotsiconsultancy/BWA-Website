@@ -7852,3 +7852,154 @@ body {
     min-height: 0;
   }
 }
+
+/* Follow ask: end of stories, stone pages, Stone Meanings */
+.follow-bwa {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: var(--rule) solid var(--color-line);
+  color: var(--color-ink);
+}
+.follow-bwa-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  line-height: 1.1;
+}
+.follow-bwa .grow-links {
+  max-width: 34rem;
+}
+
+/* Stone Meanings page and "About the stone" on stone pages */
+.stone-feeling {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-height: 7.5rem;
+  padding: var(--space-4);
+  border-right: var(--rule) solid var(--color-line);
+  border-bottom: var(--rule) solid var(--color-line);
+}
+.stone-feeling strong {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+.stone-feeling p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+.stone-feeling a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.stone-meanings-list {
+  display: grid;
+  gap: clamp(3.5rem, 7vw, 6rem);
+  padding-top: clamp(3.5rem, 7vw, 6rem);
+}
+.stone-meaning {
+  display: grid;
+  gap: var(--space-5);
+  scroll-margin-top: 6rem;
+  padding-top: var(--space-6);
+  border-top: var(--rule) solid var(--color-line);
+}
+.stone-meaning header h2 {
+  margin: var(--space-1) 0 0;
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+.stone-meaning-headline {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  color: var(--color-muted);
+}
+.stone-meaning-body {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 44rem;
+  line-height: 1.7;
+}
+.stone-meaning-body p {
+  margin: 0;
+}
+.stone-meaning-body a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.stone-meaning-beliefs {
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-paper-deep);
+  border-left: 3px solid var(--color-ink);
+}
+.stone-meaning-beliefs h3 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+.stone-meaning-beliefs ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: var(--space-2);
+}
+.stone-meaning-close {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  line-height: 1.4;
+}
+.stone-meaning-more {
+  margin: 0;
+}
+.stone-meaning-more a,
+.stone-meanings-design a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.stone-meanings-disclaimer {
+  margin: 0;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--color-muted);
+}
+.stone-meanings-design {
+  margin: 0;
+  color: var(--color-muted);
+}
+.stone-about {
+  display: grid;
+  gap: var(--space-6);
+}
+.stone-about .stone-meaning {
+  border-top: 0;
+  padding-top: 0;
+}
+.stone-feelings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: var(--rule) solid var(--color-line);
+  border-left: var(--rule) solid var(--color-line);
+}
+@media (max-width: 900px) {
+  .stone-feelings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .stone-feelings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .stone-feeling {
+    min-height: 0;
+  }
+}

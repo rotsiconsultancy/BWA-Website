@@ -106,6 +106,83 @@ export const seoHubs: SeoHub[] = [
       "Red Jasper brings an earthy, energetic colour note. These BWA pieces are for people drawn to warm natural materials and a bolder wrist presence.",
   },
   {
+    slug: "howlite-bracelets",
+    field: "stone_type",
+    value: "howlite",
+    title: "Howlite Bracelets in Kenya",
+    eyebrow: "Stone guide / Howlite",
+    description:
+      "Natural howlite stone bracelets by Beads World Africa: clean white stone with fine grey and black veins, handmade in Kenya.",
+    intro:
+      "White stone traced with fine grey and black veins, like cracks in fresh snow. Explore BWA howlite bracelets for a calm, clean look.",
+  },
+  {
+    slug: "sodalite-bracelets",
+    field: "stone_type",
+    value: "sodalite",
+    title: "Sodalite Bracelets in Kenya",
+    eyebrow: "Stone guide / Sodalite",
+    description:
+      "Natural sodalite stone bracelets by Beads World Africa: rich blue stone with white veins like clouds, handmade in Kenya.",
+    intro:
+      "Lapis lazuli's cousin: a rich blue stone with white veins like clouds. The easiest blue to wear, from jeans to white linen.",
+  },
+  {
+    slug: "obsidian-bracelets",
+    field: "stone_type",
+    value: "obsidian",
+    title: "Obsidian Bracelets in Kenya",
+    eyebrow: "Stone guide / Obsidian",
+    description:
+      "Mahogany and snowflake obsidian bracelets by Beads World Africa: natural volcanic glass, glossy and smooth, handmade into bracelets in Kenya.",
+    intro:
+      "Obsidian is natural volcanic glass, and Kenya's Rift Valley is one of the richest obsidian landscapes on Earth. Glossy black, warm mahogany or flecked with snow.",
+  },
+  {
+    slug: "hematite-bracelets",
+    field: "stone_type",
+    value: "hematite",
+    title: "Hematite Bracelets in Kenya",
+    eyebrow: "Stone guide / Hematite",
+    description:
+      "Hematite bracelets by Beads World Africa: heavy, cool iron oxide polished to a mirror shine, handmade in Kenya.",
+    intro:
+      "Heavy, cool and shining like polished steel. Hematite sits naturally beside a silver watch and a grey or black suit.",
+  },
+  {
+    slug: "rhodonite-bracelets",
+    field: "stone_type",
+    value: "rhodonite",
+    title: "Rhodonite Bracelets in Kenya",
+    eyebrow: "Stone guide / Rhodonite",
+    description:
+      "Natural rhodonite stone bracelets by Beads World Africa: rose pink with bold black veins, handmade in Kenya. A gift that says love.",
+    intro:
+      "Rose pink with bold black veins, and a stone Russia's tsars prized. Gorgeous with white, navy and black.",
+  },
+  {
+    slug: "jasper-bracelets",
+    field: "stone_type",
+    value: "jasper",
+    title: "Jasper Bracelets in Kenya",
+    eyebrow: "Stone guide / Jasper",
+    description:
+      "Natural jasper stone bracelets by Beads World Africa: picture, fancy, Picasso and pink zebra jasper, each bead patterned like the land. Handmade in Kenya.",
+    intro:
+      "Every jasper bead carries its own pattern: little maps, forest greens, brush strokes and soft pink stripes. Explore BWA's jasper bracelets.",
+  },
+  {
+    slug: "agate-bracelets",
+    field: "stone_type",
+    value: "agate",
+    title: "Agate Bracelets in Kenya",
+    eyebrow: "Stone guide / Agate",
+    description:
+      "Carnelian and moss agate bracelets by Beads World Africa: a sunset or a forest in every bead, handmade in Kenya.",
+    intro:
+      "Agate holds a sunset or a forest inside: warm banded carnelian, or soft green moss threads in clear stone.",
+  },
+  {
     slug: "bracelets-for-grounding",
     field: "energy_vibe",
     value: "grounding",
