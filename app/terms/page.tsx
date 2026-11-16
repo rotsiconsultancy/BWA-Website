@@ -194,6 +194,13 @@ export default function TermsPage() {
             order. You may request deletion of your data at any time by
             contacting us.
           </p>
+          <p>
+            This Site uses Google Analytics and the Meta Pixel to understand how
+            visitors use it and to show our adverts on Instagram and Facebook.
+            They set cookies when you visit. You can turn them off at any time
+            with &ldquo;Turn off&rdquo; on the cookie notice, or by clearing
+            this Site&rsquo;s data in your browser to see the notice again.
+          </p>
         </section>
 
         <section className="legal-section">

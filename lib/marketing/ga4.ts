@@ -34,7 +34,8 @@ export const GA4_MEASUREMENT_ID = "G-4HNRWEMRVY";
 
 // Standard gtag bootstrap, run on first use so events fired by page effects
 // before the GA component mounts still queue behind the config call.
-// Consent Mode: until the visitor accepts, GA sends cookieless pings only.
+// Consent Mode: granted by default; after "Turn off", GA sends cookieless
+// pings only.
 export function ensureGtag() {
   if (typeof window === "undefined" || window.gtag) return;
   window.dataLayer = window.dataLayer || [];

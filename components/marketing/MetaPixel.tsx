@@ -6,6 +6,7 @@ import { trackMetaEvent } from "@/lib/marketing/meta-pixel";
 import { updateGa4Consent } from "@/lib/marketing/ga4";
 import {
   CONSENT_KEY,
+  marketingAllowed,
   readMarketingConsent,
   type MarketingConsent,
 } from "@/lib/marketing/consent";
@@ -23,10 +24,13 @@ export default function MetaPixel() {
     setConsent(readMarketingConsent());
     setChecked(true);
   }, []);
+  // Opt-out: the Pixel loads unless the visitor has declined. Wait until the
+  // saved choice is read, so a visitor who declined never loads it.
+  const allowed = checked && marketingAllowed(consent);
   useEffect(() => {
     if (
       isAdmin ||
-      consent !== "accepted" ||
+      !allowed ||
       !pixelId ||
       window.fbq ||
       window._fbq ||
@@ -53,21 +57,16 @@ export default function MetaPixel() {
     fbq("init", pixelId);
     trackedPath.current = pathname;
     trackMetaEvent("PageView");
-  }, [consent, isAdmin, pathname]);
+  }, [allowed, isAdmin, pathname]);
   useEffect(() => {
-    if (
-      !isAdmin &&
-      consent === "accepted" &&
-      window.fbq &&
-      trackedPath.current !== pathname
-    ) {
+    if (!isAdmin && allowed && window.fbq && trackedPath.current !== pathname) {
       trackedPath.current = pathname;
       trackMetaEvent("PageView");
     }
-  }, [pathname, consent, isAdmin]);
+  }, [pathname, allowed, isAdmin]);
 
-  // GA4 always loads (in cookieless mode until accepted), so the prompt is
-  // needed even when no Meta Pixel is configured.
+  // The notice shows until the visitor chooses; GA4 needs it too, so it shows
+  // even when no Meta Pixel is configured.
   if (isAdmin || !checked || consent) return null;
   const choose = (value: MarketingConsent) => {
     try {
@@ -75,6 +74,8 @@ export default function MetaPixel() {
     } catch {}
     setConsent(value);
     updateGa4Consent(value);
+    // Already loaded this visit: tell Meta to stop (or resume) sending.
+    window.fbq?.("consent", value === "declined" ? "revoke" : "grant");
   };
   return (
     <aside
@@ -83,15 +84,16 @@ export default function MetaPixel() {
       aria-label="Marketing cookies"
     >
       <p>
-        We use optional analytics and marketing cookies (Google and Meta) to
-        understand which BWA stories lead to visits and orders.
+        We use Google and Meta cookies to see which BWA stories lead to visits
+        and orders, and to show BWA on Instagram and Facebook. You can turn them
+        off.
       </p>
       <div>
         <button type="button" onClick={() => choose("declined")}>
-          Decline
+          Turn off
         </button>
         <button type="button" onClick={() => choose("accepted")}>
-          Accept
+          OK
         </button>
       </div>
     </aside>

@@ -13,9 +13,17 @@ export function readMarketingConsent(): MarketingConsent | null {
   }
 }
 
-/** Google Consent Mode v2 state for a consent choice (none yet = denied). */
+/**
+ * Opt-out (owner, 2026-11-17): Meta Pixel and Google Analytics run until the
+ * visitor declines. No choice yet counts as allowed.
+ */
+export function marketingAllowed(consent: MarketingConsent | null) {
+  return consent !== "declined";
+}
+
+/** Google Consent Mode v2 state for a consent choice (none yet = granted). */
 export function googleConsentState(consent: MarketingConsent | null) {
-  const value = consent === "accepted" ? "granted" : "denied";
+  const value = marketingAllowed(consent) ? "granted" : "denied";
   return {
     analytics_storage: value,
     ad_storage: value,

@@ -32,6 +32,13 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-17] — Meta Pixel and GA4 On by Default (Opt-Out)
+
+- **Owner decision, 2026-11-17**: tracking runs until the visitor turns it off, so Meta can learn from ad traffic. Earlier the Pixel loaded only after Accept and GA4 sent cookieless pings only.
+- **What**: `marketingAllowed()` in `lib/marketing/consent.ts` (no choice yet counts as allowed). Google Consent Mode defaults to granted and is denied after "Turn off". `components/marketing/MetaPixel.tsx` loads the Pixel once the saved choice has been read, unless the visitor declined. "Turn off" sends `fbq('consent','revoke')` if the Pixel already loaded this visit; "OK" sends grant. The notice now reads as a notice, with "Turn off" and "OK" buttons. Terms §12 names Google Analytics and the Meta Pixel and how to turn them off.
+- **Checked**: tsc, 40 tests; local: with no choice the Pixel loads (fbevents + config for pixel 2315602975933818) and GA consent is granted; after Turn off, GA updates to denied; after a reload, no Pixel, no Facebook requests, GA denied, no console errors.
+- **Note**: Kenya's Data Protection Act leans towards opt-in for marketing data; the owner chose opt-out knowing this.
+
 ### [2026-11-16] — All Journal Posts Live (Last Date 2026-11-11); Matte Onyx → Black Obsidian; Pinterest Code
 
 - **Journal (owner directive)**: nothing is scheduled any more; every post is dated 2026-11-11 or earlier. Legends published (dropped `_`): evil eye 2026-11-09, bloodstone 11-10, rhodonite 11-11. Backdated: malachite 11-15 → 11-04, lapis 11-22 → 11-06.
