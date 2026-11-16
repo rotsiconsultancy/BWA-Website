@@ -9,6 +9,7 @@ import FollowBwa from "@/components/marketing/FollowBwa";
 import {
   STONE_DISCLAIMER,
   STONE_MEANINGS_PATH,
+  stoneMeaningPath,
   stoneMeaningsForType,
 } from "@/lib/commerce/stone-meanings";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
@@ -188,8 +189,7 @@ export default async function BraceletHubPage({ params }: Props) {
               <h2>{about.length > 1 ? "The stones" : about[0].name}</h2>
             </div>
             <p>
-              What it is, what people have believed about it, and how to wear
-              it. More in our{" "}
+              What it is and how to wear it. For every stone, see our{" "}
               <Link href={STONE_MEANINGS_PATH}>stone meanings</Link>.
             </p>
           </div>
@@ -203,23 +203,17 @@ export default async function BraceletHubPage({ params }: Props) {
               <div className="stone-meaning-body">
                 <p className="stone-meaning-headline">{stone.headline}</p>
                 <p>{stone.pitch}</p>
-                <div className="stone-meaning-beliefs">
-                  <h3>What people believe</h3>
-                  <ul>
-                    {stone.beliefs.map((belief) => (
-                      <li key={belief.where}>
-                        <b>{belief.where}:</b> {belief.what}
-                      </li>
-                    ))}
-                    <li>
-                      <b>Today,</b> {stone.today}
-                    </li>
-                  </ul>
-                </div>
+                <p>
+                  <b>Today,</b> {stone.today}
+                </p>
                 <p>
                   <b>Wear it with:</b> {stone.wear}
                 </p>
-                <p className="stone-meaning-close">{stone.close}</p>
+                <p className="stone-meaning-more">
+                  <Link href={stoneMeaningPath(stone.id)}>
+                    What {stone.name.toLowerCase()} means: the full story →
+                  </Link>
+                </p>
               </div>
             </article>
           ))}

@@ -59,4 +59,4 @@ Rhodonite looks beautiful with white, navy and black. It is pink without being s
 
 Picture it: a navy suit or a navy dress, an evening out, and **Rose Murram** on your wrist, the rose-pink stone Russia's tsars carved for an empress. A gift that says love without saying it.
 
-What does your stone mean? Read our [stone meanings](/stone-meanings). See all our [rhodonite bracelets](/bracelets/rhodonite-bracelets).
+Read what [rhodonite means](/stone-meanings/rhodonite), or find your own stone in our [stone meanings](/stone-meanings). See all our [rhodonite bracelets](/bracelets/rhodonite-bracelets).

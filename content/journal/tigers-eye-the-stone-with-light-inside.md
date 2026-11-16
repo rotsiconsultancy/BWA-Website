@@ -108,4 +108,4 @@ Next time you are out in the sun, turn your wrist slowly and watch the light sli
 
 Picture it: a navy suit, a crisp white shirt, and a band of gold light sliding across your wrist every time you reach for your pen. That is **Simba Gold**: the stone people wear for courage, worn the way you dress on your best days.
 
-What does your stone mean? Read our [stone meanings](/stone-meanings).
+Read what [tiger's eye means](/stone-meanings/tigers-eye), or find your own stone in our [stone meanings](/stone-meanings).

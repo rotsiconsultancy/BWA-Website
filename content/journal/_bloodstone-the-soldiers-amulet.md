@@ -57,4 +57,4 @@ Bloodstone is dark and calm, so it wears like a neutral. It sits well with charc
 
 Picture it: a charcoal suit on the morning of the big meeting, a white shirt, and **Taita Spark** on your wrist, the same stone a soldier carried into battle for courage.
 
-What does your stone mean? Read our [stone meanings](/stone-meanings).
+Read what [bloodstone means](/stone-meanings/bloodstone), or find your own stone in our [stone meanings](/stone-meanings).

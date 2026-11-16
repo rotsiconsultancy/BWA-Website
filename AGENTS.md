@@ -32,6 +32,14 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 
 ## 📝 Change Log
 
+### [2026-11-16] — A Page for Each Stone: `/stone-meanings/<stone>`
+
+- **New** `app/stone-meanings/[stone]/page.tsx`: one page per stone (19), e.g. `/stone-meanings/tigers-eye`. Product photo hero with "<Stone> meaning", headline, pitch and a shop button with the live price; "What people have believed" (place-by-place list + Today); "How to wear"; "Wear the story" close with lead bracelet and price; bracelet grid + link to the stone's `/bracelets/` page; Journal stories about the stone (`stoneStories` in `lib/commerce/stone-meanings.ts`, shown once published); stones from the same feeling group; follow ask; per-stone FAQ (incl. "Does <stone> have healing powers?" → no). Article + Breadcrumb + FAQ JSON-LD. Unknown stone or no listed bracelet → 404.
+- **`/stone-meanings`** is now the index: feeling picker and a card grid linking to each page. Cards keep the old `#<stone>` anchors so earlier links still land.
+- **Stone pages** (`/bracelets/...`): "About the stone" shortened (headline, pitch, today, wear) with a link to the full meaning page, so the two don't repeat each other.
+- **Links**: the eight stone stories (incl. the three legend drafts) now link to their stone's page; all 19 pages in the sitemap; Pinterest pins 1 and 6 point to the new pages (`../SocialMediaPlayground/Pinterest/README.md`).
+- **Checked**: tsc, 40 tests, production build; local server against live data: all 19 pages 200, unknown 404, links from stone pages 200, no horizontal scroll at 375 px.
+
 ### [2026-11-16] — Stone Meanings Page, Stone Pages, Follow Ask, Legend Drafts, Pinterest Claim
 
 - **`/stone-meanings`** (new): feeling picker ("What do you want to carry?"), one section per stone with what it is, what people believed (place and time), today's meaning, "wear it with", and a style + belief close naming the lead bracelet with its live price; bracelet grid per stone; "Shell & starlight" for Maziwa Glow and Nyota Night (not stone, said plainly); disclaimer; follow ask; FAQ. Content in `lib/commerce/stone-meanings.ts`, from the owner's guide (`../Assets/stones/guides/build_sales.py`) minus its health lines and the aqeeq line. In the sitemap and footer.

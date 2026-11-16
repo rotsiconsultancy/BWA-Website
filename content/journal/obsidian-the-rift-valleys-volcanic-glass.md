@@ -110,4 +110,4 @@ Either way, the next time you drive along the Rift Valley floor past Naivasha, l
 
 Picture it: a dinner jacket, a gold watch, and **Njorowa Ember** on your wrist: glass made by a volcano, glossy as the watch face beside it, and kept close for protection.
 
-What does your stone mean? Read our [stone meanings](/stone-meanings). See all our [obsidian bracelets](/bracelets/obsidian-bracelets).
+Read what [obsidian means](/stone-meanings/obsidian), or find your own stone in our [stone meanings](/stone-meanings). See all our [obsidian bracelets](/bracelets/obsidian-bracelets).

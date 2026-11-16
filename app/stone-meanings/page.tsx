@@ -6,8 +6,6 @@ import SeoProductGrid from "@/components/commerce/SeoProductGrid";
 import FaqSection from "@/components/commerce/FaqSection";
 import FollowBwa from "@/components/marketing/FollowBwa";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
-import { isProductSlug } from "@/lib/commerce/product-redirects";
-import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
 import {
   absoluteUrl,
   breadcrumbJsonLd,
@@ -16,13 +14,15 @@ import {
 } from "@/lib/commerce/seo";
 import {
   feelingGroups,
+  findStoneProducts,
   getStoneMeaning,
   notStone,
   STONE_DISCLAIMER,
   STONE_MEANINGS_PATH,
+  stoneMeaningPath,
   stoneMeanings,
+  stoneTitle,
 } from "@/lib/commerce/stone-meanings";
-import type { CommerceProduct } from "@/lib/commerce/types";
 import type { FaqItem } from "@/lib/commerce/faq";
 
 export const dynamic = "force-dynamic";
@@ -77,28 +77,14 @@ const faqs: FaqItem[] = [
   },
 ];
 
-function findProducts(catalogue: CommerceProduct[], slugs: string[]) {
-  return slugs.flatMap((slug) => {
-    const product = catalogue.find((item) => isProductSlug(item.slug, slug));
-    return product ? [product] : [];
-  });
-}
-
 export default async function StoneMeaningsPage() {
   const catalogue = await getStorefrontCatalogue();
   const stones = stoneMeanings
-    .map((stone) => ({ stone, products: findProducts(catalogue, stone.products) }))
+    .map((stone) => ({ stone, products: findStoneProducts(catalogue, stone.products) }))
     .filter((entry) => entry.products.length > 0);
   const shown = new Set(stones.map(({ stone }) => stone.id));
-  const stonePage = (stoneType: string) =>
-    seoHubs.find(
-      (hub) =>
-        hub.field === "stone_type" &&
-        hub.value === stoneType &&
-        productsForSeoHub(catalogue, hub).length > 0,
-    );
   const others = notStone.flatMap((item) => {
-    const [product] = findProducts(catalogue, [item.product]);
+    const [product] = findStoneProducts(catalogue, [item.product]);
     return product ? [{ ...item, product }] : [];
   });
 
@@ -112,6 +98,11 @@ export default async function StoneMeaningsPage() {
     author: { "@type": "Organization", name: SITE_NAME },
     publisher: { "@type": "Organization", name: SITE_NAME },
     about: stones.map(({ stone }) => stone.name),
+    hasPart: stones.map(({ stone }) => ({
+      "@type": "Article",
+      name: `${stoneTitle(stone.name)} meaning`,
+      url: absoluteUrl(stoneMeaningPath(stone.id)),
+    })),
   };
 
   return (
@@ -158,7 +149,7 @@ export default async function StoneMeaningsPage() {
             <h2>What do you want to carry?</h2>
           </div>
           <p>
-            Pick a feeling, then find its stone below. Or wear one simply
+            Pick a feeling, then tap a stone to read its meaning. Or wear one simply
             because it looks good. That&rsquo;s a perfectly good reason too.
           </p>
         </div>
@@ -173,7 +164,9 @@ export default async function StoneMeaningsPage() {
                   {members.map((id, index) => (
                     <span key={id}>
                       {index > 0 && " · "}
-                      <a href={`#${id}`}>{getStoneMeaning(id)?.name}</a>
+                      <Link href={stoneMeaningPath(id)}>
+                        {getStoneMeaning(id)?.name}
+                      </Link>
                     </span>
                   ))}
                 </p>
@@ -184,51 +177,47 @@ export default async function StoneMeaningsPage() {
       </section>
 
       <div className="container stone-meanings-list">
-        {stones.map(({ stone, products }) => {
-          const lead = products[0];
-          const hub = stonePage(stone.stoneType);
-          return (
-            <section key={stone.id} id={stone.id} className="stone-meaning">
-              <header>
-                <p className="eyebrow">{stone.material}</p>
-                <h2>{stone.name}</h2>
-                <p className="stone-meaning-headline">{stone.headline}</p>
-              </header>
-              <div className="stone-meaning-body">
-                <p>{stone.pitch}</p>
-                <div className="stone-meaning-beliefs">
-                  <h3>What people believe</h3>
-                  <ul>
-                    {stone.beliefs.map((belief) => (
-                      <li key={belief.where}>
-                        <b>{belief.where}:</b> {belief.what}
-                      </li>
-                    ))}
-                    <li>
-                      <b>Today,</b> {stone.today}
-                    </li>
-                  </ul>
+        <section className="stone-index">
+          <div className="seo-hub-heading">
+            <div>
+              <p className="eyebrow">The stones</p>
+              <h2>Every stone, and what it means</h2>
+            </div>
+            <p>
+              Tap a stone for its full story: what people have believed, how
+              to wear it, and the bracelets made from it.
+            </p>
+          </div>
+          <div className="stone-cards">
+            {stones.map(({ stone, products }) => (
+              <Link
+                key={stone.id}
+                id={stone.id}
+                href={stoneMeaningPath(stone.id)}
+                className="stone-card"
+              >
+                <div className="stone-card-media">
+                  <StoreImage
+                    src={products[0].images[0]}
+                    alt={`${products[0].title}, a ${stone.name.toLowerCase()} bracelet`}
+                    sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw"
+                    width={800}
+                    height={800}
+                  />
                 </div>
-                <p>
-                  <b>Wear it with:</b> {stone.wear}
-                </p>
-                <p className="stone-meaning-close">
-                  {stone.close}{" "}
-                  <Link href={`/product/${lead.slug}`}>{lead.title}</Link>,{" "}
-                  <Money prices={lead.prices} />.
-                </p>
-              </div>
-              <SeoProductGrid products={products} />
-              {hub && (
-                <p className="stone-meaning-more">
-                  <Link href={`/bracelets/${hub.slug}`}>
-                    All {hub.title.replace(" in Kenya", "").toLowerCase()} →
-                  </Link>
-                </p>
-              )}
-            </section>
-          );
-        })}
+                <div className="stone-card-copy">
+                  <small>{stone.material}</small>
+                  <strong>{stoneTitle(stone.name)}</strong>
+                  <span>{stone.headline}</span>
+                  <em>
+                    From <Money prices={products[0].prices} /> · Read its
+                    meaning →
+                  </em>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {others.length > 0 && (
           <section id="not-stone" className="stone-meaning">

@@ -12,6 +12,9 @@
  * comes from the place in the story.
  */
 
+import { isProductSlug } from "@/lib/commerce/product-redirects";
+import type { CommerceProduct } from "@/lib/commerce/types";
+
 export type StoneBelief = { where: string; what: string };
 
 export type StoneMeaning = {
@@ -506,4 +509,44 @@ export function getStoneMeaning(id: string) {
 /** The meanings for one stone page (several jaspers share "jasper"). */
 export function stoneMeaningsForType(stoneType: string) {
   return stoneMeanings.filter((stone) => stone.stoneType === stoneType);
+}
+
+/** The page for one stone, e.g. /stone-meanings/tigers-eye. */
+export function stoneMeaningPath(id: string) {
+  return `${STONE_MEANINGS_PATH}/${id}`;
+}
+
+/** "Tiger's eye" → "Tiger's Eye", for titles. */
+export function stoneTitle(name: string) {
+  return name.replace(/(^|\s)(\p{L})/gu, (_, space, letter) => space + letter.toUpperCase());
+}
+
+/** Journal stories about each stone (shown only once published). */
+export const stoneStories: Record<string, string[]> = {
+  "tigers-eye": [
+    "tigers-eye-the-stone-with-light-inside",
+    "the-stone-worn-against-the-evil-eye",
+  ],
+  "lava-stone": ["lava-stone-the-volcano-on-your-wrist"],
+  obsidian: ["obsidian-the-rift-valleys-volcanic-glass"],
+  malachite: [
+    "malachite-africas-copper-green",
+    "the-stone-worn-against-the-evil-eye",
+  ],
+  "lapis-lazuli": ["lapis-lazuli-the-blue-of-pharaohs"],
+  bloodstone: ["bloodstone-the-soldiers-amulet"],
+  rhodonite: ["rhodonite-the-tsars-rose-stone"],
+};
+
+/** The feeling groups a stone belongs to, and the other stones in them. */
+export function stoneFeelings(id: string) {
+  return feelingGroups.filter((group) => group.stones.includes(id));
+}
+
+/** The listed bracelets for a set of slugs, in order (old slugs still match). */
+export function findStoneProducts(catalogue: CommerceProduct[], slugs: string[]) {
+  return slugs.flatMap((slug) => {
+    const product = catalogue.find((item) => isProductSlug(item.slug, slug));
+    return product ? [product] : [];
+  });
 }

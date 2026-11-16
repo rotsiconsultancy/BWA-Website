@@ -106,4 +106,4 @@ Those are beliefs, not proven effects. But it is easy to see why the stone colle
 
 Picture it: a white linen shirt, sleeves rolled, and **Msitu Malachite** on your wrist: rings of copper green, the stone Romans wore to keep danger away.
 
-What does your stone mean? Read our [stone meanings](/stone-meanings).
+Read what [malachite means](/stone-meanings/malachite), or find your own stone in our [stone meanings](/stone-meanings).

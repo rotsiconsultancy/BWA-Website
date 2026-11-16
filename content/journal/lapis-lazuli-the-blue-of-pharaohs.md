@@ -109,4 +109,4 @@ These are beliefs, not proven effects. Wear lapis for the meaning, or simply for
 
 Picture it: a navy suit, a white shirt, and **Watamu Deep** on your wrist: the same deep blue that frames Tutankhamun's golden mask. A stone for kings, worn on an ordinary Tuesday.
 
-What does your stone mean? Read our [stone meanings](/stone-meanings). See all our [lapis lazuli bracelets](/bracelets/lapis-lazuli-bracelets).
+Read what [lapis lazuli means](/stone-meanings/lapis-lazuli), or find your own stone in our [stone meanings](/stone-meanings). See all our [lapis lazuli bracelets](/bracelets/lapis-lazuli-bracelets).

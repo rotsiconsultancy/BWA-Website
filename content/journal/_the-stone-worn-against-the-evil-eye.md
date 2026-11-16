@@ -63,4 +63,4 @@ These are beliefs, not proven effects. Whether you wear tiger's eye to turn away
 
 Picture it: a navy suit, a white shirt, the Nairobi skyline going gold outside the window, and **Simba Gold** on your wrist, an eye of light that watches back. Let them look.
 
-What does your stone mean? Read our [stone meanings](/stone-meanings). See all our [tiger eye bracelets](/bracelets/tiger-eye-bracelets).
+Read what [tiger's eye means](/stone-meanings/tigers-eye), or find your own stone in our [stone meanings](/stone-meanings). See all our [tiger eye bracelets](/bracelets/tiger-eye-bracelets).

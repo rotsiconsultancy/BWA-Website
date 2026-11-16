@@ -3,6 +3,11 @@ import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
 import { productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
 import { MENS_PAGE_PATH } from "@/lib/commerce/mens-stone-bracelets";
 import { getAllPosts } from "@/lib/journal/posts";
+import {
+  findStoneProducts,
+  stoneMeaningPath,
+  stoneMeanings,
+} from "@/lib/commerce/stone-meanings";
 
 // Rebuild hourly so products added straight in Supabase (not via admin) still appear.
 export const revalidate = 3600;
@@ -79,6 +84,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    ...stoneMeanings
+      .filter((stone) => findStoneProducts(products, stone.products).length > 0)
+      .map((stone) => ({
+        url: `${baseUrl}${stoneMeaningPath(stone.id)}`,
+        lastModified: new Date("2026-11-16T00:00:00+03:00"),
+        changeFrequency: "monthly" as const,
+        priority: 0.75,
+      })),
     {
       url: `${baseUrl}/returns`,
       lastModified: new Date(),
