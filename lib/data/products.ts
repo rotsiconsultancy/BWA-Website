@@ -46,7 +46,7 @@ export const PRODUCTS: Product[] = [
     stock_count: 12,
     energy_vibe: ["grounding", "protection", "focus"],
     intention: ["inner_strength", "peace_mind"],
-    stone_type: ["matte_onyx", "lava_stone", "ukalite"],
+    stone_type: ["matte_onyx", "lava_stone"],
     color_palette: ["dark_monochrome"],
     style_tags: ["everyday_minimal", "raw_rugged"],
     wrist_fits: ["medium_18cm", "large_20cm", "adjustable"],

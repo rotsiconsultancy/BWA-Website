@@ -3,10 +3,15 @@ import FaqSection from "@/components/commerce/FaqSection";
 import { shoppingFaqs } from "@/lib/commerce/faq";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import SeoProductGrid from "@/components/commerce/SeoProductGrid";
 import { getStorefrontCatalogue } from "@/lib/commerce/catalogue-server";
-import { getSeoHub, productsForSeoHub, seoHubs } from "@/lib/commerce/seo-hubs";
+import {
+  getSeoHub,
+  productsForSeoHub,
+  SEO_HUB_REDIRECTS,
+  seoHubs,
+} from "@/lib/commerce/seo-hubs";
 import {
   absoluteUrl,
   breadcrumbJsonLd,
@@ -60,11 +65,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BraceletHubPage({ params }: Props) {
-  const hub = getSeoHub((await params).hub);
-  if (!hub) notFound();
+  const slug = (await params).hub;
+  const hub = getSeoHub(slug);
+  if (!hub) {
+    const moved = SEO_HUB_REDIRECTS[slug];
+    if (moved) permanentRedirect(`/bracelets/${moved}`);
+    notFound();
+  }
 
   const catalogue = await getStorefrontCatalogue();
   const products = productsForSeoHub(catalogue, hub);
+  // An empty stone page is a thin page to Google; it is also left out of the
+  // sitemap (app/sitemap.ts), so answer 404 until a bracelet carries the tag.
+  if (products.length === 0) notFound();
   const relatedHubs = seoHubs
     .filter(
       (candidate) =>

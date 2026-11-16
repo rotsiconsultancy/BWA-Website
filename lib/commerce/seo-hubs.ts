@@ -18,6 +18,15 @@ export type SeoHub = {
   intro: string;
 };
 
+/**
+ * Old hub addresses that moved, mapped to the current slug.
+ * Never remove an entry: old links live on in Google.
+ */
+export const SEO_HUB_REDIRECTS: Record<string, string> = {
+  // 2026-11-16: "Ukalite" was a misspelling of unakite.
+  "ukalite-bracelets": "unakite-bracelets",
+};
+
 export const seoHubs: SeoHub[] = [
   {
     slug: "tiger-eye-bracelets",
@@ -42,15 +51,15 @@ export const seoHubs: SeoHub[] = [
       "Lava Stone has a tactile, raw surface that makes a quiet statement. These BWA bracelets are made for a more rugged, layered way of wearing natural stone.",
   },
   {
-    slug: "ukalite-bracelets",
+    slug: "unakite-bracelets",
     field: "stone_type",
-    value: "ukalite",
-    title: "Ukalite Bracelets in Kenya",
-    eyebrow: "Stone guide / Ukalite",
+    value: "unakite",
+    title: "Unakite Bracelets in Kenya",
+    eyebrow: "Stone guide / Unakite",
     description:
-      "Discover Ukalite bracelets by Beads World Africa: natural stone pieces with a soft, earthy green tone, handcrafted for everyday wear.",
+      "Natural unakite stone bracelets by Beads World Africa, mottled moss green and salmon pink, handmade in Kenya for everyday wear.",
     intro:
-      "Ukalite brings a gentle, earthy green note to your bracelet collection. Explore BWA pieces chosen for their calm, natural presence and versatile style.",
+      "Unakite mixes moss green and salmon pink in one stone, so no two beads look alike. Explore BWA bracelets that bring a soft, earthy colour to the wrist.",
   },
   {
     slug: "matte-onyx-bracelets",

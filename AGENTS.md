@@ -23,7 +23,7 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 | :-------------- | :------- | :---------------------------------------------------------------------------------------- | :-------------------------------------------------------------- |
 | `energy_vibe`   | `text[]` | `'grounding'`, `'protection'`, `'vitality'`, `'focus'`, `'calm'`, `'clarity'`             | Matches user's desired mood/energy state                        |
 | `intention`     | `text[]` | `'inner_strength'`, `'wealth_abundance'`, `'peace_mind'`, `'courage'`, `'transformation'` | Matches user's personal goals/intentions                        |
-| `stone_type`    | `text[]` | `'tiger_eye'`, `'lava_stone'`, `'ukalite'`                                                | `'matte_onyx'`, `'lapis_lazuli'`, `'turquoise'`, `'red_jasper'` | Stone material preference & properties |
+| `stone_type`    | `text[]` | `'tiger_eye'`, `'lava_stone'`, `'unakite'`                                                | `'matte_onyx'`, `'lapis_lazuli'`, `'turquoise'`, `'red_jasper'` | Stone material preference & properties |
 | `color_palette` | `text[]` | `'earth_tones'`, `'dark_monochrome'`, `'vibrant'`, `'deep_blue'`, `'raw_natural'`         | Aesthetic & wardrobe compatibility                              |
 | `style_tags`    | `text[]` | `'everyday_minimal'`, `'bold_statement'`, `'stacked_layers'`, `'raw_rugged'`              | Lifestyle & style density preference                            |
 | `wrist_fits`    | `text[]` | `'small_16cm'`, `'medium_18cm'`, `'large_20cm'`, `'adjustable'`                           | Sizing & fit compatibility                                      |
@@ -31,6 +31,12 @@ To support the future automated **"Find Your Bracelet"** quiz recommendation eng
 ---
 
 ## 📝 Change Log
+
+### [2026-11-16] — Stone Pages: "Ukalite" Renamed to Unakite; Empty Stone Pages 404
+
+- **Why**: Search Console (owner's export 2026-11-16) listed `/bracelets/ukalite-bracelets` as crawled, not indexed. "Ukalite" was a misspelling of unakite; the page was live, indexable, out of the sitemap and showed no bracelets. `/bracelets/turquoise-bracelets` was the same (no bracelet carries the tag).
+- **What**: `ukalite-bracelets` hub replaced by `unakite-bracelets` (Pwani Sand, Savannah Mosaic); the old address 308-redirects there via `SEO_HUB_REDIRECTS` in `lib/commerce/seo-hubs.ts` (never remove entries). A stone/feeling page with no bracelets now answers 404, matching the sitemap, which already skipped empty hubs. "Ukalite" option removed from `taxonomy.ts` and from the fallback seed products.
+- **Checked**: tsc, 40 tests; local server against live data: ukalite 308 → unakite 200 (2 bracelets), turquoise 404, lava 200, sitemap now lists unakite.
 
 ### [2026-11-14] — Journal: Malachite Belief Corrected
 
